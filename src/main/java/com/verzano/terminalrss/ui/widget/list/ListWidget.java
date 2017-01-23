@@ -28,11 +28,11 @@ public class ListWidget<T> extends TerminalWidget {
     this.rows = rows;
 
     addEscapedKeyAction(UP_ARROW, () -> {
-      move(Direction.UP, 1);
+      scroll(Direction.UP, 1);
       TerminalUI.reprint();
     });
     addEscapedKeyAction(DOWN_ARROW, () -> {
-      move(Direction.DOWN, 1);
+      scroll(Direction.DOWN, 1);
       TerminalUI.reprint();
     });
   }
@@ -62,7 +62,7 @@ public class ListWidget<T> extends TerminalWidget {
     }
   }
 
-  private void move(Direction dir, int distance) {
+  private void scroll(Direction dir, int distance) {
     switch (dir) {
       case UP:
         setSelectedIndex(Math.max(0, selectedIndex - distance));
