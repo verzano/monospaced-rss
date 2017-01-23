@@ -23,7 +23,10 @@ public abstract class TerminalWidget {
     public void print() { }
   };
 
-  public static final Comparator<TerminalWidget> Z_COMPARTOR = Comparator.comparingInt(tw -> tw.z);
+  public static final Comparator<TerminalWidget> Z_COMPARTOR = (tw1, tw2) -> {
+    int comp = Integer.compare(tw1.z, tw2.z);
+    return comp == 0 ? Long.compare(tw1.hashCode(), tw2.hashCode()) : comp;
+  };
 
   // TODO use metrics.Size from terminal-printer
   @Getter @Setter

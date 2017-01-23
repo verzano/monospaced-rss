@@ -27,8 +27,14 @@ public class ListWidget<T> extends TerminalWidget {
   public ListWidget(List<T> rows) {
     this.rows = rows;
 
-    addEscapedKeyAction(UP_ARROW, () -> move(Direction.UP, 1));
-    addEscapedKeyAction(DOWN_ARROW, () -> move(Direction.DOWN, 1));
+    addEscapedKeyAction(UP_ARROW, () -> {
+      move(Direction.UP, 1);
+      TerminalUI.reprint();
+    });
+    addEscapedKeyAction(DOWN_ARROW, () -> {
+      move(Direction.DOWN, 1);
+      TerminalUI.reprint();
+    });
   }
 
   @Override
@@ -37,7 +43,7 @@ public class ListWidget<T> extends TerminalWidget {
       TerminalUI.move(getX(), getY() + row);
       if (row + topRow >= rows.size()) {
         // TODO cut this off it it runs off-screen should prolly be done in the TerminalUI
-        TerminalUI.printr(" ", getWidth());
+        TerminalUI.printn(" ", getWidth());
       } else {
         // TODO need to pad or crop this
         String toPrint = rows.get(row + topRow).toString();

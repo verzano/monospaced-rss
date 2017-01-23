@@ -25,7 +25,7 @@ public class TextAreaWidget extends TerminalWidget {
         beginIndex += getWidth();
         endIndex = Math.min(endIndex + getWidth(), text.length());
       } else {
-        TerminalUI.printr(" ", getWidth());
+        TerminalUI.printn(" ", getWidth());
       }
     }
   }

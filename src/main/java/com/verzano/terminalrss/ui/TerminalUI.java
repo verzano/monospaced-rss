@@ -1,5 +1,6 @@
 package com.verzano.terminalrss.ui;
 
+import com.verzano.terminalrss.ui.widget.PrintTask;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
 import lombok.Setter;
 import org.jline.terminal.Terminal;
@@ -7,7 +8,9 @@ import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
 import java.util.SortedSet;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.verzano.terminalrss.ui.widget.TerminalWidget.NULL_WIDGET;
@@ -15,11 +18,10 @@ import static com.verzano.terminalrss.ui.widget.TerminalWidget.Z_COMPARTOR;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.ESC;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
 
-// TODO make this a base component, add a list and a text view, add listeners, add mouse listener to stop scrolling
 // TODO use an executor to schedule events
 // TODO use a thread to check size (these should replace each other in the event queue)
 // TODO use a thread to check mouse events cursor offscreen instead of removing it?
-// TODO just leave the
+// TODO create a layout manager type thing for the TerminalUI
 public class TerminalUI {
   private TerminalUI() { }
 
@@ -27,7 +29,13 @@ public class TerminalUI {
   private static TerminalWidget focusedWidget = NULL_WIDGET;
 
   private static final SortedSet<TerminalWidget> widgetStack = new ConcurrentSkipListSet<>(Z_COMPARTOR);
-  private static final AtomicBoolean run = new AtomicBoolean(true);
+
+  private static final AtomicBoolean runKeyActionThread = new AtomicBoolean(true);
+  private static final Thread keyActionThread = new Thread(TerminalUI::keyActionLoop, "Key Action");
+
+  private static final AtomicBoolean runPrintingThread = new AtomicBoolean(true);
+  private static final Thread printingThread = new Thread(TerminalUI::printingLoop, "Printing");
+  private static final BlockingDeque<PrintTask> printTaskQueue = new LinkedBlockingDeque<>();
 
   private static final Terminal terminal;
   static {
@@ -35,49 +43,75 @@ public class TerminalUI {
       terminal = TerminalBuilder.terminal();
       terminal.enterRawMode();
       terminal.echo(false);
-      // TODO do this better somehow
-      new Thread(TerminalUI::startup).start();
+
+      printingThread.start();
+      keyActionThread.start();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private static void startup() {
+  private static void printingLoop() {
     clear();
 
-    try {
-      while (run.get()) {
-        paint();
-        terminal.flush();
+    while(runPrintingThread.get()) {
+      try {
+        printTaskQueue.take().print();
+        terminal.writer().flush();
+      } catch (InterruptedException e) {
+        // TODO logging
+        throw new RuntimeException(e);
+      }
+    }
 
-        int key = terminal.reader().read();
+    clear();
+  }
+
+  private static void keyActionLoop() {
+    try {
+      while (runKeyActionThread.get()) {
+        // TODO this is kind of a lame way to do this
+        int key = terminal.reader().read(100);
         switch (key) {
-          // TODO remove this
-          case 'q':
-            shutdown();
-            break;
           case ESC:
             switch (terminal.reader().read()) {
               case '[':
                 focusedWidget.fireEscapedKeyActions(terminal.reader().read());
                 break;
             }
+          case -2:
+            break;
           default:
             focusedWidget.fireKeyActions(key);
             break;
         }
       }
-
-      clear();
-      terminal.flush();
-      terminal.close();
     } catch (IOException e) {
+      // TODO logging
       throw new RuntimeException(e);
     }
   }
 
   public static void shutdown() {
-    run.set(false);
+    new Thread(() -> {
+      printTaskQueue.addFirst(() -> runPrintingThread.set(false));
+
+      runKeyActionThread.set(false);
+
+      try {
+        printingThread.join();
+        keyActionThread.join();
+      } catch (InterruptedException ignored) {
+        // TODO logging...
+      }
+
+      try {
+        terminal.close();
+      } catch (IOException e) {
+        // TODO logging
+        throw new RuntimeException(e);
+      }
+    }).start();
   }
 
   public static void addWidget(TerminalWidget widget) {
@@ -93,40 +127,61 @@ public class TerminalUI {
     }
   }
 
-  private static void paint() {
+  private static void print() {
     // TODO ensure this order is correct
     widgetStack.forEach(TerminalWidget::print);
   }
 
   private static void clear() {
     move(1, 1);
+    String emptyLine = new String(new char[terminal.getWidth()]).replace("\0", " ");
     for (int row = 0; row < terminal.getHeight(); row++) {
-      // TODO could be more efficient but its only used for shutting down the shit...
-      terminal.writer().println(new String(new char[terminal.getWidth()]).replace("\0", " "));
+      terminal.writer().println(emptyLine);
     }
     move(1, 1);
+    terminal.flush();
   }
 
-  public static void repaint() {
-    clear();
-    paint();
+  public static void reprint() {
+    if (Thread.currentThread() != printingThread) {
+      printTaskQueue.add(TerminalUI::reprint);
+    } else {
+      clear();
+      print();
+    }
   }
 
   public static void move(int x, int y) {
-    printf(SET_POSITION, y, x);
+    if (Thread.currentThread() != printingThread) {
+      printTaskQueue.add(() -> move(x, y));
+    } else {
+      printf(SET_POSITION, y, x);
+    }
   }
 
   public static void print(String s) {
-    terminal.writer().print(s);
+    if (Thread.currentThread() != printingThread) {
+      printTaskQueue.add(() -> print(s));
+    } else {
+      terminal.writer().print(s);
+    }
   }
 
   public static void printf(String s, Object... args) {
-    terminal.writer().printf(s, args);
+    if (Thread.currentThread() != printingThread) {
+      printTaskQueue.add(() -> printf(s, args));
+    } else {
+      terminal.writer().printf(s, args);
+    }
   }
 
-  public static void printr(String s, int n) {
-    for (int i = 0; i < n; i++) {
-      terminal.writer().print(s);
+  public static void printn(String s, int n) {
+    if (Thread.currentThread() != printingThread) {
+      printTaskQueue.add(() -> printn(s, n));
+    } else {
+      for (int i = 0; i < n; i++) {
+        terminal.writer().print(s);
+      }
     }
   }
 
