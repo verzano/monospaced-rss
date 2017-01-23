@@ -47,20 +47,24 @@ public class TextAreaWidget extends TerminalWidget {
     topLine = 0;
 
     int width = getWidth() - 1;
-    int begin = 0;
-    int end = width;
 
-    while(end < text.length()) {
-      int lastSpace = text.substring(begin, end).lastIndexOf(' ') + begin + 1;
-      String line = text.substring(begin, lastSpace);
+    for (String chunk : text.split("\n")) {
+      int begin = 0;
+      int end = width;
+
+      while (end < chunk.length()) {
+        int lastSpace = chunk.substring(begin, end).lastIndexOf(' ') + begin + 1;
+        String line = chunk.substring(begin, lastSpace);
+        lines.add(line + new String(new char[width - line.length()]).replace('\0', ' '));
+
+        begin = lastSpace;
+        end = begin + width;
+      }
+
+      String line = chunk.substring(begin);
       lines.add(line + new String(new char[width - line.length()]).replace('\0', ' '));
-
-      begin = lastSpace;
-      end = begin + width;
+      lines.add(new String(new char[width]).replace('\0', ' '));
     }
-
-    String line = text.substring(begin);
-    lines.add(line + new String(new char[width - line.length()]).replace('\0', ' '));
   }
 
   private void scroll(Direction direction, int distance) {

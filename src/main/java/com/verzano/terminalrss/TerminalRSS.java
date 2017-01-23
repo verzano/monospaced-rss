@@ -69,8 +69,6 @@ public class TerminalRSS {
     sourcesListWidget = new ListWidget<>(new LinkedList<>(SourceManager.getSources()));
     sourcesListWidget.setY(2);
     sourcesListWidget.setHeight(sourcesListWidget.getHeight() - 1);
-    sourcesListWidget.setX(2);
-    sourcesListWidget.setWidth(sourcesListWidget.getWidth() - 1);
 
     sourcesListWidget.addKeyAction(ENTER, () -> {
       Source source = sourcesListWidget.getSelectedRow();
@@ -94,8 +92,6 @@ public class TerminalRSS {
     articlesListWidget = new ListWidget<>(Collections.emptyList());
     articlesListWidget.setY(3);
     articlesListWidget.setHeight(articlesListWidget.getHeight() - 2);
-    articlesListWidget.setX(2);
-    articlesListWidget.setWidth(articlesListWidget.getWidth() - 1);
 
     articlesListWidget.addKeyAction(ENTER, () -> {
       TerminalUI.removeWidget(articlesListWidget);

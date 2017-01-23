@@ -2,6 +2,7 @@ package com.verzano.terminalrss.content;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 
@@ -16,17 +17,24 @@ public class ContentRetriever {
       throws IOException {
     Document doc = Jsoup.connect(uri).get();
 
-    String content = "";
+    StringBuilder builder = new StringBuilder();
+    // TODO actually parse through and separate into paragraphs
     switch (contentType) {
       case CLASS_CONTENT:
         // TODO might want to grab all of these and concatenate....
-        content = doc.getElementsByClass(contentTag).get(0).text();
+        doc.getElementsByClass(contentTag).get(0).getElementsByTag("p")
+            .stream()
+            .map(Element::text)
+            .forEach(t -> builder.append(t).append("\n"));
         break;
       case ID_CONTENT:
-        content = doc.getElementById(contentTag).text();
+        doc.getElementById(contentTag).getElementsByTag("p")
+            .stream()
+            .map(Element::text)
+            .forEach(t -> builder.append(t).append("\n"));
         break;
     }
 
-    return content;
+    return builder.toString();
   }
 }
