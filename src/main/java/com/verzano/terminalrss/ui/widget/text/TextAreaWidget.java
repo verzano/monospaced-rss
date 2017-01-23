@@ -63,11 +63,11 @@ public class TextAreaWidget extends TerminalWidget {
   private void scroll(Direction direction, int distance) {
     switch (direction) {
       case UP:
-        topLine = Math.max(0, topLine - 1);
+        topLine = Math.max(0, topLine - distance);
         break;
       case DOWN:
         if (topLine + getHeight() < lines.size()) {
-          topLine++;
+          topLine = topLine + distance;
         }
         break;
     }
