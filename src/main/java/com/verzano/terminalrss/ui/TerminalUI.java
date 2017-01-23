@@ -2,6 +2,7 @@ package com.verzano.terminalrss.ui;
 
 import com.verzano.terminalrss.ui.widget.PrintTask;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
+import lombok.Getter;
 import lombok.Setter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
@@ -30,12 +31,18 @@ public class TerminalUI {
 
   private static final SortedSet<TerminalWidget> widgetStack = new ConcurrentSkipListSet<>(Z_COMPARTOR);
 
-  private static final AtomicBoolean runKeyActionThread = new AtomicBoolean(true);
+  private static final AtomicBoolean run = new AtomicBoolean(true);
+
   private static final Thread keyActionThread = new Thread(TerminalUI::keyActionLoop, "Key Action");
 
-  private static final AtomicBoolean runPrintingThread = new AtomicBoolean(true);
   private static final Thread printingThread = new Thread(TerminalUI::printingLoop, "Printing");
   private static final BlockingDeque<PrintTask> printTaskQueue = new LinkedBlockingDeque<>();
+
+  @Getter
+  private static volatile int width;
+  @Getter
+  private static volatile int height;
+  private static final Thread resizeDetectionThread = new Thread(TerminalUI::resizeDetectionLoop, "Resize Detection");
 
   private static final Terminal terminal;
   static {
@@ -44,8 +51,12 @@ public class TerminalUI {
       terminal.enterRawMode();
       terminal.echo(false);
 
+      width = terminal.getWidth();
+      height = terminal.getHeight();
+
       printingThread.start();
       keyActionThread.start();
+      resizeDetectionThread.start();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -54,7 +65,7 @@ public class TerminalUI {
   private static void printingLoop() {
     clear();
 
-    while(runPrintingThread.get()) {
+    while (run.get()) {
       try {
         printTaskQueue.take().print();
         terminal.writer().flush();
@@ -69,7 +80,7 @@ public class TerminalUI {
 
   private static void keyActionLoop() {
     try {
-      while (runKeyActionThread.get()) {
+      while (run.get()) {
         // TODO this is kind of a lame way to do this
         int key = terminal.reader().read(100);
         switch (key) {
@@ -92,15 +103,29 @@ public class TerminalUI {
     }
   }
 
+  private static void resizeDetectionLoop() {
+    while (run.get()) {
+      if (width != terminal.getWidth() || height != terminal.getHeight()) {
+        width = terminal.getWidth();
+        height = terminal.getHeight();
+        reprint();
+      }
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException ignored) {
+        // TODO probably log this...
+      }
+    }
+  }
+
   public static void shutdown() {
     new Thread(() -> {
-      printTaskQueue.addFirst(() -> runPrintingThread.set(false));
-
-      runKeyActionThread.set(false);
+      printTaskQueue.addFirst(() -> run.set(false));
 
       try {
         printingThread.join();
         keyActionThread.join();
+        resizeDetectionThread.join();
       } catch (InterruptedException ignored) {
         // TODO logging...
       }
@@ -155,7 +180,7 @@ public class TerminalUI {
     if (Thread.currentThread() != printingThread) {
       printTaskQueue.add(() -> move(x, y));
     } else {
-      printf(SET_POSITION, y, x);
+      terminal.writer().printf(SET_POSITION, y, x);
     }
   }
 
@@ -167,14 +192,6 @@ public class TerminalUI {
     }
   }
 
-  public static void printf(String s, Object... args) {
-    if (Thread.currentThread() != printingThread) {
-      printTaskQueue.add(() -> printf(s, args));
-    } else {
-      terminal.writer().printf(s, args);
-    }
-  }
-
   public static void printn(String s, int n) {
     if (Thread.currentThread() != printingThread) {
       printTaskQueue.add(() -> printn(s, n));
@@ -183,13 +200,5 @@ public class TerminalUI {
         terminal.writer().print(s);
       }
     }
-  }
-
-  public static int getWidth() {
-    return terminal.getWidth();
-  }
-
-  public static int getHeight() {
-    return terminal.getHeight();
   }
 }
