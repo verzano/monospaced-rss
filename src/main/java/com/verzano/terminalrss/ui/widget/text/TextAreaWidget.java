@@ -50,14 +50,14 @@ public class TextAreaWidget extends TerminalWidget {
     while(end < text.length()) {
       int lastSpace = text.substring(begin, end).lastIndexOf(' ') + begin + 1;
       String toPrint = text.substring(begin, lastSpace);
-      lines.add(toPrint + new String(new char[getWidth() - toPrint.length()]).replace("\0", " "));
+      lines.add(toPrint + new String(new char[getWidth() - toPrint.length()]).replace('\0', ' '));
 
       begin = lastSpace;
       end = begin + getWidth();
     }
 
     String toPrint = text.substring(begin);
-    lines.add(toPrint + new String(new char[getWidth() - toPrint.length()]).replace("\0", " "));
+    lines.add(toPrint + new String(new char[getWidth() - toPrint.length()]).replace('\0', ' '));
   }
 
   private void scroll(Direction direction, int distance) {

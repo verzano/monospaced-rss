@@ -50,7 +50,7 @@ public class ListWidget<T> extends TerminalWidget {
         if (toPrint.length() > getWidth()) {
           toPrint = toPrint.substring(0, getWidth());
         } else if(toPrint.length() < getWidth()) {
-          toPrint = toPrint + new String(new char[getWidth() - toPrint.length()]).replace("\0", " ");
+          toPrint = toPrint + new String(new char[getWidth() - toPrint.length()]).replace('\0', ' ');
         }
 
         if (row == selectedIndex) {
