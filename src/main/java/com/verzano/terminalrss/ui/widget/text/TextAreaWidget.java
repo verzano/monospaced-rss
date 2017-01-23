@@ -49,6 +49,10 @@ public class TextAreaWidget extends TerminalWidget {
     int width = getWidth() - 1;
 
     for (String chunk : text.split("\n")) {
+      if (chunk.isEmpty()) {
+        continue;
+      }
+
       int begin = 0;
       int end = width;
 
