@@ -33,19 +33,4 @@ public class Source {
   public String toString() {
     return title;
   }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    Source source = (Source) o;
-
-    return uri.equals(source.uri);
-  }
-
-  @Override
-  public int hashCode() {
-    return uri.hashCode();
-  }
 }

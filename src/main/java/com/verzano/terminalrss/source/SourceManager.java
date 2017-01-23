@@ -1,6 +1,7 @@
 package com.verzano.terminalrss.source;
 
 import com.google.gson.reflect.TypeToken;
+import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 
 import java.io.File;
@@ -8,18 +9,17 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-// TODO most likely synchronization isn't necessary, but maybe when the UI stuff is done
-// TODO if synchronization is used might want to make everything more thread safe
-// TODO don't allow duplicates of sources based on uri
 public class SourceManager {
-  private static final Map<Long, Source> SOURCES = new HashMap<>();
+  private SourceManager() {}
+
+  private static final Map<Long, Source> SOURCES = new ConcurrentHashMap<>();
   private static final AtomicLong SOURCE_ID = new AtomicLong(0);
 
   private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
@@ -39,14 +39,16 @@ public class SourceManager {
     }
   }
 
-  private SourceManager() {}
-
   public static Long createSource(
       String uri,
       String contentTag,
       Date publishedDate,
       String title)
-      throws IOException {
+      throws IOException, SourceExistsException {
+    if (SOURCES.values().stream().anyMatch(s -> s.getUri().equals(uri))) {
+      throw new SourceExistsException();
+    }
+
     Long id;
     synchronized (SOURCE_ID) {
       id = SOURCE_ID.incrementAndGet();
@@ -54,10 +56,8 @@ public class SourceManager {
     }
 
     Source source = new Source(id, uri, contentTag, publishedDate, title);
-    synchronized (SOURCES) {
-      SOURCES.put(id, source);
-      saveSources();
-    }
+    SOURCES.put(id, source);
+    saveSources();
 
     return id;
   }
@@ -65,11 +65,9 @@ public class SourceManager {
   // TODO catch this and if it fails put the Source back in
   public static boolean deleteSource(Long id) throws IOException {
     boolean removed;
-    synchronized (SOURCES) {
-      removed = SOURCES.remove(id) != null;
-      if (removed) {
-        saveSources();
-      }
+    removed = SOURCES.remove(id) != null;
+    if (removed) {
+      saveSources();
     }
 
     return removed;
@@ -83,7 +81,7 @@ public class SourceManager {
     return SOURCES.getOrDefault(id, Source.NULL_SOURCE);
   }
 
-  private static void saveSources() throws IOException {
+  private static synchronized void saveSources() throws IOException {
     Persistence.save(SOURCES.values(), SOURCES_FILE);
   }
 

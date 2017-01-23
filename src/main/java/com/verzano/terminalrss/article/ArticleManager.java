@@ -1,6 +1,7 @@
 package com.verzano.terminalrss.article;
 
 import com.google.gson.reflect.TypeToken;
+import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 
 import java.io.File;
@@ -12,13 +13,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+// TODO allow only N of the newest articles to be stored but allow N + M in memory
 public class ArticleManager {
-  // TODO articles should really be like an LRU cache so space isn't abused
-  // TODO sort these bitches as well by time
-  private static final Map<Long, Map<Long, Article>> ARTICLES = new HashMap<>();
+  private ArticleManager() { }
+
+  private static final Map<Long, Map<Long, Article>> ARTICLES = new ConcurrentHashMap<>();
   private static final AtomicLong ARTICLE_ID = new AtomicLong(0);
 
   private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
@@ -40,8 +43,6 @@ public class ArticleManager {
     }
   }
 
-  private ArticleManager() { }
-
   public static Long createArticle(
       Long sourceId,
       String uri,
@@ -49,7 +50,11 @@ public class ArticleManager {
       String title,
       String content,
       Date updatedDate)
-      throws IOException {
+      throws IOException, ArticleExistsException {
+    if (getArticles(sourceId).stream().anyMatch(a -> a.getUri().equals(uri))) {
+      throw new ArticleExistsException();
+    }
+
     Long id;
     synchronized (ARTICLE_ID) {
       id = ARTICLE_ID.incrementAndGet();

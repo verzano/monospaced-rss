@@ -40,19 +40,4 @@ public class Article {
   public String toString() {
     return title;
   }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    Article article = (Article) o;
-
-    return uri.equals(article.uri);
-  }
-
-  @Override
-  public int hashCode() {
-    return uri.hashCode();
-  }
 }

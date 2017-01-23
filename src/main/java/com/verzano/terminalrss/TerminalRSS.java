@@ -21,9 +21,7 @@ import static com.verzano.terminalrss.ui.widget.action.Key.ENTER;
 // TODO handle bad urls
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
 // TODO do infinite scrolling for sources
-// TODO add some persistence class for saving loading with json
 // TODO recover from exceptions and stuff
-// TODO make all of the printing happen on the printing thread
 public class TerminalRSS {
   private static ListWidget<Source> sourcesListWidget;
   private static ListWidget<Article> articlesListWidget;
