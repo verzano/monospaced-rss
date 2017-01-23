@@ -15,7 +15,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 
 public class ListWidget<T> extends TerminalWidget {
   // TODO thread safe?
-  @Getter @Setter
+  @Getter
   private List<T> rows;
 
   @Getter @Setter
@@ -25,7 +25,7 @@ public class ListWidget<T> extends TerminalWidget {
   private int topRow = 0;
 
   public ListWidget(List<T> rows) {
-    this.rows = rows;
+    setRows(rows);
 
     addEscapedKeyAction(UP_ARROW, () -> {
       scroll(Direction.UP, 1);
@@ -35,6 +35,30 @@ public class ListWidget<T> extends TerminalWidget {
       scroll(Direction.DOWN, 1);
       reprint();
     });
+  }
+
+  public void setRows(List<T> rows) {
+    this.rows = rows;
+    selectedIndex = 0;
+  }
+
+  public T getRow(int row) {
+    // TODO this will throw if out of bounds
+    return rows.get(row);
+  }
+
+  public T getSelectedRow() {
+    return rows.get(selectedIndex);
+  }
+
+  private void scroll(Direction dir, int distance) {
+    switch (dir) {
+      case UP:
+        setSelectedIndex(Math.max(0, selectedIndex - distance));
+        break;
+      case DOWN:
+        setSelectedIndex(Math.min(rows.size() - 1, selectedIndex + distance));
+    }
   }
 
   @Override
@@ -60,24 +84,5 @@ public class ListWidget<T> extends TerminalWidget {
         TerminalUI.print(toPrint);
       }
     }
-  }
-
-  private void scroll(Direction dir, int distance) {
-    switch (dir) {
-      case UP:
-        setSelectedIndex(Math.max(0, selectedIndex - distance));
-        break;
-      case DOWN:
-        setSelectedIndex(Math.min(rows.size() - 1, selectedIndex + distance));
-    }
-  }
-
-  public T getRow(int row) {
-    // TODO this will throw if out of bounds
-    return rows.get(row);
-  }
-
-  public T getSelectedRow() {
-    return rows.get(selectedIndex);
   }
 }

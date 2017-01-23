@@ -1,6 +1,7 @@
 package com.verzano.terminalrss.source;
 
 import com.google.gson.reflect.TypeToken;
+import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 
@@ -41,6 +42,7 @@ public class SourceManager {
 
   public static Long createSource(
       String uri,
+      ContentType contentType,
       String contentTag,
       Date publishedDate,
       String title)
@@ -55,7 +57,7 @@ public class SourceManager {
       Persistence.save(id, SOURCES_ID_FILE);
     }
 
-    Source source = new Source(id, uri, contentTag, publishedDate, title);
+    Source source = new Source(id, uri, contentType, contentTag, publishedDate, title);
     SOURCES.put(id, source);
     saveSources();
 

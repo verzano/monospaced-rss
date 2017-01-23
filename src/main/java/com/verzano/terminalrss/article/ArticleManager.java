@@ -1,6 +1,8 @@
 package com.verzano.terminalrss.article;
 
 import com.google.gson.reflect.TypeToken;
+import com.verzano.terminalrss.content.ContentRetriever;
+import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 
@@ -43,17 +45,21 @@ public class ArticleManager {
     }
   }
 
+  // TODO maybe just have this take a Source...
   public static Long createArticle(
       Long sourceId,
+      ContentType contentType,
+      String contentTag,
       String uri,
       Date publishedDate,
       String title,
-      String content,
       Date updatedDate)
       throws IOException, ArticleExistsException {
     if (getArticles(sourceId).stream().anyMatch(a -> a.getUri().equals(uri))) {
       throw new ArticleExistsException();
     }
+
+    String content = ContentRetriever.getContent(uri, contentType, contentTag);
 
     Long id;
     synchronized (ARTICLE_ID) {

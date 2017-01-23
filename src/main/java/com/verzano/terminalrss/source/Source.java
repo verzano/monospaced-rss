@@ -1,16 +1,19 @@
 package com.verzano.terminalrss.source;
 
 import com.google.gson.annotations.SerializedName;
+import com.verzano.terminalrss.content.ContentType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 
+import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
+
 @Getter
 @AllArgsConstructor
 public class Source {
-  public static final Source NULL_SOURCE = new Source(-1L, "", "", new Date(0), "");
+  public static final Source NULL_SOURCE = new Source(-1L, "", NULL_TYPE, "", new Date(0), "");
 
   @SerializedName("id")
   private final long id;
@@ -18,6 +21,10 @@ public class Source {
   @SerializedName("uri")
   private final String uri;
 
+  @SerializedName("content_type")
+  private final ContentType contentType;
+
+  @Setter
   @SerializedName("content_tag")
   private String contentTag;
 
