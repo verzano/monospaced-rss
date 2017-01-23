@@ -84,4 +84,8 @@ public abstract class TerminalWidget {
   public void setFocused() {
     TerminalUI.setFocusedWidget(this);
   }
+
+  public void reprint() {
+    TerminalUI.schedulePrintTask(this::print);
+  }
 }

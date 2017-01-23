@@ -29,11 +29,11 @@ public class ListWidget<T> extends TerminalWidget {
 
     addEscapedKeyAction(UP_ARROW, () -> {
       scroll(Direction.UP, 1);
-      TerminalUI.reprint();
+      reprint();
     });
     addEscapedKeyAction(DOWN_ARROW, () -> {
       scroll(Direction.DOWN, 1);
-      TerminalUI.reprint();
+      reprint();
     });
   }
 

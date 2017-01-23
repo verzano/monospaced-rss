@@ -201,4 +201,8 @@ public class TerminalUI {
       }
     }
   }
+
+  public static void schedulePrintTask(PrintTask printTask) {
+    printTaskQueue.add(printTask);
+  }
 }
