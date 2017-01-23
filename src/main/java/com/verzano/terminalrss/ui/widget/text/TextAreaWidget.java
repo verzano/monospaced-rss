@@ -10,6 +10,8 @@ import java.util.List;
 
 import static com.verzano.terminalrss.ui.widget.action.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.action.Key.UP_ARROW;
+import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
+import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Direction.DOWN;
 import static com.verzano.terminalrss.ui.widget.constants.Direction.UP;
 
@@ -44,20 +46,21 @@ public class TextAreaWidget extends TerminalWidget {
     lines = new LinkedList<>();
     topLine = 0;
 
+    int width = getWidth() - 1;
     int begin = 0;
-    int end = getWidth();
+    int end = width;
 
     while(end < text.length()) {
       int lastSpace = text.substring(begin, end).lastIndexOf(' ') + begin + 1;
       String toPrint = text.substring(begin, lastSpace);
-      lines.add(toPrint + new String(new char[getWidth() - toPrint.length()]).replace('\0', ' '));
+      lines.add(toPrint + new String(new char[width - toPrint.length()]).replace('\0', ' '));
 
       begin = lastSpace;
-      end = begin + getWidth();
+      end = begin + width;
     }
 
     String toPrint = text.substring(begin);
-    lines.add(toPrint + new String(new char[getWidth() - toPrint.length()]).replace('\0', ' '));
+    lines.add(toPrint + new String(new char[width - toPrint.length()]).replace('\0', ' '));
   }
 
   private void scroll(Direction direction, int distance) {
@@ -75,13 +78,22 @@ public class TextAreaWidget extends TerminalWidget {
 
   @Override
   public void print() {
+    double thumbTop = getHeight()*(double)topLine/lines.size();
+    double thumbBottom = thumbTop + getHeight()*(double)getHeight()/lines.size();
+
     for (int row = 0; row < getHeight(); row++) {
       TerminalUI.move(getX(), getY() + row);
       int selectedLine = row + topLine;
       if (selectedLine < lines.size()) {
         TerminalUI.print(lines.get(selectedLine));
       } else {
-        TerminalUI.printn(" ", getWidth());
+        TerminalUI.printn(" ", getWidth() - 1);
+      }
+
+      if (row >= thumbTop && row <= thumbBottom) {
+        TerminalUI.print(REVERSE + " " + RESET);
+      } else {
+        TerminalUI.print(" ");
       }
     }
   }
