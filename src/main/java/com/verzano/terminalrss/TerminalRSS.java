@@ -13,6 +13,7 @@ import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.source.Source;
 import com.verzano.terminalrss.source.SourceManager;
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.widget.TerminalWidget;
 import com.verzano.terminalrss.ui.widget.bar.BarWidget;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
@@ -66,9 +67,12 @@ public class TerminalRSS {
     sourceBarWidget = new BarWidget("Sources:", Direction.HORIZONTAL);
     sourceBarWidget.setY(1);
 
-    sourcesListWidget = new ListWidget<>(new LinkedList<>(SourceManager.getSources()));
-    sourcesListWidget.setY(2);
-    sourcesListWidget.setHeight(sourcesListWidget.getHeight() - 1);
+    sourcesListWidget = new ListWidget<>(
+        new LinkedList<>(SourceManager.getSources()),
+        TerminalWidget.MATCH_TERMINAL,
+        TerminalUI.getHeight() - 1,
+        1,
+        2);
 
     sourcesListWidget.addKeyAction(ENTER, () -> {
       Source source = sourcesListWidget.getSelectedRow();
@@ -89,9 +93,12 @@ public class TerminalRSS {
     articleBarWidget = new BarWidget("Articles:", Direction.HORIZONTAL);
     articleBarWidget.setY(2);
 
-    articlesListWidget = new ListWidget<>(Collections.emptyList());
-    articlesListWidget.setY(3);
-    articlesListWidget.setHeight(articlesListWidget.getHeight() - 2);
+    articlesListWidget = new ListWidget<>(
+        Collections.emptyList(),
+        TerminalWidget.MATCH_TERMINAL,
+        TerminalUI.getHeight() - 2,
+        1,
+        3);
 
     articlesListWidget.addKeyAction(ENTER, () -> {
       TerminalUI.removeWidget(articlesListWidget);
@@ -119,9 +126,12 @@ public class TerminalRSS {
   }
 
   private static void buildContentTextAreaWidget() {
-    contentTextAreaWidget = new TextAreaWidget("");
-    contentTextAreaWidget.setY(3);
-    contentTextAreaWidget.setHeight(contentTextAreaWidget.getHeight() - 3);
+    contentTextAreaWidget = new TextAreaWidget(
+        "",
+        TerminalWidget.MATCH_TERMINAL,
+        TerminalUI.getHeight() - 3,
+        1,
+        3);
 
     contentTextAreaWidget.addKeyAction(DELETE, () -> {
       TerminalUI.removeWidget(contentTextAreaWidget);

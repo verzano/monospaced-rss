@@ -21,7 +21,8 @@ public class TextAreaWidget extends ScrollableWidget {
 
   private volatile int topLine;
 
-  public TextAreaWidget(String text) {
+  public TextAreaWidget(String text, int width, int height, int x, int y) {
+    super(width, height, x, y);
     setText(text);
 
     addEscapedKeyAction(UP_ARROW, () -> {

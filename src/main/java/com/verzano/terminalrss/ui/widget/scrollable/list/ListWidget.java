@@ -12,6 +12,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 
+// TODO add a row renderer of some kind, or use the BarWidget as the rows...
 public class ListWidget<T> extends ScrollableWidget {
   @Getter
   private List<T> rows;
@@ -20,7 +21,8 @@ public class ListWidget<T> extends ScrollableWidget {
 
   private int topLine;
 
-  public ListWidget(List<T> rows) {
+  public ListWidget(List<T> rows, int width, int height, int x, int y) {
+    super(width, height, x, y);
     setRows(rows);
 
     addEscapedKeyAction(UP_ARROW, () -> {

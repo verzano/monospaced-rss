@@ -19,6 +19,10 @@ public abstract class ScrollableWidget extends TerminalWidget {
 
   public abstract void scroll(Direction direction, int distance);
 
+  public ScrollableWidget(int width, int height, int x, int y) {
+    super(width, height, x, y);
+  }
+
   public void setInternalHeight(double internalHeight) {
     this.internalHeight = internalHeight;
     barLength = (int)Math.ceil(getHeight()*(double)getHeight()/internalHeight);
