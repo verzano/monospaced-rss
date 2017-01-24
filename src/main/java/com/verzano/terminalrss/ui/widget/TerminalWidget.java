@@ -12,15 +12,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-// TODO make this nice and
 // TODO migrate to terminal-printer
 // TODO make this thread safe
 // TODO maybe preload the keyActionsMap with all of the keys? might be overkill...
 // TODO autofocus on a widget when clicked
 public abstract class TerminalWidget {
-  public static final TerminalWidget NULL_WIDGET = new TerminalWidget(0, 0, 0, 0) {
+  public static final TerminalWidget NULL_WIDGET = new TerminalWidget() {
     @Override
     public void print() { }
+
+    @Override
+    public void size() { }
   };
 
   public static final Comparator<TerminalWidget> Z_COMPARTOR = (tw1, tw2) -> {
@@ -28,15 +30,17 @@ public abstract class TerminalWidget {
     return comp == 0 ? Long.compare(tw1.hashCode(), tw2.hashCode()) : comp;
   };
 
+  // TODO migrate this to metrics.Size
+  public static final int MATCH_TERMINAL = -1;
+
   // TODO use metrics.Size from terminal-printer
-  @Getter @Setter
+  @Setter
   private int width;
-  @Getter @Setter
+  @Setter
   private int height;
 
   // TODO use metrics.Point from terminal-printer
   // TODO maybe make this a 3D point??? so z is included
-  // Position withing terminal, can be offscreen....
   @Getter @Setter
   private int x;
   @Getter @Setter
@@ -49,9 +53,10 @@ public abstract class TerminalWidget {
   private final Map<Integer, Set<KeyTask>> escapedKeyActionsMap = new HashMap<>();
 
   public abstract void print();
+  public abstract void size();
 
   public TerminalWidget() {
-    this(TerminalUI.getWidth(), TerminalUI.getHeight(), 1, 1);
+    this(-1, -1, 1, 1);
   }
 
   public TerminalWidget(int width, int height, int x, int y) {
@@ -59,6 +64,14 @@ public abstract class TerminalWidget {
     this.height = height;
     this.x = x;
     this.y = y;
+  }
+
+  public int getWidth() {
+    return width == MATCH_TERMINAL ? TerminalUI.getWidth() : width;
+  }
+
+  public int getHeight() {
+    return height == MATCH_TERMINAL ? TerminalUI.getHeight() : height;
   }
 
   public void addKeyAction(int key, KeyTask action) {
@@ -87,5 +100,9 @@ public abstract class TerminalWidget {
 
   public void reprint() {
     TerminalUI.schedulePrintTask(this::print);
+  }
+
+  public void resize() {
+    TerminalUI.schedulePrintTask(this::size);
   }
 }

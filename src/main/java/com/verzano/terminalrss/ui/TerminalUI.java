@@ -23,6 +23,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
 // TODO use a thread to check size (these should replace each other in the event queue)
 // TODO use a thread to check mouse events cursor offscreen instead of removing it?
 // TODO create a layout manager type thing for the TerminalUI
+// TODO resizing draws lots of extra shit
 public class TerminalUI {
   private TerminalUI() { }
 
@@ -38,11 +39,11 @@ public class TerminalUI {
   private static final Thread printingThread = new Thread(TerminalUI::printingLoop, "Printing");
   private static final BlockingDeque<PrintTask> printTaskQueue = new LinkedBlockingDeque<>();
 
+  private static final Thread resizingThread = new Thread(TerminalUI::resizingLoop, "Resizing");
   @Getter
   private static volatile int width;
   @Getter
   private static volatile int height;
-  private static final Thread resizeDetectionThread = new Thread(TerminalUI::resizeDetectionLoop, "Resize Detection");
 
   private static final Terminal terminal;
   static {
@@ -56,7 +57,7 @@ public class TerminalUI {
 
       printingThread.start();
       keyActionThread.start();
-      resizeDetectionThread.start();
+      resizingThread.start();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -103,7 +104,7 @@ public class TerminalUI {
     }
   }
 
-  private static void resizeDetectionLoop() {
+  private static void resizingLoop() {
     while (run.get()) {
       if (width != terminal.getWidth() || height != terminal.getHeight()) {
         width = terminal.getWidth();
@@ -126,7 +127,7 @@ public class TerminalUI {
       try {
         printingThread.join();
         keyActionThread.join();
-        resizeDetectionThread.join();
+        resizingThread.join();
       } catch (InterruptedException ignored) {
         // TODO logging...
       }
@@ -161,7 +162,7 @@ public class TerminalUI {
   private static void clear() {
     move(1, 1);
     String emptyLine = new String(new char[terminal.getWidth()]).replace("\0", " ");
-    for (int row = 0; row < terminal.getHeight(); row++) {
+    for (int row = 0; row < height; row++) {
       terminal.writer().println(emptyLine);
     }
     move(1, 1);
@@ -169,7 +170,11 @@ public class TerminalUI {
   }
 
   public static void resize() {
-    // TODO this isn't important until the layouts exist
+    if (Thread.currentThread() != printingThread) {
+      printTaskQueue.addFirst(TerminalUI::resize);
+    } else {
+      widgetStack.forEach(TerminalWidget::size);
+    }
   }
 
   public static void reprint() {

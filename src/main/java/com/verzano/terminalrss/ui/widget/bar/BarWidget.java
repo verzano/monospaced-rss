@@ -8,48 +8,45 @@ import lombok.Setter;
 
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
-import static com.verzano.terminalrss.ui.widget.constants.Direction.HORIZONTAL;
 
+// TODO allow an N wide vertical bar or M high horizontal bar
+// TODO       OR
+// TODO lock width and height based on the size of the terminal
+// TODO allow positioning of text left/right or top/bottom
 public class BarWidget extends TerminalWidget {
   @Getter @Setter
   private String label;
 
   private Direction direction;
 
-  public BarWidget(String label) {
-    this(label, HORIZONTAL);
-  }
-
   public BarWidget(String label, Direction direction) {
     this.label = label;
+    setDirection(direction);
+  }
+
+  public void setDirection(Direction direction) {
     this.direction = direction;
 
     switch (direction) {
-      case UP:
-      case DOWN:
       case VERTICAL:
-        setHeight(TerminalUI.getHeight());
+        setHeight(MATCH_TERMINAL);
         setWidth(1);
         break;
-      case LEFT:
-      case RIGHT:
       case HORIZONTAL:
         setHeight(1);
-        setWidth(TerminalUI.getWidth());
+        setWidth(MATCH_TERMINAL);
         break;
+      default:
+        throw new RuntimeException("Direction: " + direction + " not permitted for a " + BarWidget.class.getSimpleName());
     }
   }
 
-  // TODO allow a 2 thick vertical bar and stuff
   @Override
   public void print() {
-    // TODO this might be better off in the TerminalUI
     TerminalUI.move(getX(), getY());
     String toPrint = label;
 
     switch (direction) {
-      case UP:
-      case DOWN:
       case VERTICAL:
         for (int row = 0; row < getHeight(); row++) {
           TerminalUI.move(getX(), getY() + row);
@@ -60,8 +57,6 @@ public class BarWidget extends TerminalWidget {
           }
         }
         break;
-      case LEFT:
-      case RIGHT:
       case HORIZONTAL:
         if (toPrint.length() > getWidth()) {
           toPrint = toPrint.substring(0, getWidth());
@@ -71,6 +66,10 @@ public class BarWidget extends TerminalWidget {
         TerminalUI.print(REVERSE + toPrint + RESET);
         break;
     }
+  }
+
+  @Override
+  public void size() {
 
   }
 }

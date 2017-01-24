@@ -39,4 +39,9 @@ public abstract class ScrollableWidget extends TerminalWidget {
       }
     }
   }
+
+  @Override
+  public void size() {
+
+  }
 }

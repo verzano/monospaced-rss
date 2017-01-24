@@ -38,7 +38,6 @@ public class TextAreaWidget extends ScrollableWidget {
     this.text = text;
     calculateLines();
     setTopLine(0);
-    setInternalHeight(lines.size());
   }
 
   private void setTopLine(int topLine) {
@@ -72,6 +71,8 @@ public class TextAreaWidget extends ScrollableWidget {
       lines.add(line + new String(new char[width - line.length()]).replace('\0', ' '));
       lines.add(new String(new char[width]).replace('\0', ' '));
     }
+
+    setInternalHeight(lines.size());
   }
 
   @Override
@@ -103,5 +104,11 @@ public class TextAreaWidget extends ScrollableWidget {
         TerminalUI.printn(" ", width);
       }
     }
+  }
+
+  @Override
+  public void size() {
+    super.size();
+    calculateLines();
   }
 }
