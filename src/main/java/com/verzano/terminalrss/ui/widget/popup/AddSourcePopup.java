@@ -13,6 +13,7 @@ public class AddSourcePopup extends TerminalWidget {
   private String text = "";
 
   public AddSourcePopup() {
+    // TODO make these also less magical
     super(24, 5, 1, 1);
     // All printable ASCII chars
     IntStream.range(32, 127).forEach(i -> addKeyAction(i, () -> {
@@ -32,7 +33,7 @@ public class AddSourcePopup extends TerminalWidget {
 
   @Override
   public void print() {
-    // TODO improve effeciency, duh
+    // TODO improve efficiency, duh
     String emptyRow = REVERSE + new String(new char[getWidth()]).replace('\0', ' ') + RESET;
     TerminalUI.move(getX(), getY());
     TerminalUI.print(emptyRow);
