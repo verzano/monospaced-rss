@@ -16,6 +16,7 @@ import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
 import com.verzano.terminalrss.ui.widget.bar.BarWidget;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
+import com.verzano.terminalrss.ui.widget.popup.AddSourcePopup;
 import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
 import com.verzano.terminalrss.ui.widget.scrollable.text.TextAreaWidget;
 
@@ -44,7 +45,10 @@ public class TerminalRSS {
 
   private static TextAreaWidget contentTextAreaWidget;
 
+  private static AddSourcePopup addSourcePopup;
+
   private static final Source ADD_SOURCE = new Source(-1, "", NULL_TYPE, "", null, "+ Add Source");
+  // TODO maybe make this 'load newer'/'load older'
   private static final Article REFRESH_SOURCE = new Article(-1, "", -1, null, "\u21BB Refresh Source", "", null);
 
   public static void main(String[] args) throws IOException, FeedException {
@@ -78,10 +82,13 @@ public class TerminalRSS {
         2);
     sourcesListWidget.addRow(ADD_SOURCE);
 
+    addSourcePopup = new AddSourcePopup();
+
     sourcesListWidget.addKeyAction(ENTER, () -> {
       Source source = sourcesListWidget.getSelectedRow();
       if (source == ADD_SOURCE) {
-        // TODO add a dialog for adding sources
+        TerminalUI.addWidget(addSourcePopup);
+        addSourcePopup.setFocused();
       } else {
         sourceBarWidget.setLabel("Source: " + source.getTitle());
 
