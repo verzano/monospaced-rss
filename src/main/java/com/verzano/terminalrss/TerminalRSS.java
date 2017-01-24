@@ -178,7 +178,7 @@ public class TerminalRSS {
   private static void updateSource(Long sourceId) {
     Source source = SourceManager.getSource(sourceId);
     if (source == Source.NULL_SOURCE) {
-      System.err.println("No source for source_id: " + sourceId);
+      // TODO logging
     } else {
       try {
         SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(source.getUri())));
@@ -201,7 +201,7 @@ public class TerminalRSS {
           }
         });
       } catch(FeedException | IOException e){
-        System.err.println("Failed to update source");
+        // TODO logging
       }
     }
   }
