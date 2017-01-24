@@ -15,8 +15,8 @@ import com.verzano.terminalrss.source.SourceManager;
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.widget.bar.BarWidget;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
-import com.verzano.terminalrss.ui.widget.list.ListWidget;
-import com.verzano.terminalrss.ui.widget.text.TextAreaWidget;
+import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
+import com.verzano.terminalrss.ui.widget.scrollable.text.TextAreaWidget;
 
 import java.io.IOException;
 import java.net.URL;

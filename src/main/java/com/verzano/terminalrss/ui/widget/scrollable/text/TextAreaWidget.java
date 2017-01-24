@@ -1,8 +1,8 @@
-package com.verzano.terminalrss.ui.widget.text;
+package com.verzano.terminalrss.ui.widget.scrollable.text;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.widget.TerminalWidget;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
+import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
 import lombok.Getter;
 
 import java.util.LinkedList;
@@ -10,22 +10,19 @@ import java.util.List;
 
 import static com.verzano.terminalrss.ui.widget.action.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.action.Key.UP_ARROW;
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Direction.DOWN;
 import static com.verzano.terminalrss.ui.widget.constants.Direction.UP;
 
-public class TextAreaWidget extends TerminalWidget {
+public class TextAreaWidget extends ScrollableWidget {
   @Getter
   private String text;
 
   private List<String> lines;
 
-  private volatile int topLine = 0;
+  private volatile int topLine;
 
   public TextAreaWidget(String text) {
-    this.text = text;
-    calculateLines();
+    setText(text);
 
     addEscapedKeyAction(UP_ARROW, () -> {
       scroll(UP, 1);
@@ -40,11 +37,17 @@ public class TextAreaWidget extends TerminalWidget {
   public void setText(String text) {
     this.text = text;
     calculateLines();
+    setTopLine(0);
+    setInternalHeight(lines.size());
+  }
+
+  private void setTopLine(int topLine) {
+    this.topLine = topLine;
+    setViewTop(topLine);
   }
 
   private void calculateLines() {
     lines = new LinkedList<>();
-    topLine = 0;
 
     int width = getWidth() - 1;
 
@@ -71,54 +74,34 @@ public class TextAreaWidget extends TerminalWidget {
     }
   }
 
-  private void scroll(Direction direction, int distance) {
+  @Override
+  public void scroll(Direction direction, int distance) {
     switch (direction) {
       case UP:
-        topLine = Math.max(0, topLine - distance);
+        setTopLine(Math.max(0, topLine - distance));
         break;
       case DOWN:
         if (topLine + getHeight() < lines.size()) {
-          topLine = topLine + distance;
+          setTopLine(topLine + distance);
         }
         break;
     }
   }
 
-  private void printText() {
+  @Override
+  public void print() {
+    super.print();
+
     int width = getWidth() - 1;
 
     for (int row = 0; row <= getHeight(); row++) {
       TerminalUI.move(getX(), getY() + row);
-      int selectedLine = row + topLine;
-      if (selectedLine < lines.size()) {
-        TerminalUI.print(lines.get(selectedLine));
+      int line = row + topLine;
+      if (line < lines.size()) {
+        TerminalUI.print(lines.get(line));
       } else {
         TerminalUI.printn(" ", width);
       }
     }
-  }
-
-  // TODO need to do this better so that it always shows..
-  private void printScrollbar() {
-    double thumbTop = getHeight()*(double)topLine/lines.size();
-    double thumbBottom = thumbTop + getHeight()*(double)getHeight()/lines.size();
-
-    int x = getX() + getWidth();
-
-    for (int row = 0; row <= getHeight(); row++) {
-      TerminalUI.move(x, getY() + row);
-      if (row >= thumbTop && row <= thumbBottom) {
-        TerminalUI.print(REVERSE + " " + RESET);
-      } else {
-        TerminalUI.print(" ");
-      }
-    }
-  }
-
-  @Override
-  public void print() {
-    printText();
-
-    printScrollbar();
   }
 }

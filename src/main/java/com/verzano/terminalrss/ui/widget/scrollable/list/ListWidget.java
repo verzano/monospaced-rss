@@ -1,10 +1,9 @@
-package com.verzano.terminalrss.ui.widget.list;
+package com.verzano.terminalrss.ui.widget.scrollable.list;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.widget.TerminalWidget;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
+import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
@@ -13,12 +12,10 @@ import static com.verzano.terminalrss.ui.widget.action.Key.UP_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 
-public class ListWidget<T> extends TerminalWidget {
-  // TODO thread safe?
+public class ListWidget<T> extends ScrollableWidget {
   @Getter
   private List<T> rows;
 
-  @Getter @Setter
   private int selectedLine;
 
   private int topLine;
@@ -39,36 +36,41 @@ public class ListWidget<T> extends TerminalWidget {
   public void setRows(List<T> rows) {
     this.rows = rows;
     selectedLine = 0;
-    topLine = 0;
+    setTopLine(0);
+    setInternalHeight(rows.size());
   }
 
-  public T getRow(int row) {
-    // TODO this will throw if out of bounds
-    return rows.get(row);
+  private void setTopLine(int topLine) {
+    this.topLine = topLine;
+    setViewTop(topLine);
   }
 
   public T getSelectedRow() {
     return rows.get(selectedLine);
   }
 
-  private void scroll(Direction dir, int distance) {
+  @Override
+  public void scroll(Direction dir, int distance) {
     switch (dir) {
       case UP:
         if (topLine == selectedLine) {
-          topLine = Math.max(0, topLine - 1);
+          setTopLine(Math.max(0, topLine - 1));
         }
         selectedLine = Math.max(0, selectedLine - distance);
         break;
       case DOWN:
         selectedLine = Math.min(rows.size() - 1, selectedLine + distance);
         if (selectedLine == topLine + getHeight()) {
-          topLine = Math.min(topLine + 1, rows.size() - getHeight());
+          setTopLine(Math.min(topLine + 1, rows.size() - getHeight()));
         }
         break;
     }
   }
 
-  private void printRows() {
+  @Override
+  public void print() {
+    super.print();
+
     int width = getWidth() - 1;
 
     for (int row = 0; row < getHeight(); row++) {
@@ -92,27 +94,5 @@ public class ListWidget<T> extends TerminalWidget {
         TerminalUI.print(toPrint);
       }
     }
-  }
-
-  // TODO need to do this better so that it always shows..
-  private void printScrollbar() {
-    double thumbTop = getHeight()*(double)topLine/rows.size();
-    double thumbBottom = thumbTop + getHeight()*(double)getHeight()/rows.size();
-
-    int x = getX() + getWidth();
-    for (int row = 0; row <= getHeight(); row++) {
-      TerminalUI.move(x, getY() + row);
-      if (row >= thumbTop && row <= thumbBottom) {
-        TerminalUI.print(REVERSE + " " + RESET);
-      } else {
-        TerminalUI.print(" ");
-      }
-    }
-  }
-
-  @Override
-  public void print() {
-    printRows();
-    printScrollbar();
   }
 }
