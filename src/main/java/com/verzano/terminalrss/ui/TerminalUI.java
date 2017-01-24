@@ -104,6 +104,7 @@ public class TerminalUI {
     }
   }
 
+  // TODO maybe have a like a little delay so that multiple resizes can be grouped together...
   private static void resizingLoop() {
     while (run.get()) {
       if (width != terminal.getWidth() || height != terminal.getHeight()) {
@@ -160,10 +161,10 @@ public class TerminalUI {
   }
 
   private static void clear() {
-    move(1, 1);
-    String emptyLine = new String(new char[terminal.getWidth()]).replace("\0", " ");
-    for (int row = 0; row < height; row++) {
-      terminal.writer().println(emptyLine);
+    String emptyLine = new String(new char[width]).replace("\0", " ");
+    for (int row = 1; row <= height; row++) {
+      move(1, row);
+      terminal.writer().print(emptyLine);
     }
     move(1, 1);
     terminal.flush();
