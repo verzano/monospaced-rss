@@ -19,7 +19,8 @@ public class BarWidget extends TerminalWidget {
 
   private Direction direction;
 
-  public BarWidget(String label, Direction direction) {
+  public BarWidget(String label, Direction direction, int x, int y) {
+    super(MATCH_TERMINAL, MATCH_TERMINAL, x, y);
     this.label = label;
     setDirection(direction);
   }

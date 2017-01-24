@@ -35,11 +35,16 @@ public class ListWidget<T> extends ScrollableWidget {
     });
   }
 
+  public void addRow(T row) {
+    rows.add(row);
+    setInternalHeight(rows.size());
+  }
+
   public void setRows(List<T> rows) {
     this.rows = rows;
     selectedLine = 0;
     setTopLine(0);
-    setInternalHeight(rows.size());
+    setInternalHeight(this.rows.size());
   }
 
   private void setTopLine(int topLine) {
