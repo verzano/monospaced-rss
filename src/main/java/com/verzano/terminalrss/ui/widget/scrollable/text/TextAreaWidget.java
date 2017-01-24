@@ -8,10 +8,10 @@ import lombok.Getter;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.verzano.terminalrss.ui.widget.action.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.ui.widget.action.Key.UP_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Direction.DOWN;
 import static com.verzano.terminalrss.ui.widget.constants.Direction.UP;
+import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 
 public class TextAreaWidget extends ScrollableWidget {
   @Getter

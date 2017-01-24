@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.ui.widget.action;
+package com.verzano.terminalrss.ui.widget.constants;
 
 public class Key {
   private Key() { }

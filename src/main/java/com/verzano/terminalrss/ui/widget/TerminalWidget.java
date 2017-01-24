@@ -1,7 +1,7 @@
 package com.verzano.terminalrss.ui.widget;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.widget.action.KeyAction;
+import com.verzano.terminalrss.ui.task.key.KeyTask;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,8 +45,8 @@ public abstract class TerminalWidget {
   private int z;
 
   // TODO combine these somehow for simplicity's sake
-  private final Map<Integer, Set<KeyAction>> keyActionsMap = new HashMap<>();
-  private final Map<Integer, Set<KeyAction>> escapedKeyActionsMap = new HashMap<>();
+  private final Map<Integer, Set<KeyTask>> keyActionsMap = new HashMap<>();
+  private final Map<Integer, Set<KeyTask>> escapedKeyActionsMap = new HashMap<>();
 
   public abstract void print();
 
@@ -61,24 +61,24 @@ public abstract class TerminalWidget {
     this.y = y;
   }
 
-  public void addKeyAction(int key, KeyAction action) {
-    Set<KeyAction> keyActions = keyActionsMap.getOrDefault(key, new HashSet<>());
-    keyActions.add(action);
-    keyActionsMap.put(key, keyActions);
+  public void addKeyAction(int key, KeyTask action) {
+    Set<KeyTask> keyTasks = keyActionsMap.getOrDefault(key, new HashSet<>());
+    keyTasks.add(action);
+    keyActionsMap.put(key, keyTasks);
   }
 
   public void fireKeyActions(int key) {
-    keyActionsMap.getOrDefault(key, Collections.emptySet()).forEach(KeyAction::fire);
+    keyActionsMap.getOrDefault(key, Collections.emptySet()).forEach(KeyTask::fire);
   }
 
-  public void addEscapedKeyAction(int escapedKey, KeyAction action) {
-    Set<KeyAction> keyActions = escapedKeyActionsMap.getOrDefault(escapedKey, new HashSet<>());
-    keyActions.add(action);
-    escapedKeyActionsMap.put(escapedKey, keyActions);
+  public void addEscapedKeyAction(int escapedKey, KeyTask action) {
+    Set<KeyTask> keyTasks = escapedKeyActionsMap.getOrDefault(escapedKey, new HashSet<>());
+    keyTasks.add(action);
+    escapedKeyActionsMap.put(escapedKey, keyTasks);
   }
 
   public void fireEscapedKeyActions(int escapedKey) {
-    escapedKeyActionsMap.getOrDefault(escapedKey, Collections.emptySet()).forEach(KeyAction::fire);
+    escapedKeyActionsMap.getOrDefault(escapedKey, Collections.emptySet()).forEach(KeyTask::fire);
   }
 
   public void setFocused() {

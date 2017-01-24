@@ -1,6 +1,6 @@
 package com.verzano.terminalrss.ui;
 
-import com.verzano.terminalrss.ui.widget.PrintTask;
+import com.verzano.terminalrss.ui.task.print.PrintTask;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
 import lombok.Getter;
 import lombok.Setter;
@@ -108,6 +108,7 @@ public class TerminalUI {
       if (width != terminal.getWidth() || height != terminal.getHeight()) {
         width = terminal.getWidth();
         height = terminal.getHeight();
+        resize();
         reprint();
       }
       try {
@@ -165,6 +166,10 @@ public class TerminalUI {
     }
     move(1, 1);
     terminal.flush();
+  }
+
+  public static void resize() {
+    // TODO this isn't important until the layouts exist
   }
 
   public static void reprint() {

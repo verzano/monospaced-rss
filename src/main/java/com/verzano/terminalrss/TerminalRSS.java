@@ -27,8 +27,8 @@ import java.util.List;
 
 import static com.verzano.terminalrss.content.ContentType.CLASS_CONTENT;
 import static com.verzano.terminalrss.content.ContentType.ID_CONTENT;
-import static com.verzano.terminalrss.ui.widget.action.Key.DELETE;
-import static com.verzano.terminalrss.ui.widget.action.Key.ENTER;
+import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
+import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
 
 // TODO handle bad urls
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually

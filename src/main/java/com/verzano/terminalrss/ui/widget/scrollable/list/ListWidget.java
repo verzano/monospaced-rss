@@ -7,10 +7,10 @@ import lombok.Getter;
 
 import java.util.List;
 
-import static com.verzano.terminalrss.ui.widget.action.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.ui.widget.action.Key.UP_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
+import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 
 public class ListWidget<T> extends ScrollableWidget {
   @Getter
