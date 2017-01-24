@@ -19,10 +19,9 @@ public class ListWidget<T> extends TerminalWidget {
   private List<T> rows;
 
   @Getter @Setter
-  private int selectedIndex = 0;
-  // TODO update this when the cursor moves past the bottom of the screen
-  // TODO also need to update it and stuff when stuff is resized...
-  private int topRow = 0;
+  private int selectedLine;
+
+  private int topLine;
 
   public ListWidget(List<T> rows) {
     setRows(rows);
@@ -39,7 +38,8 @@ public class ListWidget<T> extends TerminalWidget {
 
   public void setRows(List<T> rows) {
     this.rows = rows;
-    selectedIndex = 0;
+    selectedLine = 0;
+    topLine = 0;
   }
 
   public T getRow(int row) {
@@ -48,41 +48,71 @@ public class ListWidget<T> extends TerminalWidget {
   }
 
   public T getSelectedRow() {
-    return rows.get(selectedIndex);
+    return rows.get(selectedLine);
   }
 
   private void scroll(Direction dir, int distance) {
     switch (dir) {
       case UP:
-        setSelectedIndex(Math.max(0, selectedIndex - distance));
+        if (topLine == selectedLine) {
+          topLine = Math.max(0, topLine - 1);
+        }
+        selectedLine = Math.max(0, selectedLine - distance);
         break;
       case DOWN:
-        setSelectedIndex(Math.min(rows.size() - 1, selectedIndex + distance));
+        selectedLine = Math.min(rows.size() - 1, selectedLine + distance);
+        if (selectedLine == topLine + getHeight()) {
+          topLine = Math.min(topLine + 1, rows.size() - getHeight());
+        }
+        break;
     }
   }
 
-  @Override
-  public void print() {
+  private void printRows() {
+    int width = getWidth() - 1;
+
     for (int row = 0; row < getHeight(); row++) {
       TerminalUI.move(getX(), getY() + row);
-      if (row + topRow >= rows.size()) {
-        // TODO cut this off it it runs off-screen should prolly be done in the TerminalUI
-        TerminalUI.printn(" ", getWidth());
+      int index = row + topLine;
+
+      if (index >= rows.size()) {
+        TerminalUI.printn(" ", width);
       } else {
-        // TODO need to pad or crop this
-        String toPrint = rows.get(row + topRow).toString();
-        if (toPrint.length() > getWidth()) {
-          toPrint = toPrint.substring(0, getWidth());
-        } else if(toPrint.length() < getWidth()) {
-          toPrint = toPrint + new String(new char[getWidth() - toPrint.length()]).replace('\0', ' ');
+        String toPrint = rows.get(index).toString();
+        if (toPrint.length() > width) {
+          toPrint = toPrint.substring(0, width);
+        } else if(toPrint.length() < width) {
+          toPrint = toPrint + new String(new char[width - toPrint.length()]).replace('\0', ' ');
         }
 
-        if (row == selectedIndex) {
+        if (index == selectedLine) {
           toPrint = REVERSE + toPrint + RESET;
         }
 
         TerminalUI.print(toPrint);
       }
     }
+  }
+
+  // TODO need to do this better so that it always shows..
+  private void printScrollbar() {
+    double thumbTop = getHeight()*(double)topLine/rows.size();
+    double thumbBottom = thumbTop + getHeight()*(double)getHeight()/rows.size();
+
+    int x = getX() + getWidth();
+    for (int row = 0; row <= getHeight(); row++) {
+      TerminalUI.move(x, getY() + row);
+      if (row >= thumbTop && row <= thumbBottom) {
+        TerminalUI.print(REVERSE + " " + RESET);
+      } else {
+        TerminalUI.print(" ");
+      }
+    }
+  }
+
+  @Override
+  public void print() {
+    printRows();
+    printScrollbar();
   }
 }

@@ -84,25 +84,41 @@ public class TextAreaWidget extends TerminalWidget {
     }
   }
 
-  @Override
-  public void print() {
-    double thumbTop = getHeight()*(double)topLine/lines.size();
-    double thumbBottom = thumbTop + getHeight()*(double)getHeight()/lines.size();
+  private void printText() {
+    int width = getWidth() - 1;
 
-    for (int row = 0; row < getHeight(); row++) {
+    for (int row = 0; row <= getHeight(); row++) {
       TerminalUI.move(getX(), getY() + row);
       int selectedLine = row + topLine;
       if (selectedLine < lines.size()) {
         TerminalUI.print(lines.get(selectedLine));
       } else {
-        TerminalUI.printn(" ", getWidth() - 1);
+        TerminalUI.printn(" ", width);
       }
+    }
+  }
 
+  // TODO need to do this better so that it always shows..
+  private void printScrollbar() {
+    double thumbTop = getHeight()*(double)topLine/lines.size();
+    double thumbBottom = thumbTop + getHeight()*(double)getHeight()/lines.size();
+
+    int x = getX() + getWidth();
+
+    for (int row = 0; row <= getHeight(); row++) {
+      TerminalUI.move(x, getY() + row);
       if (row >= thumbTop && row <= thumbBottom) {
         TerminalUI.print(REVERSE + " " + RESET);
       } else {
         TerminalUI.print(" ");
       }
     }
+  }
+
+  @Override
+  public void print() {
+    printText();
+
+    printScrollbar();
   }
 }
