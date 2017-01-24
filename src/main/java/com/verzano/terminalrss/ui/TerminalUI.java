@@ -114,7 +114,7 @@ public class TerminalUI {
         reprint();
       }
       try {
-        Thread.sleep(100);
+        Thread.sleep(200);
       } catch (InterruptedException ignored) {
         // TODO probably log this...
       }
