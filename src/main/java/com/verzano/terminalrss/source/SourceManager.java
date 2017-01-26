@@ -48,7 +48,7 @@ public class SourceManager {
       String title)
       throws IOException, SourceExistsException {
     if (SOURCES.values().stream().anyMatch(s -> s.getUri().equals(uri))) {
-      throw new SourceExistsException();
+      throw new SourceExistsException("Source already exists for uri: " + uri);
     }
 
     Long id;

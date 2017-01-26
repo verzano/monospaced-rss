@@ -21,7 +21,6 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
 
 // TODO use an executor to schedule events
 // TODO use a thread to check size (these should replace each other in the event queue)
-// TODO use a thread to check mouse events cursor offscreen instead of removing it?
 // TODO create a layout manager type thing for the TerminalUI
 // TODO resizing draws lots of extra shit
 public class TerminalUI {
