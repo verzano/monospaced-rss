@@ -26,7 +26,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
 public class TerminalUI {
   private TerminalUI() { }
 
-  @Setter
+  @Getter @Setter
   private static TerminalWidget focusedWidget = NULL_WIDGET;
 
   private static final SortedSet<TerminalWidget> widgetStack = new ConcurrentSkipListSet<>(Z_COMPARTOR);
@@ -200,6 +200,10 @@ public class TerminalUI {
     } else {
       terminal.writer().print(s);
     }
+  }
+
+  public static void print(Object o) {
+    print(o.toString());
   }
 
   public static void printn(String s, int n) {

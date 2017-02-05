@@ -1,6 +1,8 @@
 package com.verzano.terminalrss.ui.widget.scrollable.text;
 
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.metrics.Location;
+import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
 import lombok.Getter;
@@ -21,8 +23,12 @@ public class TextAreaWidget extends ScrollableWidget {
 
   private volatile int topLine;
 
-  public TextAreaWidget(String text, int width, int height, int x, int y) {
-    super(width, height, x, y);
+  public TextAreaWidget(Size size, Location location) {
+    this("", size, location);
+  }
+
+  public TextAreaWidget(String text, Size size, Location location) {
+    super(size, location);
     setText(text);
 
     addEscapedKeyAction(UP_ARROW, () -> {

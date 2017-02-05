@@ -1,11 +1,14 @@
 package com.verzano.terminalrss.ui.widget.bar;
 
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.metrics.Location;
+import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import lombok.Getter;
 import lombok.Setter;
 
+import static com.verzano.terminalrss.ui.metrics.Size.MATCH_TERMINAL;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 
@@ -19,8 +22,12 @@ public class BarWidget extends TerminalWidget {
 
   private Direction direction;
 
-  public BarWidget(String label, Direction direction, int x, int y) {
-    super(MATCH_TERMINAL, MATCH_TERMINAL, x, y);
+  public BarWidget(Direction direction, Location location) {
+    this("", direction, location);
+  }
+
+  public BarWidget(String label, Direction direction, Location location) {
+    super(new Size(MATCH_TERMINAL, MATCH_TERMINAL), location);
     this.label = label;
     setDirection(direction);
   }

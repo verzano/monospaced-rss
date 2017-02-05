@@ -1,6 +1,8 @@
 package com.verzano.terminalrss.ui.widget;
 
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.metrics.Location;
+import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,10 +14,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-// TODO migrate to terminal-printer
+import static com.verzano.terminalrss.ui.metrics.Size.MATCH_TERMINAL;
+
 // TODO make this thread safe
-// TODO maybe preload the keyActionsMap with all of the keys? might be overkill...
-// TODO autofocus on a widget when clicked
 public abstract class TerminalWidget {
   public static final TerminalWidget NULL_WIDGET = new TerminalWidget() {
     @Override
@@ -26,27 +27,15 @@ public abstract class TerminalWidget {
   };
 
   public static final Comparator<TerminalWidget> Z_COMPARTOR = (tw1, tw2) -> {
-    int comp = Integer.compare(tw1.z, tw2.z);
+    int comp = Integer.compare(tw1.location.getZ(), tw2.location.getZ());
     return comp == 0 ? Long.compare(tw1.hashCode(), tw2.hashCode()) : comp;
   };
 
-  // TODO migrate this to metrics.Size
-  public static final int MATCH_TERMINAL = -1;
+  @Getter @Setter
+  private Size size;
 
-  // TODO use metrics.Size from terminal-printer
-  @Setter
-  private int width;
-  @Setter
-  private int height;
-
-  // TODO use metrics.Point from terminal-printer
-  // TODO maybe make this a 3D point??? so z is included
   @Getter @Setter
-  private int x;
-  @Getter @Setter
-  private int y;
-  @Getter @Setter
-  private int z;
+  private Location location;
 
   // TODO combine these somehow for simplicity's sake
   private final Map<Integer, Set<KeyTask>> keyActionsMap = new HashMap<>();
@@ -56,22 +45,52 @@ public abstract class TerminalWidget {
   public abstract void size();
 
   public TerminalWidget() {
-    this(-1, -1, 1, 1);
+    this(new Size(MATCH_TERMINAL, MATCH_TERMINAL), new Location(1, 1, 1));
   }
 
-  public TerminalWidget(int width, int height, int x, int y) {
-    this.width = width;
-    this.height = height;
-    this.x = x;
-    this.y = y;
+  public TerminalWidget(Size size, Location location) {
+    this.size = size;
+    this.location = location;
   }
 
   public int getWidth() {
-    return width == MATCH_TERMINAL ? TerminalUI.getWidth() : width;
+    return size.getWidth() == MATCH_TERMINAL ? TerminalUI.getWidth() : size.getWidth();
+  }
+
+  public void setWidth(int width) {
+    size.setWidth(width);
   }
 
   public int getHeight() {
-    return height == MATCH_TERMINAL ? TerminalUI.getHeight() : height;
+    return size.getHeight() == MATCH_TERMINAL ? TerminalUI.getHeight() : size.getHeight();
+  }
+
+  public void setHeight(int height) {
+    size.setHeight(height);
+  }
+
+  public int getX() {
+    return location.getX();
+  }
+
+  public void setX(int x) {
+    location.setX(x);
+  }
+
+  public int getY() {
+    return location.getY();
+  }
+
+  public void setY(int y) {
+    location.setY(y);
+  }
+
+  public int getZ() {
+    return location.getZ();
+  }
+
+  public void setZ(int z) {
+    location.setZ(z);
   }
 
   public void addKeyAction(int key, KeyTask action) {
@@ -92,6 +111,10 @@ public abstract class TerminalWidget {
 
   public void fireEscapedKeyActions(int escapedKey) {
     escapedKeyActionsMap.getOrDefault(escapedKey, Collections.emptySet()).forEach(KeyTask::fire);
+  }
+
+  public boolean isFocused() {
+    return TerminalUI.getFocusedWidget() == this;
   }
 
   public void setFocused() {

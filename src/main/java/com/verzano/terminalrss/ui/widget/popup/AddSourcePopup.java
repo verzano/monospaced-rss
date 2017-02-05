@@ -1,67 +1,107 @@
 package com.verzano.terminalrss.ui.widget.popup;
 
+import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.metrics.Location;
+import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
 
-import java.util.stream.IntStream;
+import java.util.Arrays;
 
+import static com.verzano.terminalrss.ui.metrics.Size.MATCH_TERMINAL;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
-import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
 
+// TODO make it either not resizable or that the get size is calculated...
 public class AddSourcePopup extends TerminalWidget {
-  private String text = "";
+  private TextEntryWidget uriTextEntry;
+  private RolodexWidget<ContentType> contentTypeRolodex;
+  private TextEntryWidget contentTagEntry;
+
+  private String emptyBar;
 
   public AddSourcePopup() {
-    // TODO make these also less magical
-    super(24, 5, 1, 1);
-    // All printable ASCII chars
-    IntStream.range(32, 127).forEach(i -> addKeyAction(i, () -> {
-      text += (char)i;
-      reprint();
-    }));
-    addKeyAction(DELETE, () -> {
-      text = text.substring(0, Math.max(0, text.length() - 1));
-      reprint();
-    });
-    // TODO add a way of quitting
+    super(new Size(MATCH_TERMINAL, MATCH_TERMINAL), new Location(0, 0, 1000));
+    uriTextEntry = new TextEntryWidget(new Size(20, 3), new Location(1, 1, 1001));
+//    uriTextEntry.addKeyAction(???, () -> {
+//      contentTypeRolodex.setFocused();
+//      reprint();
+//    });
 
-    // TODO make this less magical
-    setZ(1000);
+    contentTypeRolodex = new RolodexWidget<>(
+        Arrays.asList(ContentType.values()),
+        new Size(14, 3),
+        new Location(uriTextEntry.getWidth() + uriTextEntry.getX() + 1, 1, 1001));
+//    contentTypeRolodex.addKeyAction(???, () -> {
+//      contentTagEntry.setFocused();
+//      reprint();
+//    });
+
+    contentTagEntry = new TextEntryWidget(
+        new Size(14, 3),
+        new Location(contentTypeRolodex.getWidth() + contentTypeRolodex.getX() + 1, 1, 1001));
+//    contentTagEntry.addKeyAction(???, () -> {
+//      uriTextEntry.setFocused();
+//      reprint();
+//    });
+
+    setWidth(uriTextEntry.getWidth() + contentTypeRolodex.getWidth() + contentTagEntry.getWidth() + 4);
+    setHeight(Math.max(uriTextEntry.getHeight(), Math.max(contentTypeRolodex.getHeight(), contentTagEntry.getHeight())) + 2);
     size();
+  }
+
+  private void centerOnScreen() {
+    setX(TerminalUI.getWidth()/2 - getWidth()/2);
+    setY(TerminalUI.getHeight()/2 - getHeight()/2);
+  }
+
+  @Override
+  public void setX(int x) {
+    int delta = x - getX();
+    uriTextEntry.setX(uriTextEntry.getX() + delta);
+    contentTypeRolodex.setX(contentTypeRolodex.getX() + delta);
+    contentTagEntry.setX(contentTagEntry.getX() + delta);
+    super.setX(x);
+  }
+
+  @Override
+  public void setY(int y) {
+    int delta = y - getY();
+    uriTextEntry.setY(uriTextEntry.getY() + delta);
+    contentTypeRolodex.setY(contentTypeRolodex.getY() + delta);
+    contentTagEntry.setY(contentTagEntry.getY() + delta);
+    super.setY(y);
+  }
+
+  @Override
+  public void setZ(int z) {
+    int delta = z - getZ();
+    uriTextEntry.setZ(uriTextEntry.getZ() + delta);
+    contentTypeRolodex.setZ(contentTypeRolodex.getZ() + delta);
+    contentTagEntry.setZ(contentTagEntry.getZ() + delta);
+    super.setZ(z);
   }
 
   @Override
   public void print() {
-    // TODO improve efficiency, duh
-    String emptyRow = REVERSE + new String(new char[getWidth()]).replace('\0', ' ') + RESET;
-    TerminalUI.move(getX(), getY());
-    TerminalUI.print(emptyRow);
-
-    TerminalUI.move(getX(), getY() + 1);
-    TerminalUI.print(REVERSE + "    " + RESET);
-
-    String toPrint = text;
-    int textWidth = getWidth() - 8;
-
-    if (toPrint.length() < textWidth) {
-      toPrint = toPrint + new String(new char[textWidth - toPrint.length()]).replace('\0', ' ');
-    } else if (toPrint.length() == textWidth) {
-      toPrint = toPrint.substring(0, textWidth);
-    } else {
-      toPrint = toPrint.substring(toPrint.length() - textWidth + 1) + ' ';
+    for (int row = 0; row < getHeight(); row++) {
+      TerminalUI.move(getX(), getY() + row);
+      TerminalUI.print(emptyBar);
     }
 
-    TerminalUI.print(toPrint);
-    TerminalUI.print(REVERSE + "    " + RESET);
-
-    TerminalUI.move(getX(), getY() + 2);
-    TerminalUI.print(emptyRow);
+    uriTextEntry.print();
+    contentTypeRolodex.print();
+    contentTagEntry.print();
   }
 
   @Override
   public void size() {
-    setX((TerminalUI.getWidth() - getWidth())/2 + 1);
-    setY((TerminalUI.getHeight() - getHeight())/2 + 1);
+    emptyBar = REVERSE + new String(new char[getWidth()]).replace('\0', ' ') + RESET;
+    centerOnScreen();
+  }
+
+  @Override
+  public void setFocused() {
+    TerminalUI.setFocusedWidget(uriTextEntry);
   }
 }

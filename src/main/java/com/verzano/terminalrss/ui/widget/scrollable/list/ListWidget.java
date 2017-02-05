@@ -1,10 +1,13 @@
 package com.verzano.terminalrss.ui.widget.scrollable.list;
 
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.metrics.Location;
+import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
 import lombok.Getter;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
@@ -21,8 +24,12 @@ public class ListWidget<T> extends ScrollableWidget {
 
   private int topLine;
 
-  public ListWidget(List<T> rows, int width, int height, int x, int y) {
-    super(width, height, x, y);
+  public ListWidget(Size size, Location location) {
+    this(new LinkedList<>(), size, location);
+  }
+
+  public ListWidget(List<T> rows, Size size, Location location) {
+    super(size, location);
     setRows(rows);
 
     addEscapedKeyAction(UP_ARROW, () -> {

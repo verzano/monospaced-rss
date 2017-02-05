@@ -1,6 +1,8 @@
 package com.verzano.terminalrss.ui.widget.scrollable;
 
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.metrics.Location;
+import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import lombok.Setter;
@@ -19,8 +21,8 @@ public abstract class ScrollableWidget extends TerminalWidget {
 
   public abstract void scroll(Direction direction, int distance);
 
-  public ScrollableWidget(int width, int height, int x, int y) {
-    super(width, height, x, y);
+  public ScrollableWidget(Size size, Location location) {
+    super(size, location);
   }
 
   public void setInternalHeight(double internalHeight) {
