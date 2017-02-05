@@ -35,7 +35,6 @@ import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
 
 // TODO handle bad urls
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
-// TODO do infinite scrolling for sources
 /*
     addSource("https://techcrunch.com/feed/", CLASS_CONTENT, "article-entry");
     addSource("https://news.vice.com/feed", CLASS_CONTENT, "content");
@@ -44,6 +43,8 @@ import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
     addSource("http://motherboard.vice.com/rss", CLASS_CONTENT, "article-content");
     addSource("http://feeds.gawker.com/kotaku/full", CLASS_CONTENT, "entry-content");
  */
+// TODO sort Sources by name
+// TODO sort Articles by date
 public class TerminalRSS {
   private static ListWidget<Source> sourcesListWidget;
   private static ListWidget<Article> articlesListWidget;
@@ -61,7 +62,6 @@ public class TerminalRSS {
   private static final ExecutorService articleExecutor = Executors.newFixedThreadPool(6);
 
   private static Source selectedSource = Source.NULL_SOURCE;
-  private static Article selectedArticle = Article.NULL_ARTICLE;
 
   private static final Source ADD_SOURCE = new Source(-1, "", NULL_TYPE, "", null, "+ Add Source");
   // TODO maybe make this 'load newer'/'load older'
@@ -138,8 +138,6 @@ public class TerminalRSS {
       if (article == REFRESH_SOURCE) {
         updateSource(selectedSource.getId());
       } else {
-        selectedArticle = article;
-
         TerminalUI.removeWidget(articlesListWidget);
 
         articleBarWidget.setText("Article: " + article.getTitle());
@@ -172,8 +170,6 @@ public class TerminalRSS {
         new Location(1, 3, 1));
 
     contentTextAreaWidget.addKeyAction(DELETE, () -> {
-      selectedArticle = Article.NULL_ARTICLE;
-
       TerminalUI.removeWidget(contentTextAreaWidget);
 
       articleBarWidget.setText("Articles:");
