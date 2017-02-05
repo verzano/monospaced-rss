@@ -18,7 +18,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 // TODO allow positioning of text left/right or top/bottom
 public class BarWidget extends TerminalWidget {
   @Getter @Setter
-  private String label;
+  private String text;
 
   private Direction direction;
 
@@ -26,9 +26,9 @@ public class BarWidget extends TerminalWidget {
     this("", direction, location);
   }
 
-  public BarWidget(String label, Direction direction, Location location) {
+  public BarWidget(String text, Direction direction, Location location) {
     super(new Size(MATCH_TERMINAL, MATCH_TERMINAL), location);
-    this.label = label;
+    this.text = text;
     setDirection(direction);
   }
 
@@ -52,7 +52,7 @@ public class BarWidget extends TerminalWidget {
   @Override
   public void print() {
     TerminalUI.move(getX(), getY());
-    String toPrint = label;
+    String toPrint = text;
 
     switch (direction) {
       case VERTICAL:

@@ -98,7 +98,7 @@ public class TerminalRSS {
       } else {
         selectedSource = source;
 
-        sourceBarWidget.setLabel("Source: " + source.getTitle());
+        sourceBarWidget.setText("Source: " + source.getTitle());
 
         TerminalUI.removeWidget(sourcesListWidget);
         TerminalUI.addWidget(articleBarWidget);
@@ -142,7 +142,7 @@ public class TerminalRSS {
 
         TerminalUI.removeWidget(articlesListWidget);
 
-        articleBarWidget.setLabel("Article: " + article.getTitle());
+        articleBarWidget.setText("Article: " + article.getTitle());
         TerminalUI.addWidget(articleBarWidget);
 
         contentTextAreaWidget.setText(article.getContent());
@@ -158,7 +158,7 @@ public class TerminalRSS {
       TerminalUI.removeWidget(articlesListWidget);
 
       TerminalUI.removeWidget(articleBarWidget);
-      sourceBarWidget.setLabel("Sources:");
+      sourceBarWidget.setText("Sources:");
 
       TerminalUI.addWidget(sourcesListWidget);
       sourcesListWidget.setFocused();
@@ -176,7 +176,7 @@ public class TerminalRSS {
 
       TerminalUI.removeWidget(contentTextAreaWidget);
 
-      articleBarWidget.setLabel("Articles:");
+      articleBarWidget.setText("Articles:");
 
       TerminalUI.addWidget(articlesListWidget);
       articlesListWidget.setFocused();
@@ -203,7 +203,7 @@ public class TerminalRSS {
         sourcesListWidget.reprint();
       } catch (SourceExistsException | FeedException | IOException e) {
         // TODO logging
-        notificationBarWidget.setLabel(e.getMessage());
+        notificationBarWidget.setText(e.getMessage());
         notificationBarWidget.reprint();
       }
 
@@ -214,7 +214,7 @@ public class TerminalRSS {
   private static void updateSource(Long sourceId) {
     Source source = SourceManager.getSource(sourceId);
     if (source == Source.NULL_SOURCE) {
-      notificationBarWidget.setLabel("No source for sourceId: " + sourceId);
+      notificationBarWidget.setText("No source for sourceId: " + sourceId);
       notificationBarWidget.reprint();
     } else {
       sourceExecutor.execute(() -> {
@@ -237,13 +237,13 @@ public class TerminalRSS {
               articlesListWidget.reprint();
             } catch (IOException | ArticleExistsException e) {
               // TODO logging
-              notificationBarWidget.setLabel(e.getMessage());
+              notificationBarWidget.setText(e.getMessage());
               notificationBarWidget.reprint();
             }
           }));
         } catch(FeedException | IOException e) {
           // TODO logging
-          notificationBarWidget.setLabel(e.getMessage());
+          notificationBarWidget.setText(e.getMessage());
           notificationBarWidget.reprint();
         }
       });

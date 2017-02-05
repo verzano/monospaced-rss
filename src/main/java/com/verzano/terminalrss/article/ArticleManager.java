@@ -54,7 +54,7 @@ public class ArticleManager {
       Date updatedDate)
       throws IOException, ArticleExistsException {
     if (getArticles(sourceId).stream().anyMatch(a -> a.getUri().equals(uri))) {
-      throw new ArticleExistsException();
+      throw new ArticleExistsException("Article already exists for uri: " + uri);
     }
 
     String content = ContentRetriever.getContent(uri, contentType, contentTag);
