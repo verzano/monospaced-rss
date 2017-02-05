@@ -19,6 +19,7 @@ import static com.verzano.terminalrss.ui.widget.TerminalWidget.NULL_WIDGET;
 import static com.verzano.terminalrss.ui.widget.TerminalWidget.Z_COMPARTOR;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.ESC;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
+import static com.verzano.terminalrss.ui.widget.constants.Key.ESCAPED_PREFIX;
 
 // TODO use an executor to schedule events
 // TODO create a layout manager type thing for the TerminalUI
@@ -92,7 +93,7 @@ public class TerminalUI {
           case ESC:
             switch (terminal.reader().read()) {
               case '[':
-                focusedWidget.fireKeyActions((char)key + "[" + (char)terminal.reader().read());
+                focusedWidget.fireKeyActions(ESCAPED_PREFIX + (char)terminal.reader().read());
                 break;
             }
           case -2:
