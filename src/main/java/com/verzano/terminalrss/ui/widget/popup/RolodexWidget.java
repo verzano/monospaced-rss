@@ -12,9 +12,10 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 
+// TODO both this and the list widget should be backed by some kind of list model
 public class RolodexWidget<T> extends TerminalWidget {
   private List<T> items;
-  private int selectedItem = 0;
+  private volatile int selectedItem = 0;
 
   private String emptyBar = REVERSE + new String(new char[getWidth()]).replace('\0', ' ') + RESET;
 
@@ -36,11 +37,11 @@ public class RolodexWidget<T> extends TerminalWidget {
   }
 
   private int getPreviousIndex() {
-    return selectedItem == 0 ? items.size() : selectedItem--;
+    return selectedItem == 0 ? items.size() - 1 : selectedItem - 1;
   }
 
   private int getNextIndex() {
-    return selectedItem == items.size() - 1 ? 0 : selectedItem++;
+    return selectedItem == items.size() - 1 ? 0 : selectedItem + 1;
   }
 
   private String cropOrPad(String s) {
@@ -59,13 +60,13 @@ public class RolodexWidget<T> extends TerminalWidget {
   public void print() {
     if (isFocused()) {
       TerminalUI.move(getX(), getY());
-      TerminalUI.print(cropOrPad(items.get(getPreviousIndex()).toString()));
+      TerminalUI.print(' ' + cropOrPad(items.get(getPreviousIndex()).toString()) + ' ');
 
       TerminalUI.move(getX(), getY() + 1);
       TerminalUI.print(EMPTY_COL + REVERSE + cropOrPad(items.get(selectedItem).toString()) + RESET + EMPTY_COL);
 
       TerminalUI.move(getX(), getY() + 2);
-      TerminalUI.print(cropOrPad(items.get(getNextIndex()).toString()));
+      TerminalUI.print(' ' + cropOrPad(items.get(getNextIndex()).toString()) + ' ');
     } else {
       TerminalUI.move(getX(), getY());
       TerminalUI.print(emptyBar);

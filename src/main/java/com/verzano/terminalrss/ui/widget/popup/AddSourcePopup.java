@@ -7,10 +7,13 @@ import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.verzano.terminalrss.ui.metrics.Size.MATCH_TERMINAL;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
+import static com.verzano.terminalrss.ui.widget.constants.Key.TAB;
 
 // TODO make it either not resizable or that the get size is calculated...
 public class AddSourcePopup extends TerminalWidget {
@@ -22,28 +25,31 @@ public class AddSourcePopup extends TerminalWidget {
 
   public AddSourcePopup() {
     super(new Size(MATCH_TERMINAL, MATCH_TERMINAL), new Location(0, 0, 1000));
-    uriTextEntry = new TextEntryWidget(new Size(20, 3), new Location(1, 1, 1001));
-//    uriTextEntry.addKeyAction(???, () -> {
-//      contentTypeRolodex.setFocused();
-//      reprint();
-//    });
+    uriTextEntry = new TextEntryWidget(new Size(30, 3), new Location(1, 1, 1001));
+    uriTextEntry.addKeyAction(TAB, () -> {
+      contentTypeRolodex.setFocused();
+      reprint();
+    });
 
+    List<ContentType> types = Arrays.stream(ContentType.values())
+        .filter(ct -> ct != ContentType.NULL_TYPE)
+        .collect(Collectors.toList());
     contentTypeRolodex = new RolodexWidget<>(
-        Arrays.asList(ContentType.values()),
-        new Size(14, 3),
+        types,
+        new Size(20, 3),
         new Location(uriTextEntry.getWidth() + uriTextEntry.getX() + 1, 1, 1001));
-//    contentTypeRolodex.addKeyAction(???, () -> {
-//      contentTagEntry.setFocused();
-//      reprint();
-//    });
+    contentTypeRolodex.addKeyAction(TAB, () -> {
+      contentTagEntry.setFocused();
+      reprint();
+    });
 
     contentTagEntry = new TextEntryWidget(
-        new Size(14, 3),
+        new Size(20, 3),
         new Location(contentTypeRolodex.getWidth() + contentTypeRolodex.getX() + 1, 1, 1001));
-//    contentTagEntry.addKeyAction(???, () -> {
-//      uriTextEntry.setFocused();
-//      reprint();
-//    });
+    contentTagEntry.addKeyAction(TAB, () -> {
+      uriTextEntry.setFocused();
+      reprint();
+    });
 
     setWidth(uriTextEntry.getWidth() + contentTypeRolodex.getWidth() + contentTagEntry.getWidth() + 4);
     setHeight(Math.max(uriTextEntry.getHeight(), Math.max(contentTypeRolodex.getHeight(), contentTagEntry.getHeight())) + 2);

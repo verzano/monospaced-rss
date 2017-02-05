@@ -10,6 +10,7 @@ public class Key {
   public static final int LEFT_ARROW = 'D';
 
   public static final int BACKSPACE = 8;
+  public static final int TAB = 9;
   public static final int ENTER = 13;
   public static final int DELETE = 127;
 }
