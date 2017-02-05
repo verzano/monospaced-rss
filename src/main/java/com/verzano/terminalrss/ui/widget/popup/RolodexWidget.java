@@ -29,12 +29,12 @@ public class RolodexWidget<T> extends TerminalWidget {
     super(size, location);
     this.items = items;
 
-    addEscapedKeyAction(UP_ARROW, () -> {
+    addKeyAction(UP_ARROW, () -> {
       selectedIndex = getPreviousIndex();
       reprint();
     });
 
-    addEscapedKeyAction(DOWN_ARROW, () -> {
+    addKeyAction(DOWN_ARROW, () -> {
       selectedIndex = getNextIndex();
       reprint();
     });

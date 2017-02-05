@@ -32,11 +32,11 @@ public class ListWidget<T> extends ScrollableWidget {
     super(size, location);
     setRows(rows);
 
-    addEscapedKeyAction(UP_ARROW, () -> {
+    addKeyAction(UP_ARROW, () -> {
       scroll(Direction.UP, 1);
       reprint();
     });
-    addEscapedKeyAction(DOWN_ARROW, () -> {
+    addKeyAction(DOWN_ARROW, () -> {
       scroll(Direction.DOWN, 1);
       reprint();
     });

@@ -31,11 +31,11 @@ public class TextAreaWidget extends ScrollableWidget {
     super(size, location);
     setText(text);
 
-    addEscapedKeyAction(UP_ARROW, () -> {
+    addKeyAction(UP_ARROW, () -> {
       scroll(UP, 1);
       reprint();
     });
-    addEscapedKeyAction(DOWN_ARROW, () -> {
+    addKeyAction(DOWN_ARROW, () -> {
       scroll(DOWN, 1);
       reprint();
     });

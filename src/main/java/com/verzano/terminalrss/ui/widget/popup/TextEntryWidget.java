@@ -25,7 +25,7 @@ public class TextEntryWidget extends TerminalWidget {
     super(size, location);
 
     // All printable ASCII chars
-    IntStream.range(32, 127).forEach(i -> addKeyAction(i, () -> {
+    IntStream.range(32, 127).forEach(i -> addKeyAction((char)i + "", () -> {
       text += (char)i;
       reprint();
     }));

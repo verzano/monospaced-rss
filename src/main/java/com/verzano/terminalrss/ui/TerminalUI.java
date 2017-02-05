@@ -92,13 +92,13 @@ public class TerminalUI {
           case ESC:
             switch (terminal.reader().read()) {
               case '[':
-                focusedWidget.fireEscapedKeyActions(terminal.reader().read());
+                focusedWidget.fireKeyActions((char)key + "[" + (char)terminal.reader().read());
                 break;
             }
           case -2:
             break;
           default:
-            focusedWidget.fireKeyActions(key);
+            focusedWidget.fireKeyActions((char)key + "");
             break;
         }
       }

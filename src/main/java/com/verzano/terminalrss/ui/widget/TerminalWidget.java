@@ -38,8 +38,7 @@ public abstract class TerminalWidget {
   private Location location;
 
   // TODO combine these somehow for simplicity's sake
-  private final Map<Integer, Set<KeyTask>> keyActionsMap = new HashMap<>();
-  private final Map<Integer, Set<KeyTask>> escapedKeyActionsMap = new HashMap<>();
+  private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
 
   public abstract void print();
   public abstract void size();
@@ -93,24 +92,14 @@ public abstract class TerminalWidget {
     location.setZ(z);
   }
 
-  public void addKeyAction(int key, KeyTask action) {
+  public void addKeyAction(String key, KeyTask action) {
     Set<KeyTask> keyTasks = keyActionsMap.getOrDefault(key, new HashSet<>());
     keyTasks.add(action);
     keyActionsMap.put(key, keyTasks);
   }
 
-  public void fireKeyActions(int key) {
+  public void fireKeyActions(String key) {
     keyActionsMap.getOrDefault(key, Collections.emptySet()).forEach(KeyTask::fire);
-  }
-
-  public void addEscapedKeyAction(int escapedKey, KeyTask action) {
-    Set<KeyTask> keyTasks = escapedKeyActionsMap.getOrDefault(escapedKey, new HashSet<>());
-    keyTasks.add(action);
-    escapedKeyActionsMap.put(escapedKey, keyTasks);
-  }
-
-  public void fireEscapedKeyActions(int escapedKey) {
-    escapedKeyActionsMap.getOrDefault(escapedKey, Collections.emptySet()).forEach(KeyTask::fire);
   }
 
   public boolean isFocused() {
