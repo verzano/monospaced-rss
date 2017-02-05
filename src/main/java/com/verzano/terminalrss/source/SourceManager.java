@@ -5,7 +5,6 @@ import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -23,9 +22,8 @@ public class SourceManager {
   private static final Map<Long, Source> SOURCES = new ConcurrentHashMap<>();
   private static final AtomicLong SOURCE_ID = new AtomicLong(0);
 
-  private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
-  private static final String SOURCES_FILE = TEMP_DIR + File.separator + "sources.json";
-  private static final String SOURCES_ID_FILE = TEMP_DIR + File.separator + "sources.id";
+  private static final String SOURCES_FILE = "sources.json";
+  private static final String SOURCES_ID_FILE = "sources.id";
 
   private static final Type SOURCES_FILE_TYPE = new TypeToken<LinkedList<Source>>(){}.getType();
 

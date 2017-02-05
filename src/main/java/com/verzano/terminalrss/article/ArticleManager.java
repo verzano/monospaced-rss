@@ -6,7 +6,6 @@ import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -26,9 +25,8 @@ public class ArticleManager {
   private static final Map<Long, Map<Long, Article>> ARTICLES = new ConcurrentHashMap<>();
   private static final AtomicLong ARTICLE_ID = new AtomicLong(0);
 
-  private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
-  private static final String ARTICLES_FILE = TEMP_DIR + File.separator + "articles.json";
-  private static final String ARTICLES_ID_FILE = TEMP_DIR + File.separator + "articles.id";
+  private static final String ARTICLES_FILE = "articles.json";
+  private static final String ARTICLES_ID_FILE = "articles.id";
 
   private static final Type ARTICLES_FILE_TYPE = new TypeToken<List<Article>>(){}.getType();
 
