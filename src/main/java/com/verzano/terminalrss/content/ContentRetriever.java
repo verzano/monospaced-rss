@@ -9,7 +9,6 @@ import java.io.IOException;
 public class ContentRetriever {
   private ContentRetriever() { }
 
-  // TODO maybe throw if it's an unsupported type???
   public static String getContent(
       String uri,
       ContentType contentType,
@@ -18,10 +17,8 @@ public class ContentRetriever {
     Document doc = Jsoup.connect(uri).get();
 
     StringBuilder builder = new StringBuilder();
-    // TODO actually parse through and separate into paragraphs
     switch (contentType) {
       case CLASS_CONTENT:
-        // TODO might want to grab all of these and concatenate....
         doc.getElementsByClass(contentTag).get(0).getElementsByTag("p")
             .stream()
             .map(Element::text)

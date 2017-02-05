@@ -8,7 +8,6 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 
-// TODO use a real DB
 public class Persistence {
   private static final Gson GSON = new Gson();
 

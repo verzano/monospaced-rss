@@ -1,5 +1,6 @@
 package com.verzano.terminalrss.ui;
 
+import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.print.PrintTask;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
 import lombok.Getter;
@@ -20,7 +21,6 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.ESC;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
 
 // TODO use an executor to schedule events
-// TODO use a thread to check size (these should replace each other in the event queue)
 // TODO create a layout manager type thing for the TerminalUI
 // TODO resizing draws lots of extra shit
 public class TerminalUI {
@@ -40,9 +40,7 @@ public class TerminalUI {
 
   private static final Thread resizingThread = new Thread(TerminalUI::resizingLoop, "Resizing");
   @Getter
-  private static volatile int width;
-  @Getter
-  private static volatile int height;
+  private static Size size;
 
   private static final Terminal terminal;
   static {
@@ -51,8 +49,7 @@ public class TerminalUI {
       terminal.enterRawMode();
       terminal.echo(false);
 
-      width = terminal.getWidth();
-      height = terminal.getHeight();
+      size = new Size(terminal.getWidth(), terminal.getHeight());
 
       printingThread.start();
       keyActionThread.start();
@@ -60,6 +57,14 @@ public class TerminalUI {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static int getWidth() {
+    return size.getWidth();
+  }
+
+  public static int getHeight() {
+    return size.getHeight();
   }
 
   private static void printingLoop() {
@@ -106,9 +111,9 @@ public class TerminalUI {
   // TODO maybe have a like a little delay so that multiple resizes can be grouped together...
   private static void resizingLoop() {
     while (run.get()) {
-      if (width != terminal.getWidth() || height != terminal.getHeight()) {
-        width = terminal.getWidth();
-        height = terminal.getHeight();
+      if (size.getWidth() != terminal.getWidth() || size.getHeight() != terminal.getHeight()) {
+        size.setWidth(terminal.getWidth());
+        size.setHeight(terminal.getHeight());
         resize();
         reprint();
       }
@@ -155,13 +160,12 @@ public class TerminalUI {
   }
 
   private static void print() {
-    // TODO ensure this order is correct
     widgetStack.forEach(TerminalWidget::print);
   }
 
   private static void clear() {
-    String emptyLine = new String(new char[width]).replace("\0", " ");
-    for (int row = 1; row <= height; row++) {
+    String emptyLine = new String(new char[size.getWidth()]).replace("\0", " ");
+    for (int row = 1; row <= size.getHeight(); row++) {
       move(1, row);
       terminal.writer().print(emptyLine);
     }

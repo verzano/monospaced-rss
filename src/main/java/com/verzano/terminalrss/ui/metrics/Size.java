@@ -8,6 +8,6 @@ import lombok.Data;
 public class Size {
   public static final int MATCH_TERMINAL = -1;
 
-  private int width;
-  private int height;
+  private volatile int width;
+  private volatile int height;
 }
