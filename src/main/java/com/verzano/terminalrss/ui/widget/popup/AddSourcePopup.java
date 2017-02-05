@@ -4,6 +4,7 @@ import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
+import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
 
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 import static com.verzano.terminalrss.ui.metrics.Size.MATCH_TERMINAL;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
+import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
 import static com.verzano.terminalrss.ui.widget.constants.Key.TAB;
 
 // TODO make it either not resizable or that the get size is calculated...
@@ -23,13 +25,14 @@ public class AddSourcePopup extends TerminalWidget {
 
   private String emptyBar;
 
-  public AddSourcePopup() {
+  public AddSourcePopup(KeyTask completeAction) {
     super(new Size(MATCH_TERMINAL, MATCH_TERMINAL), new Location(0, 0, 1000));
     uriTextEntry = new TextEntryWidget(new Size(30, 3), new Location(1, 1, 1001));
     uriTextEntry.addKeyAction(TAB, () -> {
       contentTypeRolodex.setFocused();
       reprint();
     });
+    uriTextEntry.addKeyAction(ENTER, completeAction);
 
     List<ContentType> types = Arrays.stream(ContentType.values())
         .filter(ct -> ct != ContentType.NULL_TYPE)
@@ -42,6 +45,7 @@ public class AddSourcePopup extends TerminalWidget {
       contentTagEntry.setFocused();
       reprint();
     });
+    contentTypeRolodex.addKeyAction(ENTER, completeAction);
 
     contentTagEntry = new TextEntryWidget(
         new Size(20, 3),
@@ -50,10 +54,29 @@ public class AddSourcePopup extends TerminalWidget {
       uriTextEntry.setFocused();
       reprint();
     });
+    contentTagEntry.addKeyAction(ENTER, completeAction);
 
     setWidth(uriTextEntry.getWidth() + contentTypeRolodex.getWidth() + contentTagEntry.getWidth() + 4);
     setHeight(Math.max(uriTextEntry.getHeight(), Math.max(contentTypeRolodex.getHeight(), contentTagEntry.getHeight())) + 2);
     size();
+  }
+
+  public String getUri() {
+    return uriTextEntry.getText();
+  }
+
+  public ContentType getContentType() {
+    return contentTypeRolodex.getSelectedItem();
+  }
+
+  public String getContentTag() {
+    return contentTagEntry.getText();
+  }
+
+  public void clear() {
+    uriTextEntry.setText("");
+    contentTagEntry.setText("");
+    contentTypeRolodex.setSelectedIndex(0);
   }
 
   private void centerOnScreen() {

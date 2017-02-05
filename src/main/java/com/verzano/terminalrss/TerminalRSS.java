@@ -36,6 +36,14 @@ import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
 // TODO handle bad urls
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
 // TODO do infinite scrolling for sources
+/*
+    addSource("https://techcrunch.com/feed/", CLASS_CONTENT, "article-entry");
+    addSource("https://news.vice.com/feed", CLASS_CONTENT, "content");
+    addSource("http://www.theverge.com/rss/index.xml", CLASS_CONTENT, "c-entry-content");
+    addSource("http://feeds.reuters.com/reuters/technologyNews", ID_CONTENT, "article-text");
+    addSource("http://motherboard.vice.com/rss", CLASS_CONTENT, "article-content");
+    addSource("http://feeds.gawker.com/kotaku/full", CLASS_CONTENT, "entry-content");
+ */
 public class TerminalRSS {
   private static ListWidget<Source> sourcesListWidget;
   private static ListWidget<Article> articlesListWidget;
@@ -70,19 +78,13 @@ public class TerminalRSS {
     TerminalUI.addWidget(notificationBarWidget);
     sourcesListWidget.setFocused();
     TerminalUI.reprint();
-
-//    addSource("http://www.theverge.com/rss/index.xml", CLASS_CONTENT, "c-entry-content");
-//    addSource("http://feeds.reuters.com/reuters/technologyNews", ID_CONTENT, "article-text");
-//    addSource("https://techcrunch.com/feed/", CLASS_CONTENT, "article-entry");
-//    addSource("http://motherboard.vice.com/rss", CLASS_CONTENT, "article-content");
-//    addSource("https://news.vice.com/feed", CLASS_CONTENT, "content");
-//    addSource("http://feeds.gawker.com/kotaku/full", CLASS_CONTENT, "entry-content");
   }
 
   private static void buildSourceWidgets() {
     sourceBarWidget = new BarWidget("Sources:", HORIZONTAL, new Location(1, 1, 1));
 
     sourcesListWidget = new ListWidget<>(
+        new LinkedList<>(SourceManager.getSources()),
         new Size(MATCH_TERMINAL, TerminalUI.getHeight() - 2),
         new Location(1, 2, 1));
     sourcesListWidget.addRow(ADD_SOURCE);
@@ -90,6 +92,7 @@ public class TerminalRSS {
     sourcesListWidget.addKeyAction(ENTER, () -> {
       Source source = sourcesListWidget.getSelectedRow();
       if (source == ADD_SOURCE) {
+        addSourcePopup.clear();
         TerminalUI.addWidget(addSourcePopup);
         addSourcePopup.setFocused();
       } else {
@@ -114,11 +117,12 @@ public class TerminalRSS {
       sourceExecutor.shutdownNow();
     });
 
-    addSourcePopup = new AddSourcePopup();
-//    addSourcePopup.addKeyAction(ENTER, () -> {
-//      TerminalUI.removeWidget(addSourcePopup);
-//      sourcesListWidget.setFocused();
-//    });
+    addSourcePopup = new AddSourcePopup(() -> {
+      TerminalUI.removeWidget(addSourcePopup);
+      sourcesListWidget.setFocused();
+      TerminalUI.reprint();
+      addSource(addSourcePopup.getUri(), addSourcePopup.getContentType(), addSourcePopup.getContentTag());
+    });
   }
 
   private static void buildArticleWidgets() {
@@ -194,6 +198,9 @@ public class TerminalRSS {
             contentTag,
             feed.getPublishedDate(),
             feed.getTitle());
+        sourcesListWidget.setRows(new LinkedList<>(SourceManager.getSources()));
+        sourcesListWidget.addRow(ADD_SOURCE);
+        sourcesListWidget.reprint();
       } catch (SourceExistsException | FeedException | IOException e) {
         // TODO logging
         notificationBarWidget.setLabel(e.getMessage());
@@ -224,6 +231,10 @@ public class TerminalRSS {
                   entry.getPublishedDate(),
                   entry.getTitle(),
                   entry.getUpdatedDate());
+              // TODO this is inefficient and migt happen out of order
+              articlesListWidget.setRows(new LinkedList<>(ArticleManager.getArticles(source.getId())));
+              articlesListWidget.addRow(REFRESH_SOURCE);
+              articlesListWidget.reprint();
             } catch (IOException | ArticleExistsException e) {
               // TODO logging
               notificationBarWidget.setLabel(e.getMessage());

@@ -4,6 +4,8 @@ import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -15,7 +17,9 @@ import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 // TODO both this and the list widget should be backed by some kind of list model
 public class RolodexWidget<T> extends TerminalWidget {
   private List<T> items;
-  private volatile int selectedItem = 0;
+
+  @Getter @Setter
+  private volatile int selectedIndex = 0;
 
   private String emptyBar = REVERSE + new String(new char[getWidth()]).replace('\0', ' ') + RESET;
 
@@ -26,22 +30,26 @@ public class RolodexWidget<T> extends TerminalWidget {
     this.items = items;
 
     addEscapedKeyAction(UP_ARROW, () -> {
-      selectedItem = getPreviousIndex();
+      selectedIndex = getPreviousIndex();
       reprint();
     });
 
     addEscapedKeyAction(DOWN_ARROW, () -> {
-      selectedItem = getNextIndex();
+      selectedIndex = getNextIndex();
       reprint();
     });
   }
 
+  public T getSelectedItem() {
+    return items.get(selectedIndex);
+  }
+
   private int getPreviousIndex() {
-    return selectedItem == 0 ? items.size() - 1 : selectedItem - 1;
+    return selectedIndex == 0 ? items.size() - 1 : selectedIndex - 1;
   }
 
   private int getNextIndex() {
-    return selectedItem == items.size() - 1 ? 0 : selectedItem + 1;
+    return selectedIndex == items.size() - 1 ? 0 : selectedIndex + 1;
   }
 
   private String cropOrPad(String s) {
@@ -63,7 +71,7 @@ public class RolodexWidget<T> extends TerminalWidget {
       TerminalUI.print(' ' + cropOrPad(items.get(getPreviousIndex()).toString()) + ' ');
 
       TerminalUI.move(getX(), getY() + 1);
-      TerminalUI.print(EMPTY_COL + REVERSE + cropOrPad(items.get(selectedItem).toString()) + RESET + EMPTY_COL);
+      TerminalUI.print(EMPTY_COL + REVERSE + cropOrPad(items.get(selectedIndex).toString()) + RESET + EMPTY_COL);
 
       TerminalUI.move(getX(), getY() + 2);
       TerminalUI.print(' ' + cropOrPad(items.get(getNextIndex()).toString()) + ' ');
@@ -72,7 +80,7 @@ public class RolodexWidget<T> extends TerminalWidget {
       TerminalUI.print(emptyBar);
 
       TerminalUI.move(getX(), getY() + 1);
-      TerminalUI.print(EMPTY_COL + cropOrPad(items.get(selectedItem).toString()) + EMPTY_COL);
+      TerminalUI.print(EMPTY_COL + cropOrPad(items.get(selectedIndex).toString()) + EMPTY_COL);
 
       TerminalUI.move(getX(), getY() + 2);
       TerminalUI.print(emptyBar);

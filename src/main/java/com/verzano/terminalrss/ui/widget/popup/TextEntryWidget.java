@@ -5,6 +5,7 @@ import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.TerminalWidget;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.stream.IntStream;
 
@@ -13,7 +14,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
 
 public class TextEntryWidget extends TerminalWidget {
-  @Getter
+  @Getter @Setter
   private String text = "";
 
   private String emptyBar;
