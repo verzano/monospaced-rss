@@ -30,6 +30,7 @@ import java.util.concurrent.Executors;
 
 import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
 import static com.verzano.terminalrss.ui.metrics.Size.MATCH_TERMINAL;
+import static com.verzano.terminalrss.ui.widget.TerminalWidget.NULL_WIDGET;
 import static com.verzano.terminalrss.ui.widget.constants.Direction.HORIZONTAL;
 import static com.verzano.terminalrss.ui.widget.constants.Direction.VERTICAL;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
@@ -108,6 +109,7 @@ public class TerminalRSS {
       Source source = sourcesListWidget.getSelectedRow();
       if (source == ADD_SOURCE) {
         addSourcePopup.clear();
+        TerminalUI.setPopupWidget(addSourcePopup);
         addSourcePopup.setFocused();
       } else {
         TerminalUI.setBaseWidget(articlesScreen);
@@ -129,6 +131,7 @@ public class TerminalRSS {
     });
 
     addSourcePopup = new AddSourcePopup(() -> {
+      TerminalUI.setPopupWidget(NULL_WIDGET);
       sourcesListWidget.setFocused();
       TerminalUI.reprint();
       addSource(addSourcePopup.getUri(), addSourcePopup.getContentType(), addSourcePopup.getContentTag());

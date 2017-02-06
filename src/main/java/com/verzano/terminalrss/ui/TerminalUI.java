@@ -25,7 +25,11 @@ public class TerminalUI {
   private TerminalUI() { }
 
   @Getter @Setter
-  private static TerminalWidget baseWidget;
+  private static TerminalWidget baseWidget = NULL_WIDGET;
+
+  // TODO use a popup type widget
+  @Getter @Setter
+  private static TerminalWidget popupWidget = NULL_WIDGET;
 
   @Getter @Setter
   private static TerminalWidget focusedWidget = NULL_WIDGET;
@@ -160,6 +164,9 @@ public class TerminalUI {
       printTaskQueue.addFirst(TerminalUI::resize);
     } else {
       baseWidget.size();
+      if (popupWidget != NULL_WIDGET) {
+        popupWidget.print();
+      }
     }
   }
 
@@ -169,6 +176,9 @@ public class TerminalUI {
     } else {
       clear();
       baseWidget.print();
+      if (popupWidget != NULL_WIDGET) {
+        popupWidget.print();
+      }
     }
   }
 
