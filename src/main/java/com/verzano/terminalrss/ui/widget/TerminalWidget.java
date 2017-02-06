@@ -37,7 +37,6 @@ public abstract class TerminalWidget {
   @Getter @Setter
   private Location location;
 
-  // TODO combine these somehow for simplicity's sake
   private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
 
   public abstract void print();
