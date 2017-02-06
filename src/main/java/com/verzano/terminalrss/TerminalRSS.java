@@ -15,6 +15,7 @@ import com.verzano.terminalrss.source.SourceManager;
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
+import com.verzano.terminalrss.ui.widget.ContainerWidget;
 import com.verzano.terminalrss.ui.widget.bar.BarWidget;
 import com.verzano.terminalrss.ui.widget.popup.AddSourcePopup;
 import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
@@ -30,6 +31,7 @@ import java.util.concurrent.Executors;
 import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
 import static com.verzano.terminalrss.ui.metrics.Size.MATCH_TERMINAL;
 import static com.verzano.terminalrss.ui.widget.constants.Direction.HORIZONTAL;
+import static com.verzano.terminalrss.ui.widget.constants.Direction.VERTICAL;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
 
@@ -46,6 +48,10 @@ import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
 // TODO sort Sources by name
 // TODO sort Articles by date
 public class TerminalRSS {
+  private static ContainerWidget sourcesScreen;
+  private static ContainerWidget articlesScreen;
+  private static ContainerWidget contentScreen;
+
   private static ListWidget<Source> sourcesListWidget;
   private static ListWidget<Article> articlesListWidget;
 
@@ -53,8 +59,6 @@ public class TerminalRSS {
   private static BarWidget articleBarWidget;
 
   private static TextAreaWidget contentTextAreaWidget;
-
-  private static BarWidget notificationBarWidget;
 
   private static AddSourcePopup addSourcePopup;
 
@@ -71,41 +75,48 @@ public class TerminalRSS {
     buildSourceWidgets();
     buildArticleWidgets();
     buildContentTextAreaWidget();
-    buildNotificationBar();
 
-    TerminalUI.addWidget(sourceBarWidget);
-    TerminalUI.addWidget(sourcesListWidget);
-    TerminalUI.addWidget(notificationBarWidget);
+    sourcesScreen = new ContainerWidget(VERTICAL, new Location(1, 1));
+    sourcesScreen.addWidget(sourceBarWidget);
+    sourcesScreen.addWidget(sourcesListWidget);
+
+    articlesScreen = new ContainerWidget(VERTICAL, new Location(1, 1));
+    articlesScreen.addWidget(sourceBarWidget);
+    articlesScreen.addWidget(articleBarWidget);
+    articlesScreen.addWidget(articlesListWidget);
+
+    contentScreen = new ContainerWidget(VERTICAL, new Location(1, 1));
+    contentScreen.addWidget(sourceBarWidget);
+    contentScreen.addWidget(articleBarWidget);
+    contentScreen.addWidget(contentTextAreaWidget);
+
+    TerminalUI.setBaseWidget(sourcesScreen);
     sourcesListWidget.setFocused();
     TerminalUI.reprint();
   }
 
   private static void buildSourceWidgets() {
-    sourceBarWidget = new BarWidget("Sources:", HORIZONTAL, new Location(1, 1, 1));
+    sourceBarWidget = new BarWidget("Sources:", HORIZONTAL, new Location(1, 1));
 
     sourcesListWidget = new ListWidget<>(
         new LinkedList<>(SourceManager.getSources()),
         new Size(MATCH_TERMINAL, TerminalUI.getHeight() - 2),
-        new Location(1, 2, 1));
+        new Location(1, 2));
     sourcesListWidget.addRow(ADD_SOURCE);
 
     sourcesListWidget.addKeyAction(ENTER, () -> {
       Source source = sourcesListWidget.getSelectedRow();
       if (source == ADD_SOURCE) {
         addSourcePopup.clear();
-        TerminalUI.addWidget(addSourcePopup);
         addSourcePopup.setFocused();
       } else {
+        TerminalUI.setBaseWidget(articlesScreen);
         selectedSource = source;
 
         sourceBarWidget.setText("Source: " + source.getTitle());
 
-        TerminalUI.removeWidget(sourcesListWidget);
-        TerminalUI.addWidget(articleBarWidget);
-
         articlesListWidget.setRows(new LinkedList<>(ArticleManager.getArticles(source.getId())));
         articlesListWidget.addRow(REFRESH_SOURCE);
-        TerminalUI.addWidget(articlesListWidget);
         articlesListWidget.setFocused();
       }
       TerminalUI.reprint();
@@ -118,7 +129,6 @@ public class TerminalRSS {
     });
 
     addSourcePopup = new AddSourcePopup(() -> {
-      TerminalUI.removeWidget(addSourcePopup);
       sourcesListWidget.setFocused();
       TerminalUI.reprint();
       addSource(addSourcePopup.getUri(), addSourcePopup.getContentType(), addSourcePopup.getContentTag());
@@ -126,11 +136,11 @@ public class TerminalRSS {
   }
 
   private static void buildArticleWidgets() {
-    articleBarWidget = new BarWidget("Articles:", HORIZONTAL, new Location(1 ,2, 1));
+    articleBarWidget = new BarWidget("Articles:", HORIZONTAL, new Location(1 ,2));
 
     articlesListWidget = new ListWidget<>(
         new Size(MATCH_TERMINAL, TerminalUI.getHeight() - 3),
-        new Location(1, 3, 1));
+        new Location(1, 3));
 
     articlesListWidget.addKeyAction(ENTER, () -> {
       Article article = articlesListWidget.getSelectedRow();
@@ -138,27 +148,21 @@ public class TerminalRSS {
       if (article == REFRESH_SOURCE) {
         updateSource(selectedSource.getId());
       } else {
-        TerminalUI.removeWidget(articlesListWidget);
-
+        TerminalUI.setBaseWidget(contentScreen);
         articleBarWidget.setText("Article: " + article.getTitle());
-        TerminalUI.addWidget(articleBarWidget);
 
         contentTextAreaWidget.setText(article.getContent());
-        TerminalUI.addWidget(contentTextAreaWidget);
         contentTextAreaWidget.setFocused();
         TerminalUI.reprint();
       }
     });
 
     articlesListWidget.addKeyAction(DELETE, () -> {
+      TerminalUI.setBaseWidget(sourcesScreen);
       selectedSource = Source.NULL_SOURCE;
 
-      TerminalUI.removeWidget(articlesListWidget);
-
-      TerminalUI.removeWidget(articleBarWidget);
       sourceBarWidget.setText("Sources:");
 
-      TerminalUI.addWidget(sourcesListWidget);
       sourcesListWidget.setFocused();
       TerminalUI.reprint();
     });
@@ -167,21 +171,15 @@ public class TerminalRSS {
   private static void buildContentTextAreaWidget() {
     contentTextAreaWidget = new TextAreaWidget(
         new Size(MATCH_TERMINAL, TerminalUI.getHeight() - 4),
-        new Location(1, 3, 1));
+        new Location(1, 3));
 
     contentTextAreaWidget.addKeyAction(DELETE, () -> {
-      TerminalUI.removeWidget(contentTextAreaWidget);
-
+      TerminalUI.setBaseWidget(articlesScreen);
       articleBarWidget.setText("Articles:");
 
-      TerminalUI.addWidget(articlesListWidget);
       articlesListWidget.setFocused();
       TerminalUI.reprint();
     });
-  }
-
-  private static void buildNotificationBar() {
-    notificationBarWidget = new BarWidget(HORIZONTAL, new Location(1, TerminalUI.getHeight(), 1));
   }
 
   private static void addSource(String uri, ContentType contentType, String contentTag) {
@@ -199,8 +197,6 @@ public class TerminalRSS {
         sourcesListWidget.reprint();
       } catch (SourceExistsException | FeedException | IOException e) {
         // TODO logging
-        notificationBarWidget.setText(e.getMessage());
-        notificationBarWidget.reprint();
       }
 
       sourcesListWidget.reprint();
@@ -210,8 +206,7 @@ public class TerminalRSS {
   private static void updateSource(Long sourceId) {
     Source source = SourceManager.getSource(sourceId);
     if (source == Source.NULL_SOURCE) {
-      notificationBarWidget.setText("No source for sourceId: " + sourceId);
-      notificationBarWidget.reprint();
+      // TODO logggggg
     } else {
       sourceExecutor.execute(() -> {
         try {
@@ -233,14 +228,10 @@ public class TerminalRSS {
               articlesListWidget.reprint();
             } catch (IOException | ArticleExistsException e) {
               // TODO logging
-              notificationBarWidget.setText(e.getMessage());
-              notificationBarWidget.reprint();
             }
           }));
         } catch(FeedException | IOException e) {
           // TODO logging
-          notificationBarWidget.setText(e.getMessage());
-          notificationBarWidget.reprint();
         }
       });
     }

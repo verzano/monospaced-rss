@@ -26,8 +26,8 @@ public class AddSourcePopup extends TerminalWidget {
   private String emptyBar;
 
   public AddSourcePopup(KeyTask completeAction) {
-    super(new Size(MATCH_TERMINAL, MATCH_TERMINAL), new Location(0, 0, 1000));
-    uriTextEntry = new TextEntryWidget(new Size(30, 3), new Location(1, 1, 1001));
+    super(new Size(MATCH_TERMINAL, MATCH_TERMINAL), new Location(0, 0));
+    uriTextEntry = new TextEntryWidget(new Size(30, 3), new Location(1, 1));
     uriTextEntry.addKeyAction(TAB, () -> {
       contentTypeRolodex.setFocused();
       reprint();
@@ -40,7 +40,7 @@ public class AddSourcePopup extends TerminalWidget {
     contentTypeRolodex = new RolodexWidget<>(
         types,
         new Size(20, 3),
-        new Location(uriTextEntry.getWidth() + uriTextEntry.getX() + 1, 1, 1001));
+        new Location(uriTextEntry.getWidth() + uriTextEntry.getX() + 1, 1));
     contentTypeRolodex.addKeyAction(TAB, () -> {
       contentTagEntry.setFocused();
       reprint();
@@ -49,7 +49,7 @@ public class AddSourcePopup extends TerminalWidget {
 
     contentTagEntry = new TextEntryWidget(
         new Size(20, 3),
-        new Location(contentTypeRolodex.getWidth() + contentTypeRolodex.getX() + 1, 1, 1001));
+        new Location(contentTypeRolodex.getWidth() + contentTypeRolodex.getX() + 1, 1));
     contentTagEntry.addKeyAction(TAB, () -> {
       uriTextEntry.setFocused();
       reprint();
@@ -100,15 +100,6 @@ public class AddSourcePopup extends TerminalWidget {
     contentTypeRolodex.setY(contentTypeRolodex.getY() + delta);
     contentTagEntry.setY(contentTagEntry.getY() + delta);
     super.setY(y);
-  }
-
-  @Override
-  public void setZ(int z) {
-    int delta = z - getZ();
-    uriTextEntry.setZ(uriTextEntry.getZ() + delta);
-    contentTypeRolodex.setZ(contentTypeRolodex.getZ() + delta);
-    contentTagEntry.setZ(contentTagEntry.getZ() + delta);
-    super.setZ(z);
   }
 
   @Override

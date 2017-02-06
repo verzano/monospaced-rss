@@ -9,14 +9,11 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
-import java.util.SortedSet;
 import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.verzano.terminalrss.ui.widget.TerminalWidget.NULL_WIDGET;
-import static com.verzano.terminalrss.ui.widget.TerminalWidget.Z_COMPARTOR;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.ESC;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
 import static com.verzano.terminalrss.ui.widget.constants.Key.ESCAPED_PREFIX;
@@ -28,9 +25,10 @@ public class TerminalUI {
   private TerminalUI() { }
 
   @Getter @Setter
-  private static TerminalWidget focusedWidget = NULL_WIDGET;
+  private static TerminalWidget baseWidget;
 
-  private static final SortedSet<TerminalWidget> widgetStack = new ConcurrentSkipListSet<>(Z_COMPARTOR);
+  @Getter @Setter
+  private static TerminalWidget focusedWidget = NULL_WIDGET;
 
   private static final AtomicBoolean run = new AtomicBoolean(true);
 
@@ -147,23 +145,6 @@ public class TerminalUI {
     }).start();
   }
 
-  public static void addWidget(TerminalWidget widget) {
-    widgetStack.add(widget);
-  }
-
-  public static void removeWidget(TerminalWidget widget) {
-    widgetStack.remove(widget);
-
-    if (focusedWidget == widget) {
-      // TODO get the highest Z widget maybe
-      focusedWidget = NULL_WIDGET;
-    }
-  }
-
-  private static void print() {
-    widgetStack.forEach(TerminalWidget::print);
-  }
-
   private static void clear() {
     String emptyLine = new String(new char[size.getWidth()]).replace("\0", " ");
     for (int row = 1; row <= size.getHeight(); row++) {
@@ -178,7 +159,7 @@ public class TerminalUI {
     if (Thread.currentThread() != printingThread) {
       printTaskQueue.addFirst(TerminalUI::resize);
     } else {
-      widgetStack.forEach(TerminalWidget::size);
+      baseWidget.size();
     }
   }
 
@@ -187,7 +168,7 @@ public class TerminalUI {
       printTaskQueue.add(TerminalUI::reprint);
     } else {
       clear();
-      print();
+      baseWidget.print();
     }
   }
 

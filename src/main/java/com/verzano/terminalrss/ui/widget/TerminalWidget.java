@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,11 +25,6 @@ public abstract class TerminalWidget {
     public void size() { }
   };
 
-  public static final Comparator<TerminalWidget> Z_COMPARTOR = (tw1, tw2) -> {
-    int comp = Integer.compare(tw1.location.getZ(), tw2.location.getZ());
-    return comp == 0 ? Long.compare(tw1.hashCode(), tw2.hashCode()) : comp;
-  };
-
   @Getter @Setter
   private Size size;
 
@@ -43,7 +37,7 @@ public abstract class TerminalWidget {
   public abstract void size();
 
   public TerminalWidget() {
-    this(new Size(MATCH_TERMINAL, MATCH_TERMINAL), new Location(1, 1, 1));
+    this(new Size(MATCH_TERMINAL, MATCH_TERMINAL), new Location(1, 1));
   }
 
   public TerminalWidget(Size size, Location location) {
@@ -81,14 +75,6 @@ public abstract class TerminalWidget {
 
   public void setY(int y) {
     location.setY(y);
-  }
-
-  public int getZ() {
-    return location.getZ();
-  }
-
-  public void setZ(int z) {
-    location.setZ(z);
   }
 
   public void addKeyAction(String key, KeyTask action) {
