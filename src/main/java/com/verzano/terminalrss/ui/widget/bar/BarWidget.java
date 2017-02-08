@@ -1,14 +1,14 @@
 package com.verzano.terminalrss.ui.widget.bar;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.TerminalWidget;
+import com.verzano.terminalrss.ui.widget.Widget;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import lombok.Getter;
 import lombok.Setter;
 
-import static com.verzano.terminalrss.ui.metrics.Size.MATCH_TERMINAL;
+import static com.verzano.terminalrss.ui.metrics.Size.FILL_NEEDED;
+import static com.verzano.terminalrss.ui.metrics.Size.FILL_PARENT;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 
@@ -16,18 +16,18 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 // TODO       OR
 // TODO lock width and height based on the size of the terminal
 // TODO allow positioning of text left/right or top/bottom
-public class BarWidget extends TerminalWidget {
+public class BarWidget extends Widget {
   @Getter @Setter
   private String text;
 
   private Direction direction;
 
-  public BarWidget(Direction direction, Location location) {
-    this("", direction, location);
+  public BarWidget(Direction direction) {
+    this("", direction);
   }
 
-  public BarWidget(String text, Direction direction, Location location) {
-    super(new Size(MATCH_TERMINAL, MATCH_TERMINAL), location);
+  public BarWidget(String text, Direction direction) {
+    super(new Size(FILL_PARENT, FILL_PARENT));
     this.text = text;
     setDirection(direction);
   }
@@ -37,16 +37,44 @@ public class BarWidget extends TerminalWidget {
 
     switch (direction) {
       case VERTICAL:
-        setHeight(MATCH_TERMINAL);
-        setWidth(1);
+        setHeight(FILL_PARENT);
+        setWidth(FILL_NEEDED);
         break;
       case HORIZONTAL:
-        setHeight(1);
-        setWidth(MATCH_TERMINAL);
+        setHeight(FILL_NEEDED);
+        setWidth(FILL_PARENT);
         break;
       default:
         throw new RuntimeException("Direction: " + direction + " not permitted for a " + BarWidget.class.getSimpleName());
     }
+  }
+
+  @Override
+  public int getNeededWidth() {
+    int width = 0;
+    switch (direction) {
+      case VERTICAL:
+        width = 1;
+        break;
+      case HORIZONTAL:
+        width = text.length();
+        break;
+    }
+    return width;
+  }
+
+  @Override
+  public int getNeededHeight() {
+    int height = 0;
+    switch (direction) {
+      case VERTICAL:
+        height = text.length();
+        break;
+      case HORIZONTAL:
+        height = 1;
+        break;
+    }
+    return height;
   }
 
   @Override

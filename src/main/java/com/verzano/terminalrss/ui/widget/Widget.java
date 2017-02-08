@@ -13,11 +13,23 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.verzano.terminalrss.ui.metrics.Size.MATCH_TERMINAL;
+import static com.verzano.terminalrss.ui.metrics.Size.FILL_PARENT;
 
 // TODO make this thread safe
-public abstract class TerminalWidget {
-  public static final TerminalWidget NULL_WIDGET = new TerminalWidget() {
+// TODO add a 'parent' widget
+// TODO rework the 'resize' thing thang
+public abstract class Widget {
+  public static final Widget NULL_WIDGET = new Widget() {
+    @Override
+    public int getNeededWidth() {
+      return 0;
+    }
+
+    @Override
+    public int getNeededHeight() {
+      return 0;
+    }
+
     @Override
     public void print() { }
 
@@ -29,24 +41,44 @@ public abstract class TerminalWidget {
   private Size size;
 
   @Getter @Setter
-  private Location location;
+  private Location location = new Location(1, 1);
+  
+  @Getter @Setter
+  private Widget parent = NULL_WIDGET;
 
   private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
 
+  public abstract int getNeededWidth();
+  public abstract int getNeededHeight();
   public abstract void print();
   public abstract void size();
 
-  public TerminalWidget() {
-    this(new Size(MATCH_TERMINAL, MATCH_TERMINAL), new Location(1, 1));
+  public Widget() {
+    this(new Size(FILL_PARENT, FILL_PARENT));
   }
 
-  public TerminalWidget(Size size, Location location) {
+  public Widget(Size size) {
     this.size = size;
-    this.location = location;
   }
 
   public int getWidth() {
-    return size.getWidth() == MATCH_TERMINAL ? TerminalUI.getWidth() : size.getWidth();
+    int width = size.getWidth();
+    switch (width) {
+      case Size.FILL_PARENT:
+        if (parent == NULL_WIDGET) {
+          width = TerminalUI.getWidth();
+        } else {
+          width = parent.getWidth();
+        }
+        break;
+      case Size.FILL_NEEDED:
+        width = getNeededWidth();
+        break;
+      case Size.FILL_REMAINING:
+        // TODO figure this out...
+        break;
+    }
+    return width;
   }
 
   public void setWidth(int width) {
@@ -54,7 +86,23 @@ public abstract class TerminalWidget {
   }
 
   public int getHeight() {
-    return size.getHeight() == MATCH_TERMINAL ? TerminalUI.getHeight() : size.getHeight();
+    int height = size.getHeight();
+    switch (height) {
+      case Size.FILL_PARENT:
+        if (parent == NULL_WIDGET) {
+          height = TerminalUI.getHeight();
+        } else {
+          height = parent.getHeight();
+        }
+        break;
+      case Size.FILL_NEEDED:
+        height = getNeededHeight();
+        break;
+      case Size.FILL_REMAINING:
+        // TODO figure this out...
+        break;
+    }
+    return height;
   }
 
   public void setHeight(int height) {

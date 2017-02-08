@@ -1,7 +1,6 @@
 package com.verzano.terminalrss.ui.widget.scrollable.list;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
@@ -24,12 +23,12 @@ public class ListWidget<T> extends ScrollableWidget {
 
   private int topLine;
 
-  public ListWidget(Size size, Location location) {
-    this(new LinkedList<>(), size, location);
+  public ListWidget(Size size) {
+    this(new LinkedList<>(), size);
   }
 
-  public ListWidget(List<T> rows, Size size, Location location) {
-    super(size, location);
+  public ListWidget(List<T> rows, Size size) {
+    super(size);
     setRows(rows);
 
     addKeyAction(UP_ARROW, () -> {
@@ -79,6 +78,19 @@ public class ListWidget<T> extends ScrollableWidget {
         }
         break;
     }
+  }
+
+  @Override
+  public int getNeededWidth() {
+    return rows.stream()
+        .mapToInt(row -> row.toString().length())
+        .max()
+        .orElseGet(() -> 0) + 1;
+  }
+
+  @Override
+  public int getNeededHeight() {
+    return rows.size();
   }
 
   @Override

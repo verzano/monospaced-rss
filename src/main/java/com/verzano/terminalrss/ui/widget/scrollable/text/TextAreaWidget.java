@@ -1,7 +1,6 @@
 package com.verzano.terminalrss.ui.widget.scrollable.text;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
@@ -23,12 +22,12 @@ public class TextAreaWidget extends ScrollableWidget {
 
   private volatile int topLine;
 
-  public TextAreaWidget(Size size, Location location) {
-    this("", size, location);
+  public TextAreaWidget(Size size) {
+    this("", size);
   }
 
-  public TextAreaWidget(String text, Size size, Location location) {
-    super(size, location);
+  public TextAreaWidget(String text, Size size) {
+    super(size);
     setText(text);
 
     addKeyAction(UP_ARROW, () -> {
@@ -80,6 +79,23 @@ public class TextAreaWidget extends ScrollableWidget {
     }
 
     setInternalHeight(lines.size());
+  }
+
+  @Override
+  public int getNeededWidth() {
+    return lines.stream()
+        .mapToInt(String::length)
+        .max()
+        .orElseGet(() -> 0) + 1;
+  }
+
+  @Override
+  public int getNeededHeight() {
+    int width = getWidth() - 1;
+
+    return lines.stream()
+        .mapToInt(row -> (int)Math.ceil(row.length()/width))
+        .sum();
   }
 
   @Override

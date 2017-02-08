@@ -1,9 +1,8 @@
-package com.verzano.terminalrss.ui.widget.popup;
+package com.verzano.terminalrss.ui.widget.valueentry;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.TerminalWidget;
+import com.verzano.terminalrss.ui.widget.Widget;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +14,9 @@ import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 
 // TODO both this and the list widget should be backed by some kind of list model
-public class RolodexWidget<T> extends TerminalWidget {
+// TODO add itemsBefore and itemsAfter
+// TODO use BarWidgets for items???
+public class RolodexWidget<T> extends Widget {
   private List<T> items;
 
   @Getter @Setter
@@ -25,8 +26,8 @@ public class RolodexWidget<T> extends TerminalWidget {
 
   private static final String EMPTY_COL = REVERSE + " " + RESET;
 
-  public RolodexWidget(List<T> items, Size size, Location location) {
-    super(size, location);
+  public RolodexWidget(List<T> items, Size size) {
+    super(size);
     this.items = items;
 
     addKeyAction(UP_ARROW, () -> {
@@ -64,6 +65,22 @@ public class RolodexWidget<T> extends TerminalWidget {
     return s;
   }
 
+
+  // TODO this gets a little fucky if any of the toStrings prints a newline... which nothing should ever do
+  @Override
+  public int getNeededWidth() {
+    return items.stream()
+        .mapToInt(item -> item.toString().length())
+        .max()
+        .orElseGet(() -> 0);
+  }
+
+  @Override
+  public int getNeededHeight() {
+    return 1;
+  }
+
+  // TODO this ignores height
   @Override
   public void print() {
     if (isFocused()) {

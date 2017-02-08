@@ -1,9 +1,8 @@
-package com.verzano.terminalrss.ui.widget.popup;
+package com.verzano.terminalrss.ui.widget.valueentry;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.TerminalWidget;
+import com.verzano.terminalrss.ui.widget.Widget;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +12,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
 
-public class TextEntryWidget extends TerminalWidget {
+public class TextEntryWidget extends Widget {
   @Getter @Setter
   private String text = "";
 
@@ -21,8 +20,8 @@ public class TextEntryWidget extends TerminalWidget {
 
   private static final String EMPTY_COL = REVERSE + " " + RESET;
 
-  public TextEntryWidget(Size size, Location location) {
-    super(size, location);
+  public TextEntryWidget(Size size) {
+    super(size);
 
     // All printable ASCII chars
     IntStream.range(32, 127).forEach(i -> addKeyAction((char)i + "", () -> {
@@ -38,6 +37,18 @@ public class TextEntryWidget extends TerminalWidget {
     size();
   }
 
+  // TODO 1 really? i dont fucking know
+  @Override
+  public int getNeededWidth() {
+    return 1;
+  }
+
+  @Override
+  public int getNeededHeight() {
+    return 1;
+  }
+
+  // TODO this ignores height
   @Override
   public void print() {
     TerminalUI.move(getX(), getY());

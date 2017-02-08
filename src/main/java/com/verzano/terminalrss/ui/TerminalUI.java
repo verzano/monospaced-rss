@@ -2,7 +2,8 @@ package com.verzano.terminalrss.ui;
 
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.print.PrintTask;
-import com.verzano.terminalrss.ui.widget.TerminalWidget;
+import com.verzano.terminalrss.ui.widget.Widget;
+import com.verzano.terminalrss.ui.widget.floating.FloatingWidget;
 import lombok.Getter;
 import lombok.Setter;
 import org.jline.terminal.Terminal;
@@ -13,10 +14,11 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.verzano.terminalrss.ui.widget.TerminalWidget.NULL_WIDGET;
+import static com.verzano.terminalrss.ui.widget.Widget.NULL_WIDGET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.ESC;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
 import static com.verzano.terminalrss.ui.widget.constants.Key.ESCAPED_PREFIX;
+import static com.verzano.terminalrss.ui.widget.floating.FloatingWidget.NULL_FLOATER;
 
 // TODO use an executor to schedule events
 // TODO create a layout manager type thing for the TerminalUI
@@ -25,14 +27,14 @@ public class TerminalUI {
   private TerminalUI() { }
 
   @Getter @Setter
-  private static TerminalWidget baseWidget = NULL_WIDGET;
+  private static Widget baseWidget = NULL_WIDGET;
 
   // TODO use a popup type widget
-  @Getter @Setter
-  private static TerminalWidget popupWidget = NULL_WIDGET;
+  @Getter
+  private static FloatingWidget floatingWidget = NULL_FLOATER;
 
   @Getter @Setter
-  private static TerminalWidget focusedWidget = NULL_WIDGET;
+  private static Widget focusedWidget = NULL_WIDGET;
 
   private static final AtomicBoolean run = new AtomicBoolean(true);
 
@@ -60,6 +62,15 @@ public class TerminalUI {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static void setFloatingWidget(FloatingWidget floatingWidget) {
+    TerminalUI.floatingWidget = floatingWidget;
+    TerminalUI.floatingWidget.centerInTerminal();
+  }
+
+  public static void removeFloatingWidget() {
+    TerminalUI.floatingWidget = NULL_FLOATER;
   }
 
   public static int getWidth() {
@@ -164,8 +175,8 @@ public class TerminalUI {
       printTaskQueue.addFirst(TerminalUI::resize);
     } else {
       baseWidget.size();
-      if (popupWidget != NULL_WIDGET) {
-        popupWidget.print();
+      if (floatingWidget != NULL_FLOATER) {
+        floatingWidget.print();
       }
     }
   }
@@ -176,8 +187,8 @@ public class TerminalUI {
     } else {
       clear();
       baseWidget.print();
-      if (popupWidget != NULL_WIDGET) {
-        popupWidget.print();
+      if (floatingWidget != NULL_FLOATER) {
+        floatingWidget.print();
       }
     }
   }

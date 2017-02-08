@@ -1,9 +1,8 @@
 package com.verzano.terminalrss.ui.widget.scrollable;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.TerminalWidget;
+import com.verzano.terminalrss.ui.widget.Widget;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import lombok.Setter;
 
@@ -11,7 +10,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 
 // TODO allow this to have vertical and horizontal bars
-public abstract class ScrollableWidget extends TerminalWidget {
+public abstract class ScrollableWidget extends Widget {
   private double internalHeight = 1;
 
   @Setter
@@ -21,8 +20,8 @@ public abstract class ScrollableWidget extends TerminalWidget {
 
   public abstract void scroll(Direction direction, int distance);
 
-  public ScrollableWidget(Size size, Location location) {
-    super(size, location);
+  public ScrollableWidget(Size size) {
+    super(size);
   }
 
   public void setInternalHeight(double internalHeight) {
