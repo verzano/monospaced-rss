@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_NEEDED;
-import static com.verzano.terminalrss.ui.widget.constants.Direction.HORIZONTAL;
 import static com.verzano.terminalrss.ui.widget.constants.Key.TAB;
+import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
 
 // TODO make it either not resizable or that the get size is calculated...
 public class AddSourceFloater extends BinaryChoiceFloater {
@@ -29,35 +29,32 @@ public class AddSourceFloater extends BinaryChoiceFloater {
         addSourceAction, "Add Source",
         cancelAction, "Cancel",
         new Size(FILL_NEEDED, FILL_NEEDED));
-    BoxContainer mainContainer = new BoxContainer(HORIZONTAL, new Size(FILL_NEEDED, FILL_NEEDED)) {
+    BoxContainer mainContainer = new BoxContainer(HORIZONTAL, 1, new Size(FILL_NEEDED, FILL_NEEDED)) {
       @Override
       public void setFocused() {
         uriTextEntry.setFocused();
       }
     };
 
-    uriTextEntry = new TextEntryWidget(new Size(30, 3));
+    uriTextEntry = new TextEntryWidget(new Size(30, FILL_NEEDED));
     uriTextEntry.addKeyAction(TAB, () -> {
       contentTypeRolodex.setFocused();
-      reprint();
+      TerminalUI.reprint();
     });
 
     List<ContentType> types = Arrays.stream(ContentType.values())
         .filter(ct -> ct != ContentType.NULL_TYPE)
         .collect(Collectors.toList());
-    contentTypeRolodex = new RolodexWidget<>(
-        types,
-        new Size(20, 3));
+    contentTypeRolodex = new RolodexWidget<>(types, 3, 3, new Size(20, FILL_NEEDED));
     contentTypeRolodex.addKeyAction(TAB, () -> {
       contentTagEntry.setFocused();
-      reprint();
+      TerminalUI.reprint();
     });
 
-    contentTagEntry = new TextEntryWidget(
-        new Size(20, 3));
+    contentTagEntry = new TextEntryWidget(new Size(20, FILL_NEEDED));
     contentTagEntry.addKeyAction(TAB, () -> {
       getPositiveButton().setFocused();
-      reprint();
+      TerminalUI.reprint();
     });
 
     mainContainer.addWidget(uriTextEntry);

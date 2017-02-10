@@ -18,6 +18,7 @@ import static com.verzano.terminalrss.ui.metrics.Size.FILL_PARENT;
 // TODO make this thread safe
 // TODO add a 'parent' widget
 // TODO rework the 'resize' thing thang
+// TODO add padding around components
 public abstract class Widget {
   public static final Widget NULL_WIDGET = new Widget() {
     @Override

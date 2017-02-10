@@ -3,8 +3,10 @@ package com.verzano.terminalrss.ui.widget.container.box;
 import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
-import com.verzano.terminalrss.ui.widget.constants.Direction;
+import com.verzano.terminalrss.ui.widget.constants.Orientation;
 import com.verzano.terminalrss.ui.widget.container.Container;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -12,26 +14,30 @@ import java.util.List;
 
 public class BoxContainer extends Container {
   private List<Widget> widgetStack = new LinkedList<>();
-  private Direction direction;
+  private Orientation orientation;
 
-  public BoxContainer(Direction direction, Size size) {
+  @Getter @Setter
+  private int spacing;
+
+  public BoxContainer(Orientation orientation, int spacing, Size size) {
     super(size);
-    this.direction = direction;
+    this.orientation = orientation;
+    this.spacing = spacing;
   }
 
   @Override
   public void addWidget(Widget widget) {
     super.addWidget(widget);
-    switch (direction) {
+    switch (orientation) {
       case HORIZONTAL:
         widget.setLocation(new Location(
-            getX() + widgetStack.stream().mapToInt(Widget::getWidth).sum(),
+            getX() + widgetStack.stream().mapToInt(w -> w.getWidth() + spacing).sum(),
             getY()));
         break;
       case VERTICAL:
         widget.setLocation(new Location(
             getX(),
-            getY() + widgetStack.stream().mapToInt(Widget::getHeight).sum()));
+            getY() + widgetStack.stream().mapToInt(w -> w.getHeight() + spacing).sum()));
         break;
     }
 
@@ -46,9 +52,10 @@ public class BoxContainer extends Container {
   @Override
   public int getNeededWidth() {
     int width = 0;
-    switch (direction) {
+    switch (orientation) {
       case HORIZONTAL:
-        width = widgetStack.stream()
+        width = (widgetStack.size() - 1) * spacing
+            + widgetStack.stream()
             .mapToInt(Widget::getWidth)
             .sum();
         break;
@@ -65,7 +72,7 @@ public class BoxContainer extends Container {
   @Override
   public int getNeededHeight() {
     int height = 0;
-    switch (direction) {
+    switch (orientation) {
       case HORIZONTAL:
         height = widgetStack.stream()
             .mapToInt(Widget::getHeight)
@@ -73,7 +80,8 @@ public class BoxContainer extends Container {
             .orElseGet(() -> 0);
         break;
       case VERTICAL:
-        height = widgetStack.stream()
+        height = (widgetStack.size() - 1) * spacing
+            + widgetStack.stream()
             .mapToInt(Widget::getHeight)
             .sum();
         break;

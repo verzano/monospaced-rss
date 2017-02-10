@@ -12,8 +12,10 @@ import lombok.Getter;
 
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_NEEDED;
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_PARENT;
-import static com.verzano.terminalrss.ui.widget.constants.Direction.HORIZONTAL;
+import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET_REVERSE;
+import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.TAB;
+import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
 import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER;
 
 public class BinaryChoiceFloater extends FloatingWidget {
@@ -27,6 +29,8 @@ public class BinaryChoiceFloater extends FloatingWidget {
   @Getter
   private final ButtonWidget negativeButton;
 
+  private String emptyRow;
+
   public BinaryChoiceFloater(
       Widget displayWidget,
       KeyTask positiveTask,
@@ -38,7 +42,7 @@ public class BinaryChoiceFloater extends FloatingWidget {
     this.displayWidget = displayWidget;
     displayWidget.setParent(this);
 
-    buttonContainer = new BoxContainer(HORIZONTAL, new Size(FILL_PARENT, FILL_NEEDED));
+    buttonContainer = new BoxContainer(HORIZONTAL, 1, new Size(FILL_PARENT, FILL_NEEDED));
     buttonContainer.setParent(this);
     buttonContainer.setY(getY() + displayWidget.getHeight());
 
@@ -56,12 +60,15 @@ public class BinaryChoiceFloater extends FloatingWidget {
       this.displayWidget.setFocused();
       TerminalUI.reprint();
     });
+
+    emptyRow = REVERSE + new String(new char[getWidth()]).replace('\0', ' ') + RESET_REVERSE;
   }
 
   public void setDisplayWidget(Widget displayWidget) {
     this.displayWidget = displayWidget;
     displayWidget.setParent(this);
-    buttonContainer.setY(getY() + displayWidget.getHeight());
+    buttonContainer.setY(getY() + displayWidget.getHeight() + 1);
+    emptyRow = REVERSE + new String(new char[getWidth()]).replace('\0', ' ') + RESET_REVERSE;
   }
 
   @Override
@@ -93,12 +100,19 @@ public class BinaryChoiceFloater extends FloatingWidget {
 
   @Override
   public int getNeededHeight() {
-    return displayWidget.getNeededHeight() + buttonContainer.getNeededHeight();
+    return displayWidget.getNeededHeight() + buttonContainer.getNeededHeight() + 1;
   }
 
   @Override
   public void print() {
+    for (int row = 0; row < getHeight(); row++) {
+      TerminalUI.move(getX(), getY() + row);
+      TerminalUI.print(emptyRow);
+    }
     displayWidget.print();
+
+    TerminalUI.move(getX(), getY() + displayWidget.getHeight() + 1);
+    TerminalUI.print(emptyRow);
     buttonContainer.print();
   }
 }

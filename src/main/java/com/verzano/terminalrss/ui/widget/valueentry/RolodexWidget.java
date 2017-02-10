@@ -1,42 +1,52 @@
 package com.verzano.terminalrss.ui.widget.valueentry;
 
-import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
+import com.verzano.terminalrss.ui.widget.bar.TextWidget;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
+import static com.verzano.terminalrss.ui.widget.constants.Ansi.NORMAL;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
+import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER_LEFT;
 
 // TODO both this and the list widget should be backed by some kind of list model
-// TODO add itemsBefore and itemsAfter
-// TODO use BarWidgets for items???
 public class RolodexWidget<T> extends Widget {
+  private TextWidget printableItem = new TextWidget("", HORIZONTAL, CENTER_LEFT, new Size(1, 1));
+
   private List<T> items;
 
   @Getter @Setter
   private volatile int selectedIndex = 0;
 
-  private String emptyBar = REVERSE + new String(new char[getWidth()]).replace('\0', ' ') + RESET;
+  // TODO add setters
+  @Getter
+  private int itemsBefore;
 
-  private static final String EMPTY_COL = REVERSE + " " + RESET;
+  @Getter
+  private int itemsAfter;
 
-  public RolodexWidget(List<T> items, Size size) {
+  public RolodexWidget(List<T> items, int itemsBefore, int itemsAfter, Size size) {
     super(size);
     this.items = items;
+    this.itemsBefore = itemsBefore;
+    this.itemsAfter = itemsAfter;
+
+    printableItem.setSize(size);
+    printableItem.setNotFocusedFormat(NORMAL);
 
     addKeyAction(UP_ARROW, () -> {
-      selectedIndex = getPreviousIndex();
+      selectedIndex = getPreviousIndex(selectedIndex);
       reprint();
     });
 
     addKeyAction(DOWN_ARROW, () -> {
-      selectedIndex = getNextIndex();
+      selectedIndex = getNextIndex(selectedIndex);
       reprint();
     });
   }
@@ -45,16 +55,16 @@ public class RolodexWidget<T> extends Widget {
     return items.get(selectedIndex);
   }
 
-  private int getPreviousIndex() {
-    return selectedIndex == 0 ? items.size() - 1 : selectedIndex - 1;
+  private int getPreviousIndex(int index) {
+    return index == 0 ? items.size() - 1 : index - 1;
   }
 
-  private int getNextIndex() {
-    return selectedIndex == items.size() - 1 ? 0 : selectedIndex + 1;
+  private int getNextIndex(int index) {
+    return index == items.size() - 1 ? 0 : index + 1;
   }
 
   private String cropOrPad(String s) {
-    int maxWidth = getWidth() - 2;
+    int maxWidth = getWidth();
 
     if (s.length() < maxWidth) {
       s += new String(new char[maxWidth - s.length()]).replace('\0', ' ');
@@ -64,7 +74,6 @@ public class RolodexWidget<T> extends Widget {
 
     return s;
   }
-
 
   // TODO this gets a little fucky if any of the toStrings prints a newline... which nothing should ever do
   @Override
@@ -83,24 +92,39 @@ public class RolodexWidget<T> extends Widget {
   // TODO this ignores height
   @Override
   public void print() {
+    printableItem.setX(getX());
     if (isFocused()) {
-      TerminalUI.move(getX(), getY());
-      TerminalUI.print(' ' + cropOrPad(items.get(getPreviousIndex()).toString()) + ' ');
+      T item;
+      int index = selectedIndex;
+      printableItem.setNotFocusedFormat(NORMAL);
+      for (int i = 1; i <= itemsBefore; i++) {
+        index = getPreviousIndex(index);
+        item = items.get(index);
+        printableItem.setY(getY() - i);
+        printableItem.setText(cropOrPad(item.toString()));
+        printableItem.print();
+      }
 
-      TerminalUI.move(getX(), getY() + 1);
-      TerminalUI.print(EMPTY_COL + REVERSE + cropOrPad(items.get(selectedIndex).toString()) + RESET + EMPTY_COL);
+      printableItem.setNotFocusedFormat(REVERSE);
+      item = items.get(selectedIndex);
+      printableItem.setY(getY());
+      printableItem.setText(cropOrPad(item.toString()));
+      printableItem.print();
 
-      TerminalUI.move(getX(), getY() + 2);
-      TerminalUI.print(' ' + cropOrPad(items.get(getNextIndex()).toString()) + ' ');
+      index = selectedIndex;
+      printableItem.setNotFocusedFormat(NORMAL);
+      for (int i = 1; i <= itemsAfter; i++) {
+        index = getNextIndex(index);
+        item = items.get(index);
+        printableItem.setY(getY() + i);
+        printableItem.setText(cropOrPad(item.toString()));
+        printableItem.print();
+      }
     } else {
-      TerminalUI.move(getX(), getY());
-      TerminalUI.print(emptyBar);
-
-      TerminalUI.move(getX(), getY() + 1);
-      TerminalUI.print(EMPTY_COL + cropOrPad(items.get(selectedIndex).toString()) + EMPTY_COL);
-
-      TerminalUI.move(getX(), getY() + 2);
-      TerminalUI.print(emptyBar);
+      T item = items.get(selectedIndex);
+      printableItem.setY(getY());
+      printableItem.setText(cropOrPad(item.toString()));
+      printableItem.print();
     }
   }
 

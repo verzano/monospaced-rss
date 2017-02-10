@@ -1,43 +1,58 @@
 package com.verzano.terminalrss.ui.widget.valueentry;
 
-import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.Widget;
-import lombok.Getter;
-import lombok.Setter;
+import com.verzano.terminalrss.ui.widget.bar.TextWidget;
 
 import java.util.stream.IntStream;
 
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
+import static com.verzano.terminalrss.ui.widget.constants.Ansi.BLINK;
+import static com.verzano.terminalrss.ui.widget.constants.Ansi.NORMAL;
+import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET_BLINK;
+import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET_UNDERLINE;
+import static com.verzano.terminalrss.ui.widget.constants.Ansi.UNDERLINE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
+import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER_LEFT;
 
-public class TextEntryWidget extends Widget {
-  @Getter @Setter
-  private String text = "";
-
-  private String emptyBar;
-
-  private static final String EMPTY_COL = REVERSE + " " + RESET;
-
+public class TextEntryWidget extends TextWidget {
   public TextEntryWidget(Size size) {
-    super(size);
-
+    super("", HORIZONTAL, CENTER_LEFT, size);
     // All printable ASCII chars
     IntStream.range(32, 127).forEach(i -> addKeyAction((char)i + "", () -> {
-      text += (char)i;
+      setText(getText() + (char)i);
       reprint();
     }));
 
     addKeyAction(DELETE, () -> {
-      text = text.substring(0, Math.max(0, text.length() - 1));
+      setText(getText().substring(0, Math.max(0, getText().length() - 1)));
       reprint();
     });
 
-    size();
+    setFocusedFormat(NORMAL);
+    setNotFocusedFormat(NORMAL);
   }
 
-  // TODO 1 really? i dont fucking know
+  private String getCaret() {
+    return isFocused()
+        ? BLINK + UNDERLINE + ' ' + RESET_UNDERLINE + RESET_BLINK
+        : " ";
+  }
+
+  @Override
+  protected String getTextRow() {
+    String textRow = getText();
+    int width = getWidth();
+
+    if (textRow.length() < width - 1) {
+      textRow += getCaret()
+          + getFocusedFormat() + new String(new char[width - textRow.length() - 1]).replace('\0', ' ');
+    } else {
+      textRow = textRow.substring(textRow.length() - width + 1) + getCaret();
+    }
+
+    return textRow;
+  }
+
   @Override
   public int getNeededWidth() {
     return 1;
@@ -46,37 +61,5 @@ public class TextEntryWidget extends Widget {
   @Override
   public int getNeededHeight() {
     return 1;
-  }
-
-  // TODO this ignores height
-  @Override
-  public void print() {
-    TerminalUI.move(getX(), getY());
-    TerminalUI.print(emptyBar);
-
-    TerminalUI.move(getX(), getY() + 1);
-    TerminalUI.print(EMPTY_COL);
-
-    String toPrint = text;
-    int textWidth = getWidth() - 2;
-
-    if (toPrint.length() < textWidth - 1) {
-      toPrint = toPrint + new String(new char[textWidth - toPrint.length()]).replace('\0', ' ');
-    } else if (toPrint.length() == textWidth - 1) {
-      toPrint = toPrint.substring(0, textWidth - 1) + ' ';
-    } else {
-      toPrint = toPrint.substring(toPrint.length() - textWidth + 1) + ' ';
-    }
-
-    TerminalUI.print(toPrint);
-    TerminalUI.print(EMPTY_COL);
-
-    TerminalUI.move(getX(), getY() + 2);
-    TerminalUI.print(emptyBar);
-  }
-
-  @Override
-  public void size() {
-    emptyBar = REVERSE + new String(new char[getWidth()]).replace('\0', ' ') + RESET;
   }
 }

@@ -14,7 +14,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 
-// TODO add a row renderer of some kind, or use the BarWidget as the rows...
+// TODO add a row renderer of some kind, or use the TextWidget as the rows...
 public class ListWidget<T> extends ScrollableWidget {
   @Getter
   private List<T> rows;
