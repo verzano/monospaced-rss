@@ -10,10 +10,6 @@ import com.verzano.terminalrss.ui.widget.constants.Position;
 import lombok.Getter;
 import lombok.Setter;
 
-// TODO allow an N wide vertical bar or M high horizontal bar
-// TODO       OR
-// TODO lock width and height based on the size of the terminal
-// TODO allow positioning of text left/right or top/bottom
 public class TextWidget extends Widget {
   @Getter @Setter
   private String text;

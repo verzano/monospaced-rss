@@ -21,8 +21,8 @@ import java.util.Set;
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_PARENT;
 
 // TODO make this thread safe
-// TODO add a 'parent' widget
-// TODO add padding around components
+// TODO padding will drastically effect how something is printed...
+// TODO add borders eventually...
 // TODO a child widget should also mark its parent as focused...
 public abstract class Widget {
   public static final Widget NULL_WIDGET = new Widget() {

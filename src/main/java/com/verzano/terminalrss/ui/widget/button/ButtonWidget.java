@@ -9,7 +9,6 @@ import com.verzano.terminalrss.ui.widget.text.TextWidget;
 
 import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
 
-// TODO make this more efficient
 public class ButtonWidget extends TextWidget {
   public ButtonWidget(KeyTask onPress, String text, Position textPosition, Size size) {
     super(text, Orientation.HORIZONTAL, textPosition, size);

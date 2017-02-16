@@ -6,7 +6,6 @@ import com.verzano.terminalrss.ui.widget.Widget;
 
 import java.util.Collection;
 
-// TODO make this abstract in some way so that other styles of arranging can be done
 // TODO eventually have the size cut off or wrap the contained widgets
 public abstract class Container extends Widget {
   public abstract Collection<Widget> getContainedWidgets();

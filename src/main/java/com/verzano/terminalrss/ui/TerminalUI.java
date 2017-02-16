@@ -21,15 +21,12 @@ import static com.verzano.terminalrss.ui.widget.ansi.Ansi.SET_POSITION;
 import static com.verzano.terminalrss.ui.widget.constants.Key.ESCAPED_PREFIX;
 
 // TODO use an executor to schedule events
-// TODO create a layout manager type thing for the TerminalUI
-// TODO resizing draws lots of extra shit
 public class TerminalUI {
   private TerminalUI() { }
 
   @Getter @Setter
   private static Widget baseWidget = NULL_WIDGET;
 
-  // TODO use a popup type widget
   @Getter
   private static Floater floater = NULL_FLOATER;
 
@@ -208,10 +205,6 @@ public class TerminalUI {
     } else {
       terminal.writer().print(s);
     }
-  }
-
-  public static void print(Object o) {
-    print(o.toString());
   }
 
   public static void printn(String s, int n) {

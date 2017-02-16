@@ -23,11 +23,10 @@ public class RolodexWidget<T> extends Widget {
   @Getter @Setter
   private volatile int selectedIndex = 0;
 
-  // TODO add setters
-  @Getter
+  @Getter @Setter
   private int itemsBefore;
 
-  @Getter
+  @Getter @Setter
   private int itemsAfter;
 
   public RolodexWidget(List<T> items, int itemsBefore, int itemsAfter, Size size) {

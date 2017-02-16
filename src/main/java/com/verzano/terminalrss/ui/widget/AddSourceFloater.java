@@ -18,7 +18,6 @@ import static com.verzano.terminalrss.ui.widget.Widget.NULL_WIDGET;
 import static com.verzano.terminalrss.ui.widget.constants.Key.TAB;
 import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
 
-// TODO make it either not resizable or that the get size is calculated...
 public class AddSourceFloater extends BinaryChoiceFloater {
   private TextEntryWidget uriTextEntry;
   private RolodexWidget<ContentType> contentTypeRolodex;
