@@ -4,6 +4,10 @@ import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
+import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormat;
+import com.verzano.terminalrss.ui.widget.ansi.Attribute;
+import com.verzano.terminalrss.ui.widget.ansi.Background;
+import com.verzano.terminalrss.ui.widget.ansi.Foreground;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +21,8 @@ import static com.verzano.terminalrss.ui.metrics.Size.FILL_PARENT;
 
 // TODO make this thread safe
 // TODO add a 'parent' widget
-// TODO rework the 'resize' thing thang
 // TODO add padding around components
+// TODO a child widget should also mark its parent as focused...
 public abstract class Widget {
   public static final Widget NULL_WIDGET = new Widget() {
     @Override
@@ -46,6 +50,25 @@ public abstract class Widget {
   
   @Getter @Setter
   private Widget parent = NULL_WIDGET;
+
+  // TODO consider these more...
+  @Getter @Setter
+  private Attribute[] focusedAttributes = new Attribute[]{Attribute.NONE};
+
+  @Getter @Setter
+  private Attribute[] unfocusedAttributes = new Attribute[]{Attribute.NONE};
+
+  @Getter @Setter
+  private Foreground focusedForeground = Foreground.NONE;
+
+  @Getter @Setter
+  private Foreground unfocusedForeground = Foreground.NONE;
+
+  @Getter @Setter
+  private Background focusedBackground = Background.NONE;
+
+  @Getter @Setter
+  private Background unfocusedBackground = Background.NONE;
 
   private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
 
@@ -137,6 +160,14 @@ public abstract class Widget {
     location.setY(y);
   }
 
+  public void setFocusedAttribute(Attribute attribute) {
+    setFocusedAttributes(new Attribute[]{attribute});
+  }
+
+  public void setUnfocusedAttribute(Attribute attribute) {
+    setUnfocusedAttributes(new Attribute[]{attribute});
+  }
+
   public void addKeyAction(String key, KeyTask action) {
     Set<KeyTask> keyTasks = keyActionsMap.getOrDefault(key, new HashSet<>());
     keyTasks.add(action);
@@ -153,6 +184,17 @@ public abstract class Widget {
 
   public void setFocused() {
     TerminalUI.setFocusedWidget(this);
+  }
+
+  public String getTextFormattingPrefix() {
+    String prefix;
+    if (isFocused()) {
+      prefix = AnsiTextFormat.build(getFocusedForeground(), getFocusedBackground(), getFocusedAttributes());
+    } else {
+      prefix = AnsiTextFormat.build(getUnfocusedForeground(), getUnfocusedBackground(), getUnfocusedAttributes());
+    }
+
+    return prefix;
   }
 
   public void reprint() {

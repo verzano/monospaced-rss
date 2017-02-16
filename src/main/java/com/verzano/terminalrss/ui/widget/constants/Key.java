@@ -1,5 +1,7 @@
 package com.verzano.terminalrss.ui.widget.constants;
 
+import com.verzano.terminalrss.ui.widget.ansi.Ansi;
+
 public class Key {
   private Key() { }
 

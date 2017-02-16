@@ -2,14 +2,13 @@ package com.verzano.terminalrss.ui.widget.text.entry;
 
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
+import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.text.TextWidget;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.NORMAL;
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
@@ -38,7 +37,7 @@ public class RolodexWidget<T> extends Widget {
     this.itemsAfter = itemsAfter;
 
     printableItem.setSize(size);
-    printableItem.setNotFocusedFormat(NORMAL);
+    printableItem.setUnfocusedAttribute(Attribute.NORMAL);
 
     addKeyAction(UP_ARROW, () -> {
       selectedIndex = getPreviousIndex(selectedIndex);
@@ -96,7 +95,7 @@ public class RolodexWidget<T> extends Widget {
     if (isFocused()) {
       T item;
       int index = selectedIndex;
-      printableItem.setNotFocusedFormat(NORMAL);
+      printableItem.setUnfocusedAttribute(Attribute.NORMAL);
       for (int i = 1; i <= itemsBefore; i++) {
         index = getPreviousIndex(index);
         item = items.get(index);
@@ -105,14 +104,14 @@ public class RolodexWidget<T> extends Widget {
         printableItem.print();
       }
 
-      printableItem.setNotFocusedFormat(REVERSE);
+      printableItem.setUnfocusedAttribute(Attribute.INVERSE_ON);
       item = items.get(selectedIndex);
       printableItem.setY(getY());
       printableItem.setText(cropOrPad(item.toString()));
       printableItem.print();
 
       index = selectedIndex;
-      printableItem.setNotFocusedFormat(NORMAL);
+      printableItem.setUnfocusedAttribute(Attribute.NORMAL);
       for (int i = 1; i <= itemsAfter; i++) {
         index = getNextIndex(index);
         item = items.get(index);

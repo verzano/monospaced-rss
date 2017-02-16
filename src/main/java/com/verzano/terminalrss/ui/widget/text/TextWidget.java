@@ -3,13 +3,12 @@ package com.verzano.terminalrss.ui.widget.text;
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
+import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormat;
+import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.constants.Orientation;
 import com.verzano.terminalrss.ui.widget.constants.Position;
 import lombok.Getter;
 import lombok.Setter;
-
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 
 // TODO allow an N wide vertical bar or M high horizontal bar
 // TODO       OR
@@ -25,13 +24,9 @@ public class TextWidget extends Widget {
   @Getter @Setter
   private Position textPosition;
 
-  @Getter @Setter
-  private String focusedFormat = REVERSE;
-
-  @Getter @Setter
-  private String notFocusedFormat = REVERSE;
-
   private String emptyRow;
+
+  private static String NORMAL = AnsiTextFormat.build(Attribute.NORMAL);
 
   public TextWidget(String text, Orientation orientation, Position textPosition, Size size) {
     super(size);
@@ -39,7 +34,10 @@ public class TextWidget extends Widget {
     this.textPosition = textPosition;
     this.orientation = orientation;
 
-    emptyRow = REVERSE + new String(new char[getWidth()]).replace('\0', ' ') + RESET;
+    setFocusedAttribute(Attribute.INVERSE_ON);
+    setUnfocusedAttribute(Attribute.INVERSE_ON);
+
+    emptyRow = new String(new char[getWidth()]).replace('\0', ' ');
   }
 
   protected String getTextRow() {
@@ -82,7 +80,7 @@ public class TextWidget extends Widget {
       }
     }
 
-    return (isFocused() ? focusedFormat : notFocusedFormat) + textRow + RESET;
+    return getTextFormattingPrefix() + textRow + NORMAL;
   }
 
   private void printHorizontal() {
@@ -94,7 +92,7 @@ public class TextWidget extends Widget {
         TerminalUI.print(getTextRow());
         for (int i = 1; i < getHeight(); i++) {
           TerminalUI.move(getX(), getY() + i);
-          TerminalUI.print(emptyRow);
+          TerminalUI.print(getEmptyRow());
         }
         break;
       case CENTER_LEFT:
@@ -106,7 +104,7 @@ public class TextWidget extends Widget {
           if (i == middleRow) {
             TerminalUI.print(getTextRow());
           } else {
-            TerminalUI.print(emptyRow);
+            TerminalUI.print(getEmptyRow());
           }
         }
         break;
@@ -115,12 +113,16 @@ public class TextWidget extends Widget {
       case BOTTOM_RIGHT:
         TerminalUI.move(getX(), getY());
         for (int i = 1; i < getHeight(); i++) {
-          TerminalUI.print(emptyRow);
+          TerminalUI.print(getEmptyRow());
           TerminalUI.move(getX(), getY() + i);
         }
         TerminalUI.print(getTextRow());
         break;
     }
+  }
+
+  public String getEmptyRow() {
+    return getTextFormattingPrefix() + emptyRow + NORMAL;
   }
 
   @Override
@@ -157,13 +159,14 @@ public class TextWidget extends Widget {
     String toPrint = text;
 
     switch (orientation) {
+      // TODO make vertical print correctly
       case VERTICAL:
         for (int row = 0; row < getHeight(); row++) {
           TerminalUI.move(getX(), getY() + row);
           if (row < toPrint.length()) {
-            TerminalUI.print(REVERSE + toPrint.charAt(row) + RESET);
+            TerminalUI.print(getTextFormattingPrefix() + toPrint.charAt(row) + NORMAL);
           } else {
-            TerminalUI.print(REVERSE + " " + RESET);
+            TerminalUI.print(getTextFormattingPrefix() + " " + NORMAL);
           }
         }
         break;
@@ -175,6 +178,6 @@ public class TextWidget extends Widget {
 
   @Override
   public void size() {
-
+    emptyRow = new String(new char[getWidth()]).replace('\0', ' ');
   }
 }

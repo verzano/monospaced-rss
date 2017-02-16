@@ -2,6 +2,8 @@ package com.verzano.terminalrss.ui.widget.scrollable.list;
 
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;
+import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormat;
+import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
 import lombok.Getter;
@@ -9,12 +11,10 @@ import lombok.Getter;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.RESET;
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 
-// TODO add a row renderer of some kind, or use the TextWidget as the rows...
+// TODO rework this as a vertical BoxContainer of TextWidgets...
 public class ListWidget<T> extends ScrollableWidget {
   @Getter
   private List<T> rows;
@@ -22,6 +22,9 @@ public class ListWidget<T> extends ScrollableWidget {
   private int selectedLine;
 
   private int topLine;
+
+  private static final String SELECTED_LINE_PREFIX = AnsiTextFormat.build(Attribute.INVERSE_ON);
+  private static final String SELECTED_LINE_POSTFIX = AnsiTextFormat.build(Attribute.INVERSE_OFF);
 
   public ListWidget(Size size) {
     this(new LinkedList<>(), size);
@@ -114,7 +117,7 @@ public class ListWidget<T> extends ScrollableWidget {
         }
 
         if (index == selectedLine) {
-          toPrint = REVERSE + toPrint + RESET;
+          toPrint = SELECTED_LINE_PREFIX + toPrint + SELECTED_LINE_POSTFIX;
         }
 
         TerminalUI.print(toPrint);

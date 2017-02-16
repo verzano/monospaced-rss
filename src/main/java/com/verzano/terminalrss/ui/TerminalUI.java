@@ -16,8 +16,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.verzano.terminalrss.ui.floater.Floater.NULL_FLOATER;
 import static com.verzano.terminalrss.ui.widget.Widget.NULL_WIDGET;
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.ESC;
-import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
+import static com.verzano.terminalrss.ui.widget.ansi.Ansi.ESC;
+import static com.verzano.terminalrss.ui.widget.ansi.Ansi.SET_POSITION;
 import static com.verzano.terminalrss.ui.widget.constants.Key.ESCAPED_PREFIX;
 
 // TODO use an executor to schedule events
