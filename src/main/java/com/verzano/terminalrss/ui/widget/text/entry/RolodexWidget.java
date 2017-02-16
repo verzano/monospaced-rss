@@ -90,6 +90,8 @@ public class RolodexWidget<T> extends Widget {
   // TODO this ignores height
   @Override
   public void print() {
+    super.print();
+
     printableItem.setX(getX());
     if (isFocused()) {
       T item;
@@ -124,10 +126,5 @@ public class RolodexWidget<T> extends Widget {
       printableItem.setText(cropOrPad(item.toString()));
       printableItem.print();
     }
-  }
-
-  @Override
-  public void size() {
-
   }
 }

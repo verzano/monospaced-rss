@@ -3,7 +3,6 @@ package com.verzano.terminalrss.ui.widget.text;
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
-import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormat;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.constants.Orientation;
 import com.verzano.terminalrss.ui.widget.constants.Position;
@@ -20,10 +19,6 @@ public class TextWidget extends Widget {
   @Getter @Setter
   private Position textPosition;
 
-  private String emptyRow;
-
-  private static String NORMAL = AnsiTextFormat.build(Attribute.NORMAL);
-
   public TextWidget(String text, Orientation orientation, Position textPosition, Size size) {
     super(size);
     this.text = text;
@@ -32,8 +27,6 @@ public class TextWidget extends Widget {
 
     setFocusedAttribute(Attribute.INVERSE_ON);
     setUnfocusedAttribute(Attribute.INVERSE_ON);
-
-    emptyRow = new String(new char[getWidth()]).replace('\0', ' ');
   }
 
   protected String getTextRow() {
@@ -117,10 +110,6 @@ public class TextWidget extends Widget {
     }
   }
 
-  public String getEmptyRow() {
-    return getTextFormattingPrefix() + emptyRow + NORMAL;
-  }
-
   @Override
   public int getNeededWidth() {
     int width = 0;
@@ -151,6 +140,7 @@ public class TextWidget extends Widget {
 
   @Override
   public void print() {
+    super.print();
     TerminalUI.move(getX(), getY());
     String toPrint = text;
 
@@ -170,10 +160,5 @@ public class TextWidget extends Widget {
         printHorizontal();
         break;
     }
-  }
-
-  @Override
-  public void size() {
-    emptyRow = new String(new char[getWidth()]).replace('\0', ' ');
   }
 }

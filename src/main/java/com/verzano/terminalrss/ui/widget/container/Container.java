@@ -46,6 +46,7 @@ public abstract class Container extends Widget {
 
   @Override
   public void print() {
+    super.print();
     getContainedWidgets().forEach(Widget::print);
   }
 

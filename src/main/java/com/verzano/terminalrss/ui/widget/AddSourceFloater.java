@@ -5,6 +5,7 @@ import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.floater.binary.BinaryChoiceFloater;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
+import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.container.box.BoxContainer;
 import com.verzano.terminalrss.ui.widget.text.entry.RolodexWidget;
 import com.verzano.terminalrss.ui.widget.text.entry.TextEntryWidget;
@@ -56,6 +57,10 @@ public class AddSourceFloater extends BinaryChoiceFloater {
     displayWidget.addWidget(contentTagEntry);
 
     setDisplayWidget(displayWidget);
+
+    getBaseWidget().setUnfocusedAttribute(Attribute.INVERSE_ON);
+    getBaseWidget().setFocusedAttribute(Attribute.INVERSE_ON);
+    getBaseWidget().size();
   }
 
   public String getUri() {

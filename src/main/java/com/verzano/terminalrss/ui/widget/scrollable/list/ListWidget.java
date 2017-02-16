@@ -124,9 +124,4 @@ public class ListWidget<T> extends ScrollableWidget {
       }
     }
   }
-
-  @Override
-  public void size() {
-    super.size();
-  }
 }

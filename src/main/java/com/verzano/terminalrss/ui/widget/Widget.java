@@ -24,6 +24,7 @@ import static com.verzano.terminalrss.ui.metrics.Size.FILL_PARENT;
 // TODO padding will drastically effect how something is printed...
 // TODO add borders eventually...
 // TODO a child widget should also mark its parent as focused...
+// TODO really need to consider sizing and when to do it...
 public abstract class Widget {
   public static final Widget NULL_WIDGET = new Widget() {
     @Override
@@ -35,12 +36,6 @@ public abstract class Widget {
     public int getNeededHeight() {
       return 0;
     }
-
-    @Override
-    public void print() { }
-
-    @Override
-    public void size() { }
   };
 
   @Getter @Setter
@@ -75,11 +70,14 @@ public abstract class Widget {
 
   private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
 
+  private String emptyRow;
+
+  // TODO no, this is wrong
+  public static String NORMAL = AnsiTextFormat.build(Attribute.NORMAL);
+
   // TODO maybe add getParentXXX()???
   public abstract int getNeededWidth();
   public abstract int getNeededHeight();
-  public abstract void print();
-  public abstract void size();
 
   public Widget() {
     this(new Size(FILL_PARENT, FILL_PARENT));
@@ -200,11 +198,22 @@ public abstract class Widget {
     return prefix;
   }
 
+  public String getEmptyRow() {
+    return getTextFormattingPrefix() + emptyRow + NORMAL;
+  }
+
+  public void print() {
+    for (int row = 0; row < getHeight(); row++) {
+      TerminalUI.move(getX(), getY() + row);
+      TerminalUI.print(getEmptyRow());
+    }
+  }
+
   public void reprint() {
     TerminalUI.schedulePrintTask(this::print);
   }
 
-  public void resize() {
-    TerminalUI.schedulePrintTask(this::size);
+  public void size() {
+    emptyRow = new String(new char[getWidth()]).replace('\0', ' ');
   }
 }

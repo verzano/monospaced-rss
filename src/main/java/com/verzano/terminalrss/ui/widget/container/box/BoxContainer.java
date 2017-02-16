@@ -94,9 +94,4 @@ public class BoxContainer extends Container {
     }
     return height;
   }
-
-  @Override
-  public void size() {
-
-  }
 }

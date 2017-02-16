@@ -32,6 +32,7 @@ public abstract class ScrollableWidget extends Widget {
 
   @Override
   public void print() {
+    super.print();
     int barStart = (int)Math.floor(getHeight()*viewTop/internalHeight);
     int barEnd = barStart + barLength;
 
@@ -44,10 +45,5 @@ public abstract class ScrollableWidget extends Widget {
         TerminalUI.print(" ");
       }
     }
-  }
-
-  @Override
-  public void size() {
-
   }
 }
