@@ -47,7 +47,7 @@ public class AnsiTextFormat {
       boolean hasOne = false;
       if (!cleanAttributes.isEmpty()) {
         ansiCode += cleanAttributes.stream()
-            .map(a -> a.getValue() + "")
+            .map(Attribute::getCode)
             .reduce((a, b) -> a + ";" + b)
             .orElseGet(() -> "0");
         hasOne = true;

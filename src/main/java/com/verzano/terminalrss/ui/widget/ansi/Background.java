@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Background {
-  NONE("-1"),
+  NONE(""),
 
   DEFAULT("49"),
   
