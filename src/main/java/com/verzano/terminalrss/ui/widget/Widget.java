@@ -2,6 +2,7 @@ package com.verzano.terminalrss.ui.widget;
 
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Location;
+import com.verzano.terminalrss.ui.metrics.Padding;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormat;
@@ -47,11 +48,13 @@ public abstract class Widget {
 
   @Getter @Setter
   private Location location = new Location(1, 1);
-  
+
+  @Getter @Setter
+  private Padding padding = new Padding(0, 0, 0, 0);
+
   @Getter @Setter
   private Widget parent = NULL_WIDGET;
 
-  // TODO consider these more...
   @Getter @Setter
   private Attribute[] focusedAttributes = new Attribute[]{Attribute.NONE};
 
