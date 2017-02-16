@@ -1,7 +1,7 @@
-package com.verzano.terminalrss.ui.widget.valueentry;
+package com.verzano.terminalrss.ui.widget.text.entry;
 
 import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.bar.TextWidget;
+import com.verzano.terminalrss.ui.widget.text.TextWidget;
 
 import java.util.stream.IntStream;
 

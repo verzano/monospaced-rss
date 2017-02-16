@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.ui.widget.bar;
+package com.verzano.terminalrss.ui.widget.text;
 
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;

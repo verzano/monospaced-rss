@@ -2,12 +2,12 @@ package com.verzano.terminalrss.ui.widget;
 
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.floater.binary.BinaryChoiceFloater;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.container.box.BoxContainer;
-import com.verzano.terminalrss.ui.widget.floater.binary.BinaryChoiceFloater;
-import com.verzano.terminalrss.ui.widget.valueentry.RolodexWidget;
-import com.verzano.terminalrss.ui.widget.valueentry.TextEntryWidget;
+import com.verzano.terminalrss.ui.widget.text.entry.RolodexWidget;
+import com.verzano.terminalrss.ui.widget.text.entry.TextEntryWidget;
 
 import java.util.Arrays;
 import java.util.List;

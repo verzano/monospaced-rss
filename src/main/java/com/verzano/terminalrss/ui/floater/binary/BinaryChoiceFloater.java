@@ -1,12 +1,12 @@
-package com.verzano.terminalrss.ui.widget.floater.binary;
+package com.verzano.terminalrss.ui.floater.binary;
 
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.floater.Floater;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.Widget;
 import com.verzano.terminalrss.ui.widget.button.ButtonWidget;
 import com.verzano.terminalrss.ui.widget.container.box.BoxContainer;
-import com.verzano.terminalrss.ui.widget.floater.Floater;
 import lombok.Getter;
 
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_NEEDED;

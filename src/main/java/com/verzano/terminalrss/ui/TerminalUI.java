@@ -1,9 +1,9 @@
 package com.verzano.terminalrss.ui;
 
+import com.verzano.terminalrss.ui.floater.Floater;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.print.PrintTask;
 import com.verzano.terminalrss.ui.widget.Widget;
-import com.verzano.terminalrss.ui.widget.floater.Floater;
 import lombok.Getter;
 import lombok.Setter;
 import org.jline.terminal.Terminal;
@@ -14,11 +14,11 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.verzano.terminalrss.ui.floater.Floater.NULL_FLOATER;
 import static com.verzano.terminalrss.ui.widget.Widget.NULL_WIDGET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.ESC;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
 import static com.verzano.terminalrss.ui.widget.constants.Key.ESCAPED_PREFIX;
-import static com.verzano.terminalrss.ui.widget.floater.Floater.NULL_FLOATER;
 
 // TODO use an executor to schedule events
 // TODO create a layout manager type thing for the TerminalUI

@@ -15,11 +15,11 @@ import com.verzano.terminalrss.source.SourceManager;
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.AddSourceFloater;
-import com.verzano.terminalrss.ui.widget.bar.TextWidget;
 import com.verzano.terminalrss.ui.widget.container.Container;
 import com.verzano.terminalrss.ui.widget.container.box.BoxContainer;
 import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
 import com.verzano.terminalrss.ui.widget.scrollable.text.TextAreaWidget;
+import com.verzano.terminalrss.ui.widget.text.TextWidget;
 
 import java.io.IOException;
 import java.net.URL;

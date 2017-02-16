@@ -1,8 +1,8 @@
-package com.verzano.terminalrss.ui.widget.valueentry;
+package com.verzano.terminalrss.ui.widget.text.entry;
 
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
-import com.verzano.terminalrss.ui.widget.bar.TextWidget;
+import com.verzano.terminalrss.ui.widget.text.TextWidget;
 import lombok.Getter;
 import lombok.Setter;
 

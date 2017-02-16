@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.ui.widget.floater;
+package com.verzano.terminalrss.ui.floater;
 
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Location;

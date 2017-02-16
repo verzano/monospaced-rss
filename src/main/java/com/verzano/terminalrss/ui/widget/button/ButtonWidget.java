@@ -2,9 +2,9 @@ package com.verzano.terminalrss.ui.widget.button;
 
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
-import com.verzano.terminalrss.ui.widget.bar.TextWidget;
 import com.verzano.terminalrss.ui.widget.constants.Orientation;
 import com.verzano.terminalrss.ui.widget.constants.Position;
+import com.verzano.terminalrss.ui.widget.text.TextWidget;
 
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.NORMAL;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.REVERSE;
