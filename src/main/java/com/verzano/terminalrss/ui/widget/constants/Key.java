@@ -1,11 +1,10 @@
 package com.verzano.terminalrss.ui.widget.constants;
 
-import com.verzano.terminalrss.ui.widget.ansi.Ansi;
-
+// TODO fill out this class a lot more
 public class Key {
   private Key() { }
 
-  public static final String ESCAPED_PREFIX = Ansi.ESC + "[";
+  public static final String ESCAPED_PREFIX = "\u001b[";
 
   // Escaped keys
   public static final String UP_ARROW = ESCAPED_PREFIX + "A";
