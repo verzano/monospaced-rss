@@ -54,12 +54,12 @@ public class AnsiTextFormat {
       }
 
       if (foreground != Foreground.NONE) {
-        ansiCode += (hasOne ? ";" : "") + foreground.getValue();
+        ansiCode += (hasOne ? ";" : "") + foreground.getCode();
         hasOne = true;
       }
 
       if (background != Background.NONE) {
-        ansiCode += (hasOne ? ";" : "") + background.getValue();
+        ansiCode += (hasOne ? ";" : "") + background.getCode();
       }
 
       ansiCode += "m";
