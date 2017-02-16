@@ -49,6 +49,7 @@ public abstract class Widget {
 
   private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
 
+  // TODO maybe add getParentXXX()???
   public abstract int getNeededWidth();
   public abstract int getNeededHeight();
   public abstract void print();
@@ -66,17 +67,22 @@ public abstract class Widget {
     int width = size.getWidth();
     switch (width) {
       case Size.FILL_PARENT:
-        if (parent == NULL_WIDGET) {
-          width = TerminalUI.getWidth();
-        } else {
-          width = parent.getWidth();
+        Widget ancestor = parent;
+        boolean cont = true;
+        while (cont) {
+          // TODO this part defends against a poorly formed widget tree, but should it?
+          if (ancestor == NULL_WIDGET || ancestor == null) {
+            cont = false;
+            width = TerminalUI.getWidth();
+          } else if (ancestor.getSize().getWidth() >= 0) {
+            cont = false;
+            width = ancestor.getWidth();
+          }
+          ancestor = parent.getParent();
         }
         break;
       case Size.FILL_NEEDED:
         width = getNeededWidth();
-        break;
-      case Size.FILL_REMAINING:
-        // TODO figure this out...
         break;
     }
     return width;
@@ -90,17 +96,22 @@ public abstract class Widget {
     int height = size.getHeight();
     switch (height) {
       case Size.FILL_PARENT:
-        if (parent == NULL_WIDGET) {
-          height = TerminalUI.getHeight();
-        } else {
-          height = parent.getHeight();
+        Widget ancestor = parent;
+        boolean cont = true;
+        while (cont) {
+          // TODO this part defends against a poorly formed widget tree, but should it?
+          if (ancestor == NULL_WIDGET || ancestor == null) {
+            cont = false;
+            height = TerminalUI.getHeight();
+          } else if (ancestor.getSize().getHeight() >= 0) {
+            cont = false;
+            height = ancestor.getHeight();
+          }
+          ancestor = parent.getParent();
         }
         break;
       case Size.FILL_NEEDED:
         height = getNeededHeight();
-        break;
-      case Size.FILL_REMAINING:
-        // TODO figure this out...
         break;
     }
     return height;

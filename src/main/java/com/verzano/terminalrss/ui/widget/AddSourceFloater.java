@@ -5,7 +5,7 @@ import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.container.box.BoxContainer;
-import com.verzano.terminalrss.ui.widget.floating.binary.BinaryChoiceFloater;
+import com.verzano.terminalrss.ui.widget.floater.binary.BinaryChoiceFloater;
 import com.verzano.terminalrss.ui.widget.valueentry.RolodexWidget;
 import com.verzano.terminalrss.ui.widget.valueentry.TextEntryWidget;
 
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_NEEDED;
+import static com.verzano.terminalrss.ui.widget.Widget.NULL_WIDGET;
 import static com.verzano.terminalrss.ui.widget.constants.Key.TAB;
 import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
 
@@ -27,14 +28,8 @@ public class AddSourceFloater extends BinaryChoiceFloater {
     super(
         NULL_WIDGET,
         addSourceAction, "Add Source",
-        cancelAction, "Cancel",
-        new Size(FILL_NEEDED, FILL_NEEDED));
-    BoxContainer mainContainer = new BoxContainer(HORIZONTAL, 1, new Size(FILL_NEEDED, FILL_NEEDED)) {
-      @Override
-      public void setFocused() {
-        uriTextEntry.setFocused();
-      }
-    };
+        cancelAction, "Cancel");
+    BoxContainer displayWidget = new BoxContainer(HORIZONTAL, 1, new Size(FILL_NEEDED, FILL_NEEDED));
 
     uriTextEntry = new TextEntryWidget(new Size(30, FILL_NEEDED));
     uriTextEntry.addKeyAction(TAB, () -> {
@@ -57,11 +52,11 @@ public class AddSourceFloater extends BinaryChoiceFloater {
       TerminalUI.reprint();
     });
 
-    mainContainer.addWidget(uriTextEntry);
-    mainContainer.addWidget(contentTypeRolodex);
-    mainContainer.addWidget(contentTagEntry);
+    displayWidget.addWidget(uriTextEntry);
+    displayWidget.addWidget(contentTypeRolodex);
+    displayWidget.addWidget(contentTagEntry);
 
-    setDisplayWidget(mainContainer);
+    setDisplayWidget(displayWidget);
   }
 
   public String getUri() {
@@ -80,10 +75,5 @@ public class AddSourceFloater extends BinaryChoiceFloater {
     uriTextEntry.setText("");
     contentTagEntry.setText("");
     contentTypeRolodex.setSelectedIndex(0);
-  }
-
-  @Override
-  public void setFocused() {
-    TerminalUI.setFocusedWidget(uriTextEntry);
   }
 }

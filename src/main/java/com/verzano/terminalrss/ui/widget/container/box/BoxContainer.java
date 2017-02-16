@@ -45,6 +45,12 @@ public class BoxContainer extends Container {
   }
 
   @Override
+  public void removeWidgets() {
+    super.removeWidgets();
+    widgetStack.clear();
+  }
+
+  @Override
   public Collection<Widget> getContainedWidgets() {
     return widgetStack;
   }

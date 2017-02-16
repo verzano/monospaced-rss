@@ -20,6 +20,11 @@ public abstract class Container extends Widget {
     widget.setParent(this);
   }
 
+  // Overridden versions of this must call super.removeWidgets()
+  public void removeWidgets() {
+    getContainedWidgets().forEach(w -> w.setParent(NULL_WIDGET));
+  }
+
   @Override
   public void setLocation(Location location) {
     setX(location.getX());
@@ -43,5 +48,15 @@ public abstract class Container extends Widget {
   @Override
   public void print() {
     getContainedWidgets().forEach(Widget::print);
+  }
+
+  @Override
+  public void setFocused() {
+    Collection<Widget> widgets = getContainedWidgets();
+    if (widgets.size() > 0) {
+      widgets.iterator().next().setFocused();
+    } else {
+      super.setFocused();
+    }
   }
 }

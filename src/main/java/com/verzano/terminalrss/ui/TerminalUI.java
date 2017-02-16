@@ -3,7 +3,7 @@ package com.verzano.terminalrss.ui;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.print.PrintTask;
 import com.verzano.terminalrss.ui.widget.Widget;
-import com.verzano.terminalrss.ui.widget.floating.FloatingWidget;
+import com.verzano.terminalrss.ui.widget.floater.Floater;
 import lombok.Getter;
 import lombok.Setter;
 import org.jline.terminal.Terminal;
@@ -18,7 +18,7 @@ import static com.verzano.terminalrss.ui.widget.Widget.NULL_WIDGET;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.ESC;
 import static com.verzano.terminalrss.ui.widget.constants.Ansi.SET_POSITION;
 import static com.verzano.terminalrss.ui.widget.constants.Key.ESCAPED_PREFIX;
-import static com.verzano.terminalrss.ui.widget.floating.FloatingWidget.NULL_FLOATER;
+import static com.verzano.terminalrss.ui.widget.floater.Floater.NULL_FLOATER;
 
 // TODO use an executor to schedule events
 // TODO create a layout manager type thing for the TerminalUI
@@ -31,7 +31,7 @@ public class TerminalUI {
 
   // TODO use a popup type widget
   @Getter
-  private static FloatingWidget floatingWidget = NULL_FLOATER;
+  private static Floater floater = NULL_FLOATER;
 
   @Getter @Setter
   private static Widget focusedWidget = NULL_WIDGET;
@@ -64,13 +64,14 @@ public class TerminalUI {
     }
   }
 
-  public static void setFloatingWidget(FloatingWidget floatingWidget) {
-    TerminalUI.floatingWidget = floatingWidget;
-    TerminalUI.floatingWidget.centerInTerminal();
+  public static void setFloater(Floater floater) {
+    TerminalUI.floater = floater;
+    TerminalUI.floater.centerInTerminal();
+    TerminalUI.floater.getBaseWidget().setFocused();
   }
 
-  public static void removeFloatingWidget() {
-    TerminalUI.floatingWidget = NULL_FLOATER;
+  public static void removeFloater() {
+    TerminalUI.floater = NULL_FLOATER;
   }
 
   public static int getWidth() {
@@ -175,8 +176,8 @@ public class TerminalUI {
       printTaskQueue.addFirst(TerminalUI::resize);
     } else {
       baseWidget.size();
-      if (floatingWidget != NULL_FLOATER) {
-        floatingWidget.print();
+      if (floater != NULL_FLOATER) {
+        floater.getBaseWidget().print();
       }
     }
   }
@@ -187,8 +188,8 @@ public class TerminalUI {
     } else {
       clear();
       baseWidget.print();
-      if (floatingWidget != NULL_FLOATER) {
-        floatingWidget.print();
+      if (floater != NULL_FLOATER) {
+        floater.getBaseWidget().print();
       }
     }
   }

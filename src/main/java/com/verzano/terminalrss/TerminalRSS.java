@@ -108,8 +108,7 @@ public class TerminalRSS {
       Source source = sourcesListWidget.getSelectedRow();
       if (source == ADD_SOURCE) {
         addSourceFloater.clear();
-        TerminalUI.setFloatingWidget(addSourceFloater);
-        addSourceFloater.setFocused();
+        TerminalUI.setFloater(addSourceFloater);
       } else {
         TerminalUI.setBaseWidget(articlesScreen);
         selectedSource = source;
@@ -131,13 +130,13 @@ public class TerminalRSS {
 
     addSourceFloater = new AddSourceFloater(
         () -> {
-          TerminalUI.removeFloatingWidget();
+          TerminalUI.removeFloater();
           sourcesListWidget.setFocused();
           TerminalUI.reprint();
           addSource(addSourceFloater.getUri(), addSourceFloater.getContentType(), addSourceFloater.getContentTag());
         },
         () -> {
-          TerminalUI.removeFloatingWidget();
+          TerminalUI.removeFloater();
           sourcesListWidget.setFocused();
           TerminalUI.reprint();
         });
