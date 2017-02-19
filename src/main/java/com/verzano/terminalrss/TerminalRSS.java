@@ -16,7 +16,7 @@ import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.AddSourceFloater;
 import com.verzano.terminalrss.ui.widget.container.Container;
-import com.verzano.terminalrss.ui.widget.container.box.BoxContainer;
+import com.verzano.terminalrss.ui.widget.container.shelf.ShelfContainer;
 import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
 import com.verzano.terminalrss.ui.widget.scrollable.text.TextAreaWidget;
 import com.verzano.terminalrss.ui.widget.text.TextWidget;
@@ -77,16 +77,16 @@ public class TerminalRSS {
     buildArticleWidgets();
     buildContentTextAreaWidget();
 
-    sourcesScreen = new BoxContainer(VERTICAL, 0, new Size(FILL_PARENT, FILL_PARENT));
+    sourcesScreen = new ShelfContainer(VERTICAL, 0, new Size(FILL_PARENT, FILL_PARENT));
     sourcesScreen.addWidget(sourceTextWidget);
     sourcesScreen.addWidget(sourcesListWidget);
 
-    articlesScreen = new BoxContainer(VERTICAL, 0, new Size(FILL_PARENT, FILL_PARENT));
+    articlesScreen = new ShelfContainer(VERTICAL, 0, new Size(FILL_PARENT, FILL_PARENT));
     articlesScreen.addWidget(sourceTextWidget);
     articlesScreen.addWidget(articleTextWidget);
     articlesScreen.addWidget(articlesListWidget);
 
-    contentScreen = new BoxContainer(VERTICAL, 0, new Size(FILL_PARENT, FILL_PARENT));
+    contentScreen = new ShelfContainer(VERTICAL, 0, new Size(FILL_PARENT, FILL_PARENT));
     contentScreen.addWidget(sourceTextWidget);
     contentScreen.addWidget(articleTextWidget);
     contentScreen.addWidget(contentTextAreaWidget);

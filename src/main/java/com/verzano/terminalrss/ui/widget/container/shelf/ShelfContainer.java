@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.ui.widget.container.box;
+package com.verzano.terminalrss.ui.widget.container.shelf;
 
 import com.verzano.terminalrss.ui.metrics.Point;
 import com.verzano.terminalrss.ui.metrics.Size;
@@ -12,14 +12,14 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BoxContainer extends Container {
+public class ShelfContainer extends Container {
   private List<Widget> widgetStack = new LinkedList<>();
   private Orientation orientation;
 
   @Getter @Setter
   private int spacing;
 
-  public BoxContainer(Orientation orientation, int spacing, Size size) {
+  public ShelfContainer(Orientation orientation, int spacing, Size size) {
     super(size);
     this.orientation = orientation;
     this.spacing = spacing;

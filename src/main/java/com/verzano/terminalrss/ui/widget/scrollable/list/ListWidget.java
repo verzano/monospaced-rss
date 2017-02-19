@@ -14,7 +14,7 @@ import java.util.List;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 
-// TODO rework this as a vertical BoxContainer of TextWidgets...
+// TODO rework this as a vertical ShelfContainer of TextWidgets...
 public class ListWidget<T> extends ScrollableWidget {
   @Getter
   private List<T> rows;

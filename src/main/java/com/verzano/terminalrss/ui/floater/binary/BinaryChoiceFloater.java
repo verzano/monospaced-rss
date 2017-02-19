@@ -6,7 +6,7 @@ import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.Widget;
 import com.verzano.terminalrss.ui.widget.button.ButtonWidget;
-import com.verzano.terminalrss.ui.widget.container.box.BoxContainer;
+import com.verzano.terminalrss.ui.widget.container.shelf.ShelfContainer;
 import lombok.Getter;
 
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_NEEDED;
@@ -16,13 +16,13 @@ import static com.verzano.terminalrss.ui.widget.constants.Orientation.VERTICAL;
 import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER;
 
 public class BinaryChoiceFloater extends Floater {
-  private BoxContainer container;
+  private ShelfContainer container;
 
   @Getter
   private Widget displayWidget;
 
   @Getter
-  private final BoxContainer buttonContainer;
+  private final ShelfContainer buttonContainer;
   @Getter
   private final ButtonWidget positiveButton;
   @Getter
@@ -34,12 +34,12 @@ public class BinaryChoiceFloater extends Floater {
       String positiveText,
       KeyTask negativeTask,
       String negativeText) {
-    container = new BoxContainer(VERTICAL, 1, new Size(FILL_NEEDED, FILL_NEEDED));
+    container = new ShelfContainer(VERTICAL, 1, new Size(FILL_NEEDED, FILL_NEEDED));
 
     this.displayWidget = displayWidget;
     container.addWidget(displayWidget);
 
-    buttonContainer = new BoxContainer(HORIZONTAL, 1, new Size(FILL_NEEDED, FILL_NEEDED));
+    buttonContainer = new ShelfContainer(HORIZONTAL, 1, new Size(FILL_NEEDED, FILL_NEEDED));
     container.addWidget(buttonContainer);
     buttonContainer.setY(displayWidget.getHeight());
 

@@ -6,7 +6,7 @@ import com.verzano.terminalrss.ui.floater.binary.BinaryChoiceFloater;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
-import com.verzano.terminalrss.ui.widget.container.box.BoxContainer;
+import com.verzano.terminalrss.ui.widget.container.shelf.ShelfContainer;
 import com.verzano.terminalrss.ui.widget.text.entry.RolodexWidget;
 import com.verzano.terminalrss.ui.widget.text.entry.TextEntryWidget;
 
@@ -29,7 +29,7 @@ public class AddSourceFloater extends BinaryChoiceFloater {
         NULL_WIDGET,
         addSourceAction, "Add Source",
         cancelAction, "Cancel");
-    BoxContainer displayWidget = new BoxContainer(HORIZONTAL, 1, new Size(FILL_NEEDED, FILL_NEEDED));
+    ShelfContainer displayWidget = new ShelfContainer(HORIZONTAL, 1, new Size(FILL_NEEDED, FILL_NEEDED));
 
     uriTextEntry = new TextEntryWidget(new Size(30, FILL_NEEDED));
     uriTextEntry.addKeyAction(TAB, () -> {
