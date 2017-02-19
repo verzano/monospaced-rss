@@ -1,6 +1,6 @@
 package com.verzano.terminalrss.ui.widget.container.box;
 
-import com.verzano.terminalrss.ui.metrics.Location;
+import com.verzano.terminalrss.ui.metrics.Point;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
 import com.verzano.terminalrss.ui.widget.constants.Orientation;
@@ -30,12 +30,12 @@ public class BoxContainer extends Container {
     super.addWidget(widget);
     switch (orientation) {
       case HORIZONTAL:
-        widget.setLocation(new Location(
+        widget.setPoint(new Point(
             getX() + widgetStack.stream().mapToInt(w -> w.getWidth() + spacing).sum(),
             getY()));
         break;
       case VERTICAL:
-        widget.setLocation(new Location(
+        widget.setPoint(new Point(
             getX(),
             getY() + widgetStack.stream().mapToInt(w -> w.getHeight() + spacing).sum()));
         break;

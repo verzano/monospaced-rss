@@ -1,8 +1,8 @@
 package com.verzano.terminalrss.ui.widget;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.metrics.Location;
 import com.verzano.terminalrss.ui.metrics.Padding;
+import com.verzano.terminalrss.ui.metrics.Point;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormat;
@@ -42,7 +42,7 @@ public abstract class Widget {
   private Size size;
 
   @Getter @Setter
-  private Location location = new Location(1, 1);
+  private Point point = new Point(1, 1);
 
   @Getter @Setter
   private Padding padding = new Padding(0, 0, 0, 0);
@@ -146,19 +146,19 @@ public abstract class Widget {
   }
 
   public int getX() {
-    return location.getX();
+    return point.getX();
   }
 
   public void setX(int x) {
-    location.setX(x);
+    point.setX(x);
   }
 
   public int getY() {
-    return location.getY();
+    return point.getY();
   }
 
   public void setY(int y) {
-    location.setY(y);
+    point.setY(y);
   }
 
   public void setFocusedAttribute(Attribute attribute) {

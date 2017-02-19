@@ -1,6 +1,6 @@
 package com.verzano.terminalrss.ui.widget.container;
 
-import com.verzano.terminalrss.ui.metrics.Location;
+import com.verzano.terminalrss.ui.metrics.Point;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
 
@@ -25,9 +25,9 @@ public abstract class Container extends Widget {
   }
 
   @Override
-  public void setLocation(Location location) {
-    setX(location.getX());
-    setY(location.getY());
+  public void setPoint(Point point) {
+    setX(point.getX());
+    setY(point.getY());
   }
 
   @Override
