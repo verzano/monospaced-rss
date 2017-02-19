@@ -6,7 +6,7 @@ import com.verzano.terminalrss.ui.widget.Widget;
 
 import java.util.Collection;
 
-// TODO eventually have the size cut off or wrap the contained widgets
+// TODO eventually have the contentSize cut off or wrap the contained widgets
 public abstract class Container extends Widget {
   public abstract Collection<Widget> getContainedWidgets();
 
@@ -25,9 +25,9 @@ public abstract class Container extends Widget {
   }
 
   @Override
-  public void setPoint(Point point) {
-    setX(point.getX());
-    setY(point.getY());
+  public void setLocation(Point location) {
+    setX(location.getX());
+    setY(location.getY());
   }
 
   @Override
@@ -45,9 +45,9 @@ public abstract class Container extends Widget {
   }
 
   @Override
-  public void print() {
-    super.print();
-    getContainedWidgets().forEach(Widget::print);
+  public void printContent() {
+    // TODO test this to make sure it really does what you want, might want to call print()...
+    getContainedWidgets().forEach(Widget::printContent);
   }
 
   @Override

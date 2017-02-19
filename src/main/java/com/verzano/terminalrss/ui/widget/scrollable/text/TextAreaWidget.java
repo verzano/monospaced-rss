@@ -113,13 +113,13 @@ public class TextAreaWidget extends ScrollableWidget {
   }
 
   @Override
-  public void print() {
-    super.print();
+  public void printContent() {
+    super.printContent();
 
-    int width = getWidth() - 1;
+    int width = getContentWidth() - 1;
 
-    for (int row = 0; row <= getHeight(); row++) {
-      TerminalUI.move(getX(), getY() + row);
+    for (int row = 0; row <= getContentHeight(); row++) {
+      TerminalUI.move(getContentX(), getContentY() + row);
       int line = row + topLine;
       if (line < lines.size()) {
         TerminalUI.print(lines.get(line));

@@ -21,6 +21,6 @@ public abstract class Floater {
   public void centerInTerminal() {
     int x = TerminalUI.getWidth()/2 - getBaseWidget().getWidth()/2;
     int y = TerminalUI.getHeight()/2 - getBaseWidget().getHeight()/2;
-    getBaseWidget().setPoint(new Point(x, y));
+    getBaseWidget().setLocation(new Point(x, y));
   }
 }

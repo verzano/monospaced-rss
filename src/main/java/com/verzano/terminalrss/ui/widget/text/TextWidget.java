@@ -77,11 +77,11 @@ public class TextWidget extends Widget {
       case TOP_LEFT:
       case TOP_CENTER:
       case TOP_RIGHT:
-        TerminalUI.move(getX(), getY());
+        TerminalUI.move(getContentX(), getContentY());
         TerminalUI.print(getTextRow());
-        for (int i = 1; i < getHeight(); i++) {
-          TerminalUI.move(getX(), getY() + i);
-          TerminalUI.print(getEmptyRow());
+        for (int i = 1; i < getContentHeight(); i++) {
+          TerminalUI.move(getContentX(), getContentY() + i);
+          TerminalUI.print(getEmptyContentRow());
         }
         break;
       case CENTER_LEFT:
@@ -89,21 +89,21 @@ public class TextWidget extends Widget {
       case CENTER_RIGHT:
         int middleRow = getHeight()/2;
         for (int i = 0; i < getHeight(); i++) {
-          TerminalUI.move(getX(), getY() + i);
+          TerminalUI.move(getContentX(), getContentY() + i);
           if (i == middleRow) {
             TerminalUI.print(getTextRow());
           } else {
-            TerminalUI.print(getEmptyRow());
+            TerminalUI.print(getEmptyContentRow());
           }
         }
         break;
       case BOTTOM_LEFT:
       case BOTTOM_CENTER:
       case BOTTOM_RIGHT:
-        TerminalUI.move(getX(), getY());
-        for (int i = 1; i < getHeight(); i++) {
-          TerminalUI.print(getEmptyRow());
-          TerminalUI.move(getX(), getY() + i);
+        TerminalUI.move(getContentX(), getContentY());
+        for (int i = 1; i < getContentHeight(); i++) {
+          TerminalUI.print(getEmptyContentRow());
+          TerminalUI.move(getContentX(), getContentY() + i);
         }
         TerminalUI.print(getTextRow());
         break;
@@ -139,16 +139,15 @@ public class TextWidget extends Widget {
   }
 
   @Override
-  public void print() {
-    super.print();
-    TerminalUI.move(getX(), getY());
+  public void printContent() {
+    TerminalUI.move(getContentX(), getContentY());
     String toPrint = text;
 
     switch (orientation) {
-      // TODO make vertical print correctly
+      // TODO make vertical printContent correctly
       case VERTICAL:
-        for (int row = 0; row < getHeight(); row++) {
-          TerminalUI.move(getX(), getY() + row);
+        for (int row = 0; row < getContentHeight(); row++) {
+          TerminalUI.move(getContentX(), getContentY() + row);
           if (row < toPrint.length()) {
             TerminalUI.print(getTextFormattingPrefix() + toPrint.charAt(row) + NORMAL);
           } else {

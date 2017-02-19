@@ -174,7 +174,7 @@ public class TerminalUI {
     } else {
       baseWidget.size();
       if (floater != NULL_FLOATER) {
-        floater.getBaseWidget().print();
+        floater.getBaseWidget().size();
       }
     }
   }

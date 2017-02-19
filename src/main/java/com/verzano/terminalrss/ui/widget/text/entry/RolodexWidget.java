@@ -15,6 +15,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL
 import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER_LEFT;
 
 // TODO both this and the list widget should be backed by some kind of list model
+// TODO allow setting of the height
 public class RolodexWidget<T> extends Widget {
   private TextWidget printableItem = new TextWidget("", HORIZONTAL, CENTER_LEFT, new Size(1, 1));
 
@@ -35,7 +36,7 @@ public class RolodexWidget<T> extends Widget {
     this.itemsBefore = itemsBefore;
     this.itemsAfter = itemsAfter;
 
-    printableItem.setSize(size);
+    printableItem.setContentSize(size);
     printableItem.setUnfocusedAttribute(Attribute.NORMAL);
 
     addKeyAction(UP_ARROW, () -> {
@@ -87,11 +88,8 @@ public class RolodexWidget<T> extends Widget {
     return 1;
   }
 
-  // TODO this ignores height
   @Override
-  public void print() {
-    super.print();
-
+  public void printContent() {
     printableItem.setX(getX());
     if (isFocused()) {
       T item;
@@ -102,14 +100,14 @@ public class RolodexWidget<T> extends Widget {
         item = items.get(index);
         printableItem.setY(getY() - i);
         printableItem.setText(cropOrPad(item.toString()));
-        printableItem.print();
+        printableItem.printContent();
       }
 
       printableItem.setUnfocusedAttribute(Attribute.INVERSE_ON);
       item = items.get(selectedIndex);
       printableItem.setY(getY());
       printableItem.setText(cropOrPad(item.toString()));
-      printableItem.print();
+      printableItem.printContent();
 
       index = selectedIndex;
       printableItem.setUnfocusedAttribute(Attribute.NORMAL);
@@ -118,13 +116,13 @@ public class RolodexWidget<T> extends Widget {
         item = items.get(index);
         printableItem.setY(getY() + i);
         printableItem.setText(cropOrPad(item.toString()));
-        printableItem.print();
+        printableItem.printContent();
       }
     } else {
       T item = items.get(selectedIndex);
       printableItem.setY(getY());
       printableItem.setText(cropOrPad(item.toString()));
-      printableItem.print();
+      printableItem.printContent();
     }
   }
 }

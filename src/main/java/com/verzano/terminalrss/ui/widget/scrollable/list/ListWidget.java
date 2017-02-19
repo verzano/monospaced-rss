@@ -2,7 +2,7 @@ package com.verzano.terminalrss.ui.widget.scrollable.list;
 
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormat;
+import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormatBuilder;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
@@ -23,8 +23,8 @@ public class ListWidget<T> extends ScrollableWidget {
 
   private int topLine;
 
-  private static final String SELECTED_LINE_PREFIX = AnsiTextFormat.build(Attribute.INVERSE_ON);
-  private static final String SELECTED_LINE_POSTFIX = AnsiTextFormat.build(Attribute.INVERSE_OFF);
+  private static final String SELECTED_LINE_PREFIX = AnsiTextFormatBuilder.build(Attribute.INVERSE_ON);
+  private static final String SELECTED_LINE_POSTFIX = AnsiTextFormatBuilder.build(Attribute.INVERSE_OFF);
 
   public ListWidget(Size size) {
     this(new LinkedList<>(), size);
@@ -97,13 +97,13 @@ public class ListWidget<T> extends ScrollableWidget {
   }
 
   @Override
-  public void print() {
-    super.print();
+  public void printContent() {
+    super.printContent();
 
-    int width = getWidth() - 1;
+    int width = getContentWidth() - 1;
 
-    for (int row = 0; row < getHeight(); row++) {
-      TerminalUI.move(getX(), getY() + row);
+    for (int row = 0; row < getContentHeight(); row++) {
+      TerminalUI.move(getContentX(), getContentY() + row);
       int index = row + topLine;
 
       if (index >= rows.size()) {

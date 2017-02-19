@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AnsiTextFormat {
-  private AnsiTextFormat() { }
+public class AnsiTextFormatBuilder {
+  private AnsiTextFormatBuilder() { }
 
   public static String build(Attribute... attributes) {
     return build(Foreground.NONE, Background.NONE, attributes);

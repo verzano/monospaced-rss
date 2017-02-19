@@ -30,12 +30,12 @@ public class BoxContainer extends Container {
     super.addWidget(widget);
     switch (orientation) {
       case HORIZONTAL:
-        widget.setPoint(new Point(
+        widget.setLocation(new Point(
             getX() + widgetStack.stream().mapToInt(w -> w.getWidth() + spacing).sum(),
             getY()));
         break;
       case VERTICAL:
-        widget.setPoint(new Point(
+        widget.setLocation(new Point(
             getX(),
             getY() + widgetStack.stream().mapToInt(w -> w.getHeight() + spacing).sum()));
         break;

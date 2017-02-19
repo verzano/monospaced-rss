@@ -5,7 +5,7 @@ import com.verzano.terminalrss.ui.metrics.Padding;
 import com.verzano.terminalrss.ui.metrics.Point;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
-import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormat;
+import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormatBuilder;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.ansi.Background;
 import com.verzano.terminalrss.ui.widget.ansi.Foreground;
@@ -36,16 +36,19 @@ public abstract class Widget {
     public int getNeededHeight() {
       return 0;
     }
+
+    @Override
+    public void printContent() { }
   };
 
   @Getter @Setter
-  private Size size;
-
-  @Getter @Setter
-  private Point point = new Point(1, 1);
+  private Point location = new Point(1, 1);
 
   @Getter @Setter
   private Padding padding = new Padding(0, 0, 0, 0);
+
+  @Getter @Setter
+  private Size contentSize = new Size(FILL_PARENT, FILL_PARENT);
 
   @Getter @Setter
   private Widget parent = NULL_WIDGET;
@@ -71,24 +74,23 @@ public abstract class Widget {
   private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
 
   private String emptyRow;
+  private String emptyContentRow;
 
   // TODO no, this is wrong
-  public static String NORMAL = AnsiTextFormat.build(Attribute.NORMAL);
+  public static String NORMAL = AnsiTextFormatBuilder.build(Attribute.NORMAL);
 
-  // TODO maybe add getParentXXX()???
   public abstract int getNeededWidth();
   public abstract int getNeededHeight();
+  public abstract void printContent();
 
-  public Widget() {
-    this(new Size(FILL_PARENT, FILL_PARENT));
-  }
+  public Widget() { }
 
-  public Widget(Size size) {
-    this.size = size;
+  public Widget(Size contentSize) {
+    this.contentSize = contentSize;
   }
 
   public int getWidth() {
-    int width = size.getWidth();
+    int width = contentSize.getWidth();
     switch (width) {
       case Size.FILL_PARENT:
         Widget ancestor = parent;
@@ -98,7 +100,7 @@ public abstract class Widget {
           if (ancestor == NULL_WIDGET || ancestor == null) {
             cont = false;
             width = TerminalUI.getWidth();
-          } else if (ancestor.getSize().getWidth() >= 0) {
+          } else if (ancestor.getContentSize().getWidth() >= 0) {
             cont = false;
             width = ancestor.getWidth();
           }
@@ -113,11 +115,15 @@ public abstract class Widget {
   }
 
   public void setWidth(int width) {
-    size.setWidth(width);
+    contentSize.setWidth(width);
+  }
+
+  public int getContentWidth() {
+    return getWidth() - padding.getLeft() - padding.getRight();
   }
 
   public int getHeight() {
-    int height = size.getHeight();
+    int height = contentSize.getHeight();
     switch (height) {
       case Size.FILL_PARENT:
         Widget ancestor = parent;
@@ -127,7 +133,7 @@ public abstract class Widget {
           if (ancestor == NULL_WIDGET || ancestor == null) {
             cont = false;
             height = TerminalUI.getHeight();
-          } else if (ancestor.getSize().getHeight() >= 0) {
+          } else if (ancestor.getContentSize().getHeight() >= 0) {
             cont = false;
             height = ancestor.getHeight();
           }
@@ -142,23 +148,35 @@ public abstract class Widget {
   }
 
   public void setHeight(int height) {
-    size.setHeight(height);
+    contentSize.setHeight(height);
+  }
+
+  public int getContentHeight() {
+    return getHeight() - padding.getTop() - padding.getBottom();
   }
 
   public int getX() {
-    return point.getX();
+    return location.getX();
   }
 
   public void setX(int x) {
-    point.setX(x);
+    location.setX(x);
+  }
+
+  public int getContentX() {
+    return getX() + padding.getLeft();
   }
 
   public int getY() {
-    return point.getY();
+    return location.getY();
   }
 
   public void setY(int y) {
-    point.setY(y);
+    location.setY(y);
+  }
+
+  public int getContentY() {
+    return getY() + padding.getTop();
   }
 
   public void setFocusedAttribute(Attribute attribute) {
@@ -190,23 +208,35 @@ public abstract class Widget {
   public String getTextFormattingPrefix() {
     String prefix;
     if (isFocused()) {
-      prefix = AnsiTextFormat.build(getFocusedForeground(), getFocusedBackground(), getFocusedAttributes());
+      prefix = AnsiTextFormatBuilder.build(
+          getFocusedForeground(),
+          getFocusedBackground(),
+          getFocusedAttributes());
     } else {
-      prefix = AnsiTextFormat.build(getUnfocusedForeground(), getUnfocusedBackground(), getUnfocusedAttributes());
+      prefix = AnsiTextFormatBuilder.build(
+          getUnfocusedForeground(),
+          getUnfocusedBackground(),
+          getUnfocusedAttributes());
     }
 
     return prefix;
   }
 
-  public String getEmptyRow() {
+  private String getEmptyRow() {
     return getTextFormattingPrefix() + emptyRow + NORMAL;
   }
 
-  public void print() {
+  public String getEmptyContentRow() {
+    return getTextFormattingPrefix() + emptyContentRow + NORMAL;
+  }
+
+  public final void print() {
     for (int row = 0; row < getHeight(); row++) {
       TerminalUI.move(getX(), getY() + row);
       TerminalUI.print(getEmptyRow());
     }
+
+    printContent();
   }
 
   public void reprint() {
@@ -215,5 +245,6 @@ public abstract class Widget {
 
   public void size() {
     emptyRow = new String(new char[getWidth()]).replace('\0', ' ');
+    emptyContentRow = new String(new char[getContentWidth()]).replace('\0', ' ');
   }
 }
