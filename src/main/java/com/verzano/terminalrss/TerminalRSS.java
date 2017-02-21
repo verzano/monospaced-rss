@@ -12,11 +12,11 @@ import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.source.Source;
 import com.verzano.terminalrss.source.SourceManager;
+import com.verzano.terminalrss.ui.AddSourceFloater;
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.container.shelf.Shelf;
+import com.verzano.terminalrss.ui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.AddSourceFloater;
-import com.verzano.terminalrss.ui.widget.container.shelf.Shelf;
-import com.verzano.terminalrss.ui.widget.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
 import com.verzano.terminalrss.ui.widget.scrollable.text.TextAreaWidget;
 import com.verzano.terminalrss.ui.widget.text.TextWidget;
@@ -29,12 +29,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
+import static com.verzano.terminalrss.ui.constants.Key.DELETE;
+import static com.verzano.terminalrss.ui.constants.Key.ENTER;
+import static com.verzano.terminalrss.ui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.ui.constants.Orientation.VERTICAL;
+import static com.verzano.terminalrss.ui.constants.Position.CENTER_LEFT;
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_CONTAINER;
-import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
-import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
-import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.ui.widget.constants.Orientation.VERTICAL;
-import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER_LEFT;
 
 // TODO handle bad urls
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
@@ -108,7 +108,7 @@ public class TerminalRSS {
       Source source = sourcesListWidget.getSelectedRow();
       if (source == ADD_SOURCE) {
         addSourceFloater.clear();
-        TerminalUI.setFloater(addSourceFloater);
+        addSourceFloater.showFloater();
       } else {
         TerminalUI.setBaseWidget(articlesScreen);
         selectedSource = source;

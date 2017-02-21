@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.ui.widget.constants;
+package com.verzano.terminalrss.ui.constants;
 
 public enum Position {
   TOP_LEFT,     TOP_CENTER,     TOP_RIGHT,

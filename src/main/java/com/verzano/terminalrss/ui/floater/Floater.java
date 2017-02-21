@@ -1,26 +1,20 @@
 package com.verzano.terminalrss.ui.floater;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.widget.Widget;
+import com.verzano.terminalrss.ui.container.enclosure.Enclosure;
 import lombok.NoArgsConstructor;
 
-// TODO force the floaters to the center of the screen always
-// TODO need to disable setX setY stuff so that its position can't be fucked with
-// TODO convert this to a type of container
 @NoArgsConstructor
-public abstract class Floater {
-  public static final Floater NULL_FLOATER = new Floater() {
-    @Override
-    public Widget getBaseWidget() {
-      return Widget.NULL_WIDGET;
-    }
-  };
+public abstract class Floater extends Enclosure {
+  public static final Floater NULL_FLOATER = new Floater() { };
 
-  public abstract Widget getBaseWidget();
+  @Override
+  public final int getX() {
+    return TerminalUI.getWidth()/2 - getWidth()/2;
+  }
 
-  public void centerInTerminal() {
-    int x = TerminalUI.getWidth()/2 - getBaseWidget().getWidth()/2;
-    int y = TerminalUI.getHeight()/2 - getBaseWidget().getHeight()/2;
-//    getBaseWidget().setLocation(new Point(x, y));
+  @Override
+  public final int getY() {
+    return TerminalUI.getHeight()/2 - getHeight()/2;
   }
 }

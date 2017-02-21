@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.ui.widget.container;
+package com.verzano.terminalrss.ui.container;
 
 import com.verzano.terminalrss.ui.metrics.Point;
 import com.verzano.terminalrss.ui.metrics.Size;
@@ -82,32 +82,32 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
     return widgetSizes.getOrDefault(widget, NO_SIZE).getWidth();
   }
 
-  public void setWidgetWidth(Widget widget, int width) {
-    widgetSizes.get(widget).setWidth(width);
+  public void setWidgetWidth(Widget widget) {
+    widgetSizes.get(widget).setWidth(calculateWidgetWidth(widget));
   }
 
   public int getWidgetHeight(Widget widget) {
     return widgetSizes.getOrDefault(widget, NO_SIZE).getHeight();
   }
 
-  public void setWidgetHeight(Widget widget, int height) {
-    widgetSizes.get(widget).setHeight(height);
+  public void setWidgetHeight(Widget widget) {
+    widgetSizes.get(widget).setHeight(calculateWidgetHeight(widget));
   }
 
   public int getWidgetX(Widget widget) {
     return widgetLocations.getOrDefault(widget, NO_LOCATION).getX();
   }
 
-  public void setWidgetX(Widget widget, int x) {
-    widgetLocations.get(widget).setX(x);
+  public void setWidgetX(Widget widget) {
+    widgetLocations.get(widget).setX(calculateWidgetX(widget));
   }
 
   public int getWidgetY(Widget widget) {
     return widgetLocations.getOrDefault(widget, NO_LOCATION).getY();
   }
 
-  public void setWidgetY(Widget widget, int y) {
-    widgetLocations.get(widget).setY(y);
+  public void setWidgetY(Widget widget) {
+    widgetLocations.get(widget).setY(calculateWidgetY(widget));
   }
 
   public void addWidget(Widget widget, T options) {
@@ -139,10 +139,10 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
 
   public void arrange() {
     getContainedWidgets().forEach(widget -> {
-      setWidgetWidth(widget, calculateWidgetWidth(widget));
-      setWidgetHeight(widget, calculateWidgetHeight(widget));
-      setWidgetX(widget, calculateWidgetX(widget));
-      setWidgetY(widget, calculateWidgetY(widget));
+      setWidgetWidth(widget);
+      setWidgetHeight(widget);
+      setWidgetX(widget);
+      setWidgetY(widget);
 
       if (widget instanceof Container) {
         ((Container)widget).arrange();

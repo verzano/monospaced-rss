@@ -1,24 +1,23 @@
 package com.verzano.terminalrss.ui.floater.binary;
 
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.constants.CardinalDirection;
+import com.verzano.terminalrss.ui.container.enclosure.EnclosureOptions;
+import com.verzano.terminalrss.ui.container.shelf.Shelf;
+import com.verzano.terminalrss.ui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.ui.floater.Floater;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.Widget;
 import com.verzano.terminalrss.ui.widget.button.ButtonWidget;
-import com.verzano.terminalrss.ui.widget.container.shelf.Shelf;
-import com.verzano.terminalrss.ui.widget.container.shelf.ShelfOptions;
 import lombok.Getter;
 
+import static com.verzano.terminalrss.ui.constants.Key.TAB;
+import static com.verzano.terminalrss.ui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.ui.constants.Position.CENTER;
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_NEEDED;
-import static com.verzano.terminalrss.ui.widget.constants.Key.TAB;
-import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.ui.widget.constants.Orientation.VERTICAL;
-import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER;
 
 public class BinaryChoiceFloater extends Floater {
-  private Shelf container;
-
   @Getter
   private Widget displayWidget;
 
@@ -35,13 +34,8 @@ public class BinaryChoiceFloater extends Floater {
       String positiveText,
       KeyTask negativeTask,
       String negativeText) {
-    container = new Shelf(VERTICAL, 1);
-
     this.displayWidget = displayWidget;
-    container.addWidget(displayWidget, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
-
     buttonContainer = new Shelf(HORIZONTAL, 1);
-    container.addWidget(buttonContainer, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
 
     positiveButton = new ButtonWidget(positiveTask, positiveText, CENTER, new Size(FILL_NEEDED, FILL_NEEDED));
     buttonContainer.addWidget(positiveButton, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
@@ -57,18 +51,8 @@ public class BinaryChoiceFloater extends Floater {
       this.displayWidget.setFocused();
       TerminalUI.reprint();
     });
-  }
 
-  public void setDisplayWidget(Widget displayWidget) {
-    this.displayWidget = displayWidget;
-
-    container.removeWidgets();
-    container.addWidget(displayWidget, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
-    container.addWidget(buttonContainer, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
-  }
-
-  @Override
-  public Widget getBaseWidget() {
-    return container;
+    addWidget(displayWidget, new EnclosureOptions(CardinalDirection.CENTER));
+    addWidget(buttonContainer, new EnclosureOptions(CardinalDirection.SOUTH));
   }
 }

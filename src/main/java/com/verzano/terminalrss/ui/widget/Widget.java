@@ -1,13 +1,13 @@
 package com.verzano.terminalrss.ui.widget;
 
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.ansi.AnsiFormat;
+import com.verzano.terminalrss.ui.ansi.Attribute;
+import com.verzano.terminalrss.ui.ansi.Background;
+import com.verzano.terminalrss.ui.ansi.Foreground;
+import com.verzano.terminalrss.ui.container.Container;
 import com.verzano.terminalrss.ui.metrics.Padding;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
-import com.verzano.terminalrss.ui.widget.ansi.AnsiFormat;
-import com.verzano.terminalrss.ui.widget.ansi.Attribute;
-import com.verzano.terminalrss.ui.widget.ansi.Background;
-import com.verzano.terminalrss.ui.widget.ansi.Foreground;
-import com.verzano.terminalrss.ui.widget.container.Container;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,8 +18,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.verzano.terminalrss.ui.widget.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.ui.widget.container.Container.NULL_CONTAINER;
+import static com.verzano.terminalrss.ui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.ui.container.Container.NULL_CONTAINER;
 
 // TODO make this thread safe
 // TODO padding will drastically effect how something is printed...

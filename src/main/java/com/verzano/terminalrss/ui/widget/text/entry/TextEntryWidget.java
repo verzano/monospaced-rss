@@ -1,21 +1,21 @@
 package com.verzano.terminalrss.ui.widget.text.entry;
 
-import com.verzano.terminalrss.ui.widget.ansi.AnsiFormat;
-import com.verzano.terminalrss.ui.widget.ansi.Attribute;
-import com.verzano.terminalrss.ui.widget.ansi.Background;
-import com.verzano.terminalrss.ui.widget.ansi.Foreground;
+import com.verzano.terminalrss.ui.ansi.AnsiFormat;
+import com.verzano.terminalrss.ui.ansi.Attribute;
+import com.verzano.terminalrss.ui.ansi.Background;
+import com.verzano.terminalrss.ui.ansi.Foreground;
 import com.verzano.terminalrss.ui.widget.text.TextWidget;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.stream.IntStream;
 
-import static com.verzano.terminalrss.ui.widget.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.ui.widget.ansi.Attribute.BLINK_ON;
-import static com.verzano.terminalrss.ui.widget.ansi.Attribute.UNDERLINE_ON;
-import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
-import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER_LEFT;
+import static com.verzano.terminalrss.ui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.ui.ansi.Attribute.BLINK_ON;
+import static com.verzano.terminalrss.ui.ansi.Attribute.UNDERLINE_ON;
+import static com.verzano.terminalrss.ui.constants.Key.DELETE;
+import static com.verzano.terminalrss.ui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.ui.constants.Position.CENTER_LEFT;
 
 public class TextEntryWidget extends TextWidget {
   @Getter @Setter

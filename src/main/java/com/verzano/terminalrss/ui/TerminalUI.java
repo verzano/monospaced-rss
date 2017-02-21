@@ -1,12 +1,12 @@
 package com.verzano.terminalrss.ui;
 
+import com.verzano.terminalrss.ui.container.floor.Floor;
+import com.verzano.terminalrss.ui.container.floor.FloorOptions;
 import com.verzano.terminalrss.ui.floater.Floater;
 import com.verzano.terminalrss.ui.metrics.Point;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.print.PrintTask;
 import com.verzano.terminalrss.ui.widget.Widget;
-import com.verzano.terminalrss.ui.widget.container.floor.Floor;
-import com.verzano.terminalrss.ui.widget.container.floor.FloorOptions;
 import lombok.Getter;
 import lombok.Setter;
 import org.jline.terminal.Terminal;
@@ -17,12 +17,12 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.verzano.terminalrss.ui.ansi.Ansi.ESC;
+import static com.verzano.terminalrss.ui.ansi.Ansi.SET_POSITION;
+import static com.verzano.terminalrss.ui.constants.Key.ESCAPED_PREFIX;
 import static com.verzano.terminalrss.ui.floater.Floater.NULL_FLOATER;
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_CONTAINER;
 import static com.verzano.terminalrss.ui.widget.Widget.NULL_WIDGET;
-import static com.verzano.terminalrss.ui.widget.ansi.Ansi.ESC;
-import static com.verzano.terminalrss.ui.widget.ansi.Ansi.SET_POSITION;
-import static com.verzano.terminalrss.ui.widget.constants.Key.ESCAPED_PREFIX;
 
 // TODO use an executor to schedule events
 public class TerminalUI {
@@ -33,6 +33,7 @@ public class TerminalUI {
   @Getter
   private static Floater floater = NULL_FLOATER;
 
+  // TODO needs to be a tree of focus
   @Getter @Setter
   private static Widget focusedWidget = NULL_WIDGET;
 
@@ -65,10 +66,10 @@ public class TerminalUI {
     }
   }
 
+  // TODO only permit one at a time... or have a stack...
   public static void setFloater(Floater floater) {
     TerminalUI.floater = floater;
-    TerminalUI.floater.centerInTerminal();
-    TerminalUI.floater.getBaseWidget().setFocused();
+    TerminalUI.floater.setFocused();
   }
 
   public static void removeFloater() {
@@ -180,9 +181,9 @@ public class TerminalUI {
     if (Thread.currentThread() != printingThread) {
       printTaskQueue.addFirst(TerminalUI::resize);
     } else {
-      floor.size();
+      floor.arrange();
       if (floater != NULL_FLOATER) {
-        floater.getBaseWidget().size();
+        floater.arrange();
       }
     }
   }
@@ -193,7 +194,7 @@ public class TerminalUI {
     } else {
       floor.print();
       if (floater != NULL_FLOATER) {
-        floater.getBaseWidget().print();
+        floater.print();
       }
     }
   }

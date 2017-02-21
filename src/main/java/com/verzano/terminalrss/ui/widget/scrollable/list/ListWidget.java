@@ -1,11 +1,11 @@
 package com.verzano.terminalrss.ui.widget.scrollable.list;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.widget.ansi.AnsiFormat;
-import com.verzano.terminalrss.ui.widget.ansi.Attribute;
-import com.verzano.terminalrss.ui.widget.ansi.Background;
-import com.verzano.terminalrss.ui.widget.ansi.Foreground;
-import com.verzano.terminalrss.ui.widget.constants.Direction;
+import com.verzano.terminalrss.ui.ansi.AnsiFormat;
+import com.verzano.terminalrss.ui.ansi.Attribute;
+import com.verzano.terminalrss.ui.ansi.Background;
+import com.verzano.terminalrss.ui.ansi.Foreground;
+import com.verzano.terminalrss.ui.constants.Direction;
 import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,9 +13,9 @@ import lombok.Setter;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.verzano.terminalrss.ui.widget.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
+import static com.verzano.terminalrss.ui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.ui.constants.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.ui.constants.Key.UP_ARROW;
 
 // TODO rework this as a vertical Shelf of TextWidgets...
 public class ListWidget<T> extends ScrollableWidget {

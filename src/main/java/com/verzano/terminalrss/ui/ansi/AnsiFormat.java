@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.ui.widget.ansi;
+package com.verzano.terminalrss.ui.ansi;
 
 import lombok.Getter;
 

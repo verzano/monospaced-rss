@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.ui.widget.constants;
+package com.verzano.terminalrss.ui.constants;
 
 // TODO fill out this class a lot more
 public class Key {

@@ -1,8 +1,8 @@
-package com.verzano.terminalrss.ui.widget.container.floor;
+package com.verzano.terminalrss.ui.container.floor;
 
+import com.verzano.terminalrss.ui.container.ContainerOptions;
 import com.verzano.terminalrss.ui.metrics.Point;
 import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.container.ContainerOptions;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

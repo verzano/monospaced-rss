@@ -1,8 +1,8 @@
-package com.verzano.terminalrss.ui.widget.container.floor;
+package com.verzano.terminalrss.ui.container.floor;
 
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.container.Container;
 import com.verzano.terminalrss.ui.widget.Widget;
-import com.verzano.terminalrss.ui.widget.container.Container;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -26,16 +26,17 @@ public class Floor extends Container<FloorOptions> {
 
   @Override
   public void addWidgetAux(Widget widget, FloorOptions options) {
+    if (this.widget != NULL_WIDGET) {
+      removeWidget(this.widget);
+    }
     this.widget = widget;
     this.options = options;
   }
 
   @Override
   public void removeWidgetAux(Widget widget) {
-    if (widget == this.widget) {
-      this.widget = NULL_WIDGET;
-      options = null;
-    }
+    this.widget = NULL_WIDGET;
+    options = null;
   }
 
   @Override

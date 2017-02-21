@@ -1,17 +1,17 @@
 package com.verzano.terminalrss.ui.widget.scrollable.text;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.widget.constants.Direction;
+import com.verzano.terminalrss.ui.constants.Direction;
 import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
 import lombok.Getter;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.verzano.terminalrss.ui.widget.constants.Direction.DOWN;
-import static com.verzano.terminalrss.ui.widget.constants.Direction.UP;
-import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
+import static com.verzano.terminalrss.ui.constants.Direction.DOWN;
+import static com.verzano.terminalrss.ui.constants.Direction.UP;
+import static com.verzano.terminalrss.ui.constants.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.ui.constants.Key.UP_ARROW;
 
 public class TextAreaWidget extends ScrollableWidget {
   @Getter

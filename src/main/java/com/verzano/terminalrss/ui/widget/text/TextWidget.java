@@ -1,14 +1,14 @@
 package com.verzano.terminalrss.ui.widget.text;
 
 import com.verzano.terminalrss.ui.TerminalUI;
+import com.verzano.terminalrss.ui.ansi.Attribute;
+import com.verzano.terminalrss.ui.constants.Orientation;
+import com.verzano.terminalrss.ui.constants.Position;
 import com.verzano.terminalrss.ui.widget.Widget;
-import com.verzano.terminalrss.ui.widget.ansi.Attribute;
-import com.verzano.terminalrss.ui.widget.constants.Orientation;
-import com.verzano.terminalrss.ui.widget.constants.Position;
 import lombok.Getter;
 import lombok.Setter;
 
-import static com.verzano.terminalrss.ui.widget.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.ui.ansi.AnsiFormat.NORMAL;
 
 public class TextWidget extends Widget {
   @Getter @Setter

@@ -7,10 +7,10 @@ import lombok.Setter;
 
 import java.util.List;
 
-import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
-import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER_LEFT;
+import static com.verzano.terminalrss.ui.constants.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.ui.constants.Key.UP_ARROW;
+import static com.verzano.terminalrss.ui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.ui.constants.Position.CENTER_LEFT;
 
 // TODO both this and the list widget should be backed by some kind of list model
 // TODO allow setting of the height
