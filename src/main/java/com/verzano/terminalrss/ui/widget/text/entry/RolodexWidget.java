@@ -105,7 +105,7 @@ public class RolodexWidget<T> extends TextWidget {
 
     if (isFocused()) {
       int index = selectedIndex;
-      for (int i = 0; i < itemsBefore; i++) {
+      for (int i = 1; i <= itemsBefore; i++) {
         index = getPreviousIndex(index);
         printItem(items.get(index), getContentY() - i*getContentHeight());
       }
