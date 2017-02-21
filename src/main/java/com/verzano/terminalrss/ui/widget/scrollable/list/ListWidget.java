@@ -1,7 +1,6 @@
 package com.verzano.terminalrss.ui.widget.scrollable.list;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormatBuilder;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
@@ -14,7 +13,7 @@ import java.util.List;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 
-// TODO rework this as a vertical ShelfContainer of TextWidgets...
+// TODO rework this as a vertical Shelf of TextWidgets...
 public class ListWidget<T> extends ScrollableWidget {
   @Getter
   private List<T> rows;
@@ -26,12 +25,11 @@ public class ListWidget<T> extends ScrollableWidget {
   private static final String SELECTED_LINE_PREFIX = AnsiTextFormatBuilder.build(Attribute.INVERSE_ON);
   private static final String SELECTED_LINE_POSTFIX = AnsiTextFormatBuilder.build(Attribute.INVERSE_OFF);
 
-  public ListWidget(Size size) {
-    this(new LinkedList<>(), size);
+  public ListWidget() {
+    this(new LinkedList<>());
   }
 
-  public ListWidget(List<T> rows, Size size) {
-    super(size);
+  public ListWidget(List<T> rows) {
     setRows(rows);
 
     addKeyAction(UP_ARROW, () -> {

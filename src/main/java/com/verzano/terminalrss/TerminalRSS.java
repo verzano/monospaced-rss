@@ -15,8 +15,8 @@ import com.verzano.terminalrss.source.SourceManager;
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.AddSourceFloater;
-import com.verzano.terminalrss.ui.widget.container.Container;
-import com.verzano.terminalrss.ui.widget.container.shelf.ShelfContainer;
+import com.verzano.terminalrss.ui.widget.container.shelf.Shelf;
+import com.verzano.terminalrss.ui.widget.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
 import com.verzano.terminalrss.ui.widget.scrollable.text.TextAreaWidget;
 import com.verzano.terminalrss.ui.widget.text.TextWidget;
@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
-import static com.verzano.terminalrss.ui.metrics.Size.FILL_PARENT;
+import static com.verzano.terminalrss.ui.metrics.Size.FILL_CONTAINER;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
 import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
 import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
@@ -49,9 +49,9 @@ import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER_LEFT;
 // TODO sort Sources by name
 // TODO sort Articles by date
 public class TerminalRSS {
-  private static Container sourcesScreen;
-  private static Container articlesScreen;
-  private static Container contentScreen;
+  private static Shelf sourcesScreen;
+  private static Shelf articlesScreen;
+  private static Shelf contentScreen;
 
   private static ListWidget<Source> sourcesListWidget;
   private static ListWidget<Article> articlesListWidget;
@@ -77,19 +77,19 @@ public class TerminalRSS {
     buildArticleWidgets();
     buildContentTextAreaWidget();
 
-    sourcesScreen = new ShelfContainer(VERTICAL, 0, new Size(FILL_PARENT, FILL_PARENT));
-    sourcesScreen.addWidget(sourceTextWidget);
-    sourcesScreen.addWidget(sourcesListWidget);
+    sourcesScreen = new Shelf(VERTICAL, 0);
+    sourcesScreen.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    sourcesScreen.addWidget(sourcesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUI.getHeight() - 1)));
 
-    articlesScreen = new ShelfContainer(VERTICAL, 0, new Size(FILL_PARENT, FILL_PARENT));
-    articlesScreen.addWidget(sourceTextWidget);
-    articlesScreen.addWidget(articleTextWidget);
-    articlesScreen.addWidget(articlesListWidget);
+    articlesScreen = new Shelf(VERTICAL, 0);
+    articlesScreen.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    articlesScreen.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    articlesScreen.addWidget(articlesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUI.getHeight() - 2)));
 
-    contentScreen = new ShelfContainer(VERTICAL, 0, new Size(FILL_PARENT, FILL_PARENT));
-    contentScreen.addWidget(sourceTextWidget);
-    contentScreen.addWidget(articleTextWidget);
-    contentScreen.addWidget(contentTextAreaWidget);
+    contentScreen = new Shelf(VERTICAL, 0);
+    contentScreen.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    contentScreen.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    contentScreen.addWidget(contentTextAreaWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUI.getHeight() - 3)));
 
     TerminalUI.setBaseWidget(sourcesScreen);
     sourcesListWidget.setFocused();
@@ -97,11 +97,11 @@ public class TerminalRSS {
   }
 
   private static void buildSourceWidgets() {
-    sourceTextWidget = new TextWidget("Sources:", HORIZONTAL, CENTER_LEFT, new Size(FILL_PARENT, 1));
+    sourceTextWidget = new TextWidget("Sources:", HORIZONTAL, CENTER_LEFT);
 
     sourcesListWidget = new ListWidget<>(
-        new LinkedList<>(SourceManager.getSources()),
-        new Size(FILL_PARENT, TerminalUI.getHeight() - 2));
+        new LinkedList<>(SourceManager.getSources())
+    );
     sourcesListWidget.addRow(ADD_SOURCE);
 
     sourcesListWidget.addKeyAction(ENTER, () -> {
@@ -143,9 +143,9 @@ public class TerminalRSS {
   }
 
   private static void buildArticleWidgets() {
-    articleTextWidget = new TextWidget("Articles:", HORIZONTAL, CENTER_LEFT, new Size(FILL_PARENT, 1));
+    articleTextWidget = new TextWidget("Articles:", HORIZONTAL, CENTER_LEFT);
 
-    articlesListWidget = new ListWidget<>(new Size(FILL_PARENT, TerminalUI.getHeight() - 3));
+    articlesListWidget = new ListWidget<>();
 
     articlesListWidget.addKeyAction(ENTER, () -> {
       Article article = articlesListWidget.getSelectedRow();
@@ -174,7 +174,7 @@ public class TerminalRSS {
   }
 
   private static void buildContentTextAreaWidget() {
-    contentTextAreaWidget = new TextAreaWidget(new Size(FILL_PARENT, TerminalUI.getHeight() - 4));
+    contentTextAreaWidget = new TextAreaWidget();
 
     contentTextAreaWidget.addKeyAction(DELETE, () -> {
       TerminalUI.setBaseWidget(articlesScreen);

@@ -6,7 +6,8 @@ import com.verzano.terminalrss.ui.floater.binary.BinaryChoiceFloater;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
-import com.verzano.terminalrss.ui.widget.container.shelf.ShelfContainer;
+import com.verzano.terminalrss.ui.widget.container.shelf.Shelf;
+import com.verzano.terminalrss.ui.widget.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.ui.widget.text.entry.RolodexWidget;
 import com.verzano.terminalrss.ui.widget.text.entry.TextEntryWidget;
 
@@ -29,9 +30,9 @@ public class AddSourceFloater extends BinaryChoiceFloater {
         NULL_WIDGET,
         addSourceAction, "Add Source",
         cancelAction, "Cancel");
-    ShelfContainer displayWidget = new ShelfContainer(HORIZONTAL, 1, new Size(FILL_NEEDED, FILL_NEEDED));
+    Shelf displayWidget = new Shelf(HORIZONTAL, 1);
 
-    uriTextEntry = new TextEntryWidget(new Size(30, FILL_NEEDED));
+    uriTextEntry = new TextEntryWidget();
     uriTextEntry.addKeyAction(TAB, () -> {
       contentTypeRolodex.setFocused();
       TerminalUI.reprint();
@@ -40,27 +41,26 @@ public class AddSourceFloater extends BinaryChoiceFloater {
     List<ContentType> types = Arrays.stream(ContentType.values())
         .filter(ct -> ct != ContentType.NULL_TYPE)
         .collect(Collectors.toList());
-    contentTypeRolodex = new RolodexWidget<>(types, 3, 3, new Size(20, FILL_NEEDED));
+    contentTypeRolodex = new RolodexWidget<>(types, 3, 3);
     contentTypeRolodex.addKeyAction(TAB, () -> {
       contentTagEntry.setFocused();
       TerminalUI.reprint();
     });
 
-    contentTagEntry = new TextEntryWidget(new Size(20, FILL_NEEDED));
+    contentTagEntry = new TextEntryWidget();
     contentTagEntry.addKeyAction(TAB, () -> {
       getPositiveButton().setFocused();
       TerminalUI.reprint();
     });
 
-    displayWidget.addWidget(uriTextEntry);
-    displayWidget.addWidget(contentTypeRolodex);
-    displayWidget.addWidget(contentTagEntry);
+    displayWidget.addWidget(uriTextEntry, new ShelfOptions(new Size(30, FILL_NEEDED)));
+    displayWidget.addWidget(contentTypeRolodex, new ShelfOptions(new Size(20, FILL_NEEDED)));
+    displayWidget.addWidget(contentTagEntry, new ShelfOptions(new Size(20, FILL_NEEDED)));
 
     setDisplayWidget(displayWidget);
 
     getBaseWidget().setUnfocusedAttribute(Attribute.INVERSE_ON);
     getBaseWidget().setFocusedAttribute(Attribute.INVERSE_ON);
-    getBaseWidget().size();
   }
 
   public String getUri() {

@@ -1,9 +1,12 @@
 package com.verzano.terminalrss.ui;
 
 import com.verzano.terminalrss.ui.floater.Floater;
+import com.verzano.terminalrss.ui.metrics.Point;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.print.PrintTask;
 import com.verzano.terminalrss.ui.widget.Widget;
+import com.verzano.terminalrss.ui.widget.container.floor.Floor;
+import com.verzano.terminalrss.ui.widget.container.floor.FloorOptions;
 import lombok.Getter;
 import lombok.Setter;
 import org.jline.terminal.Terminal;
@@ -15,6 +18,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.verzano.terminalrss.ui.floater.Floater.NULL_FLOATER;
+import static com.verzano.terminalrss.ui.metrics.Size.FILL_CONTAINER;
 import static com.verzano.terminalrss.ui.widget.Widget.NULL_WIDGET;
 import static com.verzano.terminalrss.ui.widget.ansi.Ansi.ESC;
 import static com.verzano.terminalrss.ui.widget.ansi.Ansi.SET_POSITION;
@@ -24,8 +28,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Key.ESCAPED_PREFIX;
 public class TerminalUI {
   private TerminalUI() { }
 
-  @Getter @Setter
-  private static Widget baseWidget = NULL_WIDGET;
+  private static Floor floor = new Floor();
 
   @Getter
   private static Floater floater = NULL_FLOATER;
@@ -41,6 +44,7 @@ public class TerminalUI {
   private static final BlockingDeque<PrintTask> printTaskQueue = new LinkedBlockingDeque<>();
 
   private static final Thread resizingThread = new Thread(TerminalUI::resizingLoop, "Resizing");
+
   @Getter
   private static Size size;
 
@@ -77,6 +81,10 @@ public class TerminalUI {
 
   public static int getHeight() {
     return size.getHeight();
+  }
+
+  public static void setBaseWidget(Widget baseWidget) {
+    floor.addWidget(baseWidget, new FloorOptions(new Size(FILL_CONTAINER, FILL_CONTAINER), new Point(1, 1)));
   }
 
   private static void printingLoop() {
@@ -172,7 +180,7 @@ public class TerminalUI {
     if (Thread.currentThread() != printingThread) {
       printTaskQueue.addFirst(TerminalUI::resize);
     } else {
-      baseWidget.size();
+      floor.size();
       if (floater != NULL_FLOATER) {
         floater.getBaseWidget().size();
       }
@@ -183,8 +191,7 @@ public class TerminalUI {
     if (Thread.currentThread() != printingThread) {
       printTaskQueue.add(TerminalUI::reprint);
     } else {
-      clear();
-      baseWidget.print();
+      floor.print();
       if (floater != NULL_FLOATER) {
         floater.getBaseWidget().print();
       }

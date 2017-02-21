@@ -3,45 +3,153 @@ package com.verzano.terminalrss.ui.widget.container;
 import com.verzano.terminalrss.ui.metrics.Point;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 // TODO eventually have the contentSize cut off or wrap the contained widgets
-public abstract class Container extends Widget {
+@NoArgsConstructor
+public abstract class Container<T extends ContainerOptions> extends Widget {
+  public static final Container<ContainerOptions> NULL_CONTAINER = new Container<ContainerOptions>() {
+    @Override
+    public Collection<Widget> getContainedWidgets() {
+      return Collections.emptyList();
+    }
+
+    @Override
+    public int calculateWidgetWidth(Widget widget) {
+      return 0;
+    }
+
+    @Override
+    public int calculateWidgetHeight(Widget widget) {
+      return 0;
+    }
+
+    @Override
+    public int calculateWidgetX(Widget widget) {
+      return 0;
+    }
+
+    @Override
+    public int calculateWidgetY(Widget widget) {
+      return 0;
+    }
+
+    @Override
+    public void addWidgetAux(Widget widget, ContainerOptions options) { }
+
+    @Override
+    public void removeWidgetAux(Widget widget) { }
+
+    @Override
+    public void removeWidgetsAux() { }
+
+    @Override
+    public int getNeededWidth() {
+      return 0;
+    }
+
+    @Override
+    public int getNeededHeight() {
+      return 0;
+    }
+  };
+
+  private final Map<Widget, Size> widgetSizes = new HashMap<>();
+  private final Map<Widget, Point> widgetLocations = new HashMap<>();
+
   public abstract Collection<Widget> getContainedWidgets();
 
-  public Container(Size size) {
-    super(size);
+  public abstract int calculateWidgetWidth(Widget widget);
+  public abstract int calculateWidgetHeight(Widget widget);
+
+  public abstract int calculateWidgetX(Widget widget);
+  public abstract int calculateWidgetY(Widget widget);
+
+  // TODO need better names
+  public abstract void addWidgetAux(Widget widget, T options);
+  public abstract void removeWidgetAux(Widget widget);
+  public abstract void removeWidgetsAux();
+
+  private static final Size NO_SIZE = new Size(0, 0);
+  private static final Point NO_LOCATION = new Point(0, 0);
+
+  public int getWidgetWidth(Widget widget) {
+    return widgetSizes.getOrDefault(widget, NO_SIZE).getWidth();
   }
 
-  // Overridden versions of this must call super.addWidget(widget)
-  public void addWidget(Widget widget) {
-    widget.setParent(this);
+  public void setWidgetWidth(Widget widget, int width) {
+    widgetSizes.get(widget).setWidth(width);
   }
 
-  // Overridden versions of this must call super.removeWidgets()
+  public int getWidgetHeight(Widget widget) {
+    return widgetSizes.getOrDefault(widget, NO_SIZE).getHeight();
+  }
+
+  public void setWidgetHeight(Widget widget, int height) {
+    widgetSizes.get(widget).setHeight(height);
+  }
+
+  public int getWidgetX(Widget widget) {
+    return widgetLocations.getOrDefault(widget, NO_LOCATION).getX();
+  }
+
+  public void setWidgetX(Widget widget, int x) {
+    widgetLocations.get(widget).setX(x);
+  }
+
+  public int getWidgetY(Widget widget) {
+    return widgetLocations.getOrDefault(widget, NO_LOCATION).getY();
+  }
+
+  public void setWidgetY(Widget widget, int y) {
+    widgetLocations.get(widget).setY(y);
+  }
+
+  public void addWidget(Widget widget, T options) {
+    widgetSizes.put(widget, new Size(0, 0));
+    widgetLocations.put(widget, new Point(0, 0));
+    widget.setContainer(this);
+
+    addWidgetAux(widget, options);
+    arrange();
+  }
+
+  public void removeWidget(Widget widget) {
+    widgetSizes.remove(widget);
+    widgetLocations.remove(widget);
+    widget.setContainer(NULL_CONTAINER);
+
+    removeWidgetAux(widget);
+    arrange();
+  }
+
   public void removeWidgets() {
-    getContainedWidgets().forEach(w -> w.setParent(NULL_WIDGET));
+    widgetSizes.clear();
+    widgetLocations.clear();
+    getContainedWidgets().forEach(w -> w.setContainer(NULL_CONTAINER));
+
+    removeWidgetsAux();
+    arrange();
   }
 
-  @Override
-  public void setLocation(Point location) {
-    setX(location.getX());
-    setY(location.getY());
-  }
+  public void arrange() {
+    getContainedWidgets().forEach(widget -> {
+      setWidgetWidth(widget, calculateWidgetWidth(widget));
+      setWidgetHeight(widget, calculateWidgetHeight(widget));
+      setWidgetX(widget, calculateWidgetX(widget));
+      setWidgetY(widget, calculateWidgetY(widget));
 
-  @Override
-  public void setX(int x) {
-    int delta = x - getX();
-    getContainedWidgets().forEach(w -> w.setX(w.getX() + delta));
-    super.setX(x);
-  }
+      if (widget instanceof Container) {
+        ((Container)widget).arrange();
+      }
+    });
 
-  @Override
-  public void setY(int y) {
-    int delta = y - getY();
-    getContainedWidgets().forEach(w -> w.setY(w.getY() + delta));
-    super.setY(y);
+    size();
   }
 
   @Override
@@ -58,5 +166,11 @@ public abstract class Container extends Widget {
     } else {
       super.setFocused();
     }
+  }
+
+  @Override
+  public void size() {
+    super.size();
+    getContainedWidgets().forEach(Widget::size);
   }
 }

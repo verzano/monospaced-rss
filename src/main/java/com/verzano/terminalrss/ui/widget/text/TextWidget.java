@@ -1,7 +1,6 @@
 package com.verzano.terminalrss.ui.widget.text;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.constants.Orientation;
@@ -19,8 +18,7 @@ public class TextWidget extends Widget {
   @Getter @Setter
   private Position textPosition;
 
-  public TextWidget(String text, Orientation orientation, Position textPosition, Size size) {
-    super(size);
+  public TextWidget(String text, Orientation orientation, Position textPosition) {
     this.text = text;
     this.textPosition = textPosition;
     this.orientation = orientation;
@@ -29,47 +27,45 @@ public class TextWidget extends Widget {
     setUnfocusedAttribute(Attribute.INVERSE_ON);
   }
 
-  protected String getTextRow() {
-    String textRow = text;
-
-    if (textRow.length() != getWidth()) {
+  protected String getRowForText(String text) {
+    if (text.length() != getWidth()) {
       switch (textPosition) {
         case TOP_LEFT:
         case CENTER_LEFT:
         case BOTTOM_LEFT:
-          if (textRow.length() > getWidth()) {
-            textRow = textRow.substring(0, getWidth());
+          if (text.length() > getWidth()) {
+            text = text.substring(0, getWidth());
           } else {
-            textRow += new String(new char[getWidth() - textRow.length()]).replace('\0', ' ');
+            text += new String(new char[getWidth() - text.length()]).replace('\0', ' ');
           }
           break;
         case TOP_CENTER:
         case CENTER:
         case BOTTOM_CENTER:
-          if (textRow.length() > getWidth()) {
-            double halfExtra = (textRow.length() - getWidth())/2D;
+          if (text.length() > getWidth()) {
+            double halfExtra = (text.length() - getWidth())/2D;
 
-            textRow = textRow.substring((int)halfExtra, textRow.length() - (int)Math.ceil(halfExtra));
+            text = text.substring((int)halfExtra, text.length() - (int)Math.ceil(halfExtra));
           } else {
-            double halfRemaining = (textRow.length() - getWidth())/2D;
-            textRow = new String(new char[(int)Math.ceil(halfRemaining)]).replace('\0', ' ')
-                + textRow
+            double halfRemaining = (text.length() - getWidth())/2D;
+            text = new String(new char[(int)Math.ceil(halfRemaining)]).replace('\0', ' ')
+                + text
                 + new String(new char[(int)halfRemaining]).replace('\0', ' ');
           }
           break;
         case TOP_RIGHT:
         case CENTER_RIGHT:
         case BOTTOM_RIGHT:
-          if (textRow.length() > getWidth()) {
-            textRow = textRow.substring(textRow.length() - getWidth(), textRow.length());
+          if (text.length() > getWidth()) {
+            text = text.substring(text.length() - getWidth(), text.length());
           } else {
-            textRow = new String(new char[getWidth() - textRow.length()]).replace('\0', ' ') + textRow;
+            text = new String(new char[getWidth() - text.length()]).replace('\0', ' ') + text;
           }
           break;
       }
     }
 
-    return getTextFormattingPrefix() + textRow + NORMAL;
+    return getTextFormattingPrefix() + text + NORMAL;
   }
 
   private void printHorizontal() {
@@ -78,7 +74,7 @@ public class TextWidget extends Widget {
       case TOP_CENTER:
       case TOP_RIGHT:
         TerminalUI.move(getContentX(), getContentY());
-        TerminalUI.print(getTextRow());
+        TerminalUI.print(getRowForText(text));
         for (int i = 1; i < getContentHeight(); i++) {
           TerminalUI.move(getContentX(), getContentY() + i);
           TerminalUI.print(getEmptyContentRow());
@@ -91,7 +87,7 @@ public class TextWidget extends Widget {
         for (int i = 0; i < getHeight(); i++) {
           TerminalUI.move(getContentX(), getContentY() + i);
           if (i == middleRow) {
-            TerminalUI.print(getTextRow());
+            TerminalUI.print(getRowForText(text));
           } else {
             TerminalUI.print(getEmptyContentRow());
           }
@@ -105,7 +101,7 @@ public class TextWidget extends Widget {
           TerminalUI.print(getEmptyContentRow());
           TerminalUI.move(getContentX(), getContentY() + i);
         }
-        TerminalUI.print(getTextRow());
+        TerminalUI.print(getRowForText(text));
         break;
     }
   }

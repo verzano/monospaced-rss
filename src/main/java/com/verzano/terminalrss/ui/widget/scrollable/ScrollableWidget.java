@@ -1,16 +1,17 @@
 package com.verzano.terminalrss.ui.widget.scrollable;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.Widget;
 import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormatBuilder;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 // TODO allow this to have vertical and horizontal bars
 // TODO make this a container
 // TODO make the scrollbar its own widget
+@NoArgsConstructor
 public abstract class ScrollableWidget extends Widget {
   private double internalHeight = 1;
 
@@ -22,10 +23,6 @@ public abstract class ScrollableWidget extends Widget {
   public abstract void scroll(Direction direction, int distance);
 
   private static final String SCROLLBAR_PIXEL = AnsiTextFormatBuilder.build(Attribute.INVERSE_ON) + " " + AnsiTextFormatBuilder.build(Attribute.INVERSE_OFF);
-
-  public ScrollableWidget(Size size) {
-    super(size);
-  }
 
   public void setInternalHeight(double internalHeight) {
     this.internalHeight = internalHeight;

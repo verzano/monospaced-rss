@@ -1,6 +1,5 @@
 package com.verzano.terminalrss.ui.widget.text.entry;
 
-import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormatBuilder;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.text.TextWidget;
@@ -19,8 +18,8 @@ public class TextEntryWidget extends TextWidget {
   private static final String CARET_PREFIX = AnsiTextFormatBuilder.build(UNDERLINE_ON, BLINK_ON);
   private static final String CARET_POSTFIX = AnsiTextFormatBuilder.build(UNDERLINE_OFF, BLINK_OFF);
 
-  public TextEntryWidget(Size size) {
-    super("", HORIZONTAL, CENTER_LEFT, size);
+  public TextEntryWidget() {
+    super("", HORIZONTAL, CENTER_LEFT);
     // All printable ASCII chars
     IntStream.range(32, 127).forEach(i -> addKeyAction((char)i + "", () -> {
       setText(getText() + (char)i);
@@ -41,17 +40,16 @@ public class TextEntryWidget extends TextWidget {
   }
 
   @Override
-  protected String getTextRow() {
-    String textRow = getText();
+  protected String getRowForText(String text) {
     int width = getWidth();
 
-    if (textRow.length() < width - 1) {
-      textRow += getCaret() + new String(new char[width - textRow.length() - 1]).replace('\0', ' ');
+    if (text.length() < width - 1) {
+      text += getCaret() + new String(new char[width - text.length() - 1]).replace('\0', ' ');
     } else {
-      textRow = textRow.substring(textRow.length() - width + 1) + getCaret();
+      text = text.substring(text.length() - width + 1) + getCaret();
     }
 
-    return textRow;
+    return text;
   }
 
   @Override

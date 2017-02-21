@@ -6,7 +6,8 @@ import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
 import com.verzano.terminalrss.ui.widget.Widget;
 import com.verzano.terminalrss.ui.widget.button.ButtonWidget;
-import com.verzano.terminalrss.ui.widget.container.shelf.ShelfContainer;
+import com.verzano.terminalrss.ui.widget.container.shelf.Shelf;
+import com.verzano.terminalrss.ui.widget.container.shelf.ShelfOptions;
 import lombok.Getter;
 
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_NEEDED;
@@ -16,13 +17,13 @@ import static com.verzano.terminalrss.ui.widget.constants.Orientation.VERTICAL;
 import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER;
 
 public class BinaryChoiceFloater extends Floater {
-  private ShelfContainer container;
+  private Shelf container;
 
   @Getter
   private Widget displayWidget;
 
   @Getter
-  private final ShelfContainer buttonContainer;
+  private final Shelf buttonContainer;
   @Getter
   private final ButtonWidget positiveButton;
   @Getter
@@ -34,20 +35,19 @@ public class BinaryChoiceFloater extends Floater {
       String positiveText,
       KeyTask negativeTask,
       String negativeText) {
-    container = new ShelfContainer(VERTICAL, 1, new Size(FILL_NEEDED, FILL_NEEDED));
+    container = new Shelf(VERTICAL, 1);
 
     this.displayWidget = displayWidget;
-    container.addWidget(displayWidget);
+    container.addWidget(displayWidget, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
 
-    buttonContainer = new ShelfContainer(HORIZONTAL, 1, new Size(FILL_NEEDED, FILL_NEEDED));
-    container.addWidget(buttonContainer);
-    buttonContainer.setY(displayWidget.getHeight());
+    buttonContainer = new Shelf(HORIZONTAL, 1);
+    container.addWidget(buttonContainer, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
 
     positiveButton = new ButtonWidget(positiveTask, positiveText, CENTER, new Size(FILL_NEEDED, FILL_NEEDED));
-    buttonContainer.addWidget(positiveButton);
+    buttonContainer.addWidget(positiveButton, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
 
     negativeButton = new ButtonWidget(negativeTask, negativeText, CENTER, new Size(FILL_NEEDED, FILL_NEEDED));
-    buttonContainer.addWidget(negativeButton);
+    buttonContainer.addWidget(negativeButton, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
 
     positiveButton.addKeyAction(TAB, () -> {
       negativeButton.setFocused();
@@ -63,8 +63,8 @@ public class BinaryChoiceFloater extends Floater {
     this.displayWidget = displayWidget;
 
     container.removeWidgets();
-    container.addWidget(displayWidget);
-    container.addWidget(buttonContainer);
+    container.addWidget(displayWidget, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
+    container.addWidget(buttonContainer, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
   }
 
   @Override

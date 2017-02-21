@@ -1,8 +1,6 @@
 package com.verzano.terminalrss.ui.widget.text.entry;
 
-import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.Widget;
-import com.verzano.terminalrss.ui.widget.ansi.Attribute;
+import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.widget.text.TextWidget;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,12 +14,10 @@ import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER_LEFT;
 
 // TODO both this and the list widget should be backed by some kind of list model
 // TODO allow setting of the height
-public class RolodexWidget<T> extends Widget {
-  private TextWidget printableItem = new TextWidget("", HORIZONTAL, CENTER_LEFT, new Size(1, 1));
-
+public class RolodexWidget<T> extends TextWidget {
   private List<T> items;
 
-  @Getter @Setter
+  @Getter
   private volatile int selectedIndex = 0;
 
   @Getter @Setter
@@ -30,24 +26,26 @@ public class RolodexWidget<T> extends Widget {
   @Getter @Setter
   private int itemsAfter;
 
-  public RolodexWidget(List<T> items, int itemsBefore, int itemsAfter, Size size) {
-    super(size);
+  public RolodexWidget(List<T> items, int itemsBefore, int itemsAfter) {
+    super("", HORIZONTAL, CENTER_LEFT);
     this.items = items;
     this.itemsBefore = itemsBefore;
     this.itemsAfter = itemsAfter;
 
-    printableItem.setContentSize(size);
-    printableItem.setUnfocusedAttribute(Attribute.NORMAL);
-
     addKeyAction(UP_ARROW, () -> {
-      selectedIndex = getPreviousIndex(selectedIndex);
+      setSelectedIndex(getPreviousIndex(selectedIndex));
       reprint();
     });
 
     addKeyAction(DOWN_ARROW, () -> {
-      selectedIndex = getNextIndex(selectedIndex);
+      setSelectedIndex(getNextIndex(selectedIndex));
       reprint();
     });
+  }
+
+  public void setSelectedIndex(int selectedIndex) {
+    this.selectedIndex = selectedIndex;
+    setText(items.get(this.selectedIndex).toString());
   }
 
   public T getSelectedItem() {
@@ -74,6 +72,19 @@ public class RolodexWidget<T> extends Widget {
     return s;
   }
 
+  // TODO this is basically duplicated from TextWidget
+  private void printItem(T item, int y) {
+    int middleRow = getHeight()/2;
+    for (int i = 0; i < getHeight(); i++) {
+      TerminalUI.move(getContentX(), y + i);
+      if (i == middleRow) {
+        TerminalUI.print(getRowForText(item.toString()));
+      } else {
+        TerminalUI.print(getEmptyContentRow());
+      }
+    }
+  }
+
   // TODO this gets a little fucky if any of the toStrings prints a newline... which nothing should ever do
   @Override
   public int getNeededWidth() {
@@ -90,39 +101,20 @@ public class RolodexWidget<T> extends Widget {
 
   @Override
   public void printContent() {
-    printableItem.setX(getX());
-    if (isFocused()) {
-      T item;
-      int index = selectedIndex;
-      printableItem.setUnfocusedAttribute(Attribute.NORMAL);
-      for (int i = 1; i <= itemsBefore; i++) {
-        index = getPreviousIndex(index);
-        item = items.get(index);
-        printableItem.setY(getY() - i);
-        printableItem.setText(cropOrPad(item.toString()));
-        printableItem.printContent();
-      }
+    super.printContent();
 
-      printableItem.setUnfocusedAttribute(Attribute.INVERSE_ON);
-      item = items.get(selectedIndex);
-      printableItem.setY(getY());
-      printableItem.setText(cropOrPad(item.toString()));
-      printableItem.printContent();
+    if (isFocused()) {
+      int index = selectedIndex;
+      for (int i = 0; i < itemsBefore; i++) {
+        index = getPreviousIndex(index);
+        printItem(items.get(index), getContentY() - i*getContentHeight());
+      }
 
       index = selectedIndex;
-      printableItem.setUnfocusedAttribute(Attribute.NORMAL);
       for (int i = 1; i <= itemsAfter; i++) {
         index = getNextIndex(index);
-        item = items.get(index);
-        printableItem.setY(getY() + i);
-        printableItem.setText(cropOrPad(item.toString()));
-        printableItem.printContent();
+        printItem(items.get(index), getContentY() + i*getContentHeight());
       }
-    } else {
-      T item = items.get(selectedIndex);
-      printableItem.setY(getY());
-      printableItem.setText(cropOrPad(item.toString()));
-      printableItem.printContent();
     }
   }
 }

@@ -11,7 +11,7 @@ import static com.verzano.terminalrss.ui.widget.constants.Key.ENTER;
 
 public class ButtonWidget extends TextWidget {
   public ButtonWidget(KeyTask onPress, String text, Position textPosition, Size size) {
-    super(text, Orientation.HORIZONTAL, textPosition, size);
+    super(text, Orientation.HORIZONTAL, textPosition);
     addKeyAction(ENTER, onPress);
     setFocusedAttribute(Attribute.INVERSE_ON);
     setUnfocusedAttribute(Attribute.NORMAL);
