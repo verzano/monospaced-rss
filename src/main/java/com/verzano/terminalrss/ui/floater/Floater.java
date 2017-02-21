@@ -9,6 +9,16 @@ public abstract class Floater extends Enclosure {
   public static final Floater NULL_FLOATER = new Floater() { };
 
   @Override
+  public int getWidth() {
+    return super.getNeededWidth();
+  }
+
+  @Override
+  public int getHeight() {
+    return super.getNeededHeight();
+  }
+
+  @Override
   public final int getX() {
     return TerminalUI.getWidth()/2 - getWidth()/2;
   }

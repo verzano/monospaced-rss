@@ -18,7 +18,6 @@ import static com.verzano.terminalrss.ui.constants.Position.CENTER;
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_NEEDED;
 
 public class BinaryChoiceFloater extends Floater {
-  @Getter
   private Widget displayWidget;
 
   @Getter
