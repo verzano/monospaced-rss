@@ -138,12 +138,11 @@ public class TextWidget extends Widget {
 
   @Override
   public void printContent() {
-    TerminalUI.move(getContentX(), getContentY());
-    String toPrint = text;
-
     switch (orientation) {
       // TODO make vertical printContent correctly
       case VERTICAL:
+        TerminalUI.move(getContentX(), getContentY());
+        String toPrint = text;
         for (int row = 0; row < getContentHeight(); row++) {
           TerminalUI.move(getContentX(), getContentY() + row);
           if (row < toPrint.length()) {

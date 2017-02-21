@@ -49,9 +49,7 @@ import static com.verzano.terminalrss.ui.metrics.Size.FILL_CONTAINER;
 // TODO sort Sources by name
 // TODO sort Articles by date
 public class TerminalRSS {
-  private static Shelf sourcesScreen;
-  private static Shelf articlesScreen;
-  private static Shelf contentScreen;
+  private static Shelf baseContainer;
 
   private static ListWidget<Source> sourcesListWidget;
   private static ListWidget<Article> articlesListWidget;
@@ -77,21 +75,10 @@ public class TerminalRSS {
     buildArticleWidgets();
     buildContentTextAreaWidget();
 
-    sourcesScreen = new Shelf(VERTICAL, 0);
-    sourcesScreen.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
-    sourcesScreen.addWidget(sourcesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUI.getHeight() - 1)));
+    baseContainer = new Shelf(VERTICAL, 0);
+    showToSourcesList();
 
-    articlesScreen = new Shelf(VERTICAL, 0);
-    articlesScreen.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
-    articlesScreen.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
-    articlesScreen.addWidget(articlesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUI.getHeight() - 2)));
-
-    contentScreen = new Shelf(VERTICAL, 0);
-    contentScreen.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
-    contentScreen.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
-    contentScreen.addWidget(contentTextAreaWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUI.getHeight() - 3)));
-
-    TerminalUI.setBaseWidget(sourcesScreen);
+    TerminalUI.setBaseWidget(baseContainer);
     sourcesListWidget.setFocused();
     TerminalUI.reprint();
   }
@@ -110,7 +97,8 @@ public class TerminalRSS {
         addSourceFloater.clear();
         addSourceFloater.showFloater();
       } else {
-        TerminalUI.setBaseWidget(articlesScreen);
+        showArticlesList();
+
         selectedSource = source;
 
         sourceTextWidget.setText("Source: " + source.getTitle());
@@ -153,7 +141,7 @@ public class TerminalRSS {
       if (article == REFRESH_SOURCE) {
         updateSource(selectedSource.getId());
       } else {
-        TerminalUI.setBaseWidget(contentScreen);
+        showArticle();
         articleTextWidget.setText("Article: " + article.getTitle());
 
         contentTextAreaWidget.setText(article.getContent());
@@ -163,7 +151,7 @@ public class TerminalRSS {
     });
 
     articlesListWidget.addKeyAction(DELETE, () -> {
-      TerminalUI.setBaseWidget(sourcesScreen);
+      showToSourcesList();
       selectedSource = Source.NULL_SOURCE;
 
       sourceTextWidget.setText("Sources:");
@@ -177,12 +165,32 @@ public class TerminalRSS {
     contentTextAreaWidget = new TextAreaWidget();
 
     contentTextAreaWidget.addKeyAction(DELETE, () -> {
-      TerminalUI.setBaseWidget(articlesScreen);
+      showArticlesList();
       articleTextWidget.setText("Articles:");
 
       articlesListWidget.setFocused();
       TerminalUI.reprint();
     });
+  }
+
+  private static void showToSourcesList() {
+    baseContainer.removeWidgets();
+    baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    baseContainer.addWidget(sourcesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUI.getHeight() - 1)));
+  }
+
+  private static void showArticlesList() {
+    baseContainer.removeWidgets();
+    baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    baseContainer.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    baseContainer.addWidget(articlesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUI.getHeight() - 2)));
+  }
+
+  private static void showArticle() {
+    baseContainer.removeWidgets();
+    baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    baseContainer.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    baseContainer.addWidget(contentTextAreaWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUI.getHeight() - 3)));
   }
 
   private static void addSource(String uri, ContentType contentType, String contentTag) {
