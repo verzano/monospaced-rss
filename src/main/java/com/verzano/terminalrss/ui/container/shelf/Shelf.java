@@ -90,7 +90,7 @@ public class Shelf extends Container<ShelfOptions> {
           break;
         }
 
-        x += getWidgetWidth(w);
+        x += getWidgetWidth(w) + spacing;
       }
     }
     return x;
@@ -106,7 +106,7 @@ public class Shelf extends Container<ShelfOptions> {
           break;
         }
 
-        y += getWidgetHeight(w);
+        y += getWidgetHeight(w) + spacing;
       }
     }
     return y;
