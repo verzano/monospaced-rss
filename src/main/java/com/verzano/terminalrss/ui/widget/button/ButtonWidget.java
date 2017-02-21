@@ -13,7 +13,7 @@ public class ButtonWidget extends TextWidget {
   public ButtonWidget(KeyTask onPress, String text, Position textPosition, Size size) {
     super(text, Orientation.HORIZONTAL, textPosition);
     addKeyAction(ENTER, onPress);
-    setFocusedAttribute(Attribute.INVERSE_ON);
-    setUnfocusedAttribute(Attribute.NORMAL);
+    getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
+    getUnfocusedFormat().setAttributes(Attribute.NORMAL);
   }
 }

@@ -3,7 +3,7 @@ package com.verzano.terminalrss.ui.widget;
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.metrics.Padding;
 import com.verzano.terminalrss.ui.task.key.KeyTask;
-import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormatBuilder;
+import com.verzano.terminalrss.ui.widget.ansi.AnsiFormat;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
 import com.verzano.terminalrss.ui.widget.ansi.Background;
 import com.verzano.terminalrss.ui.widget.ansi.Foreground;
@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.verzano.terminalrss.ui.widget.ansi.AnsiFormat.NORMAL;
 import static com.verzano.terminalrss.ui.widget.container.Container.NULL_CONTAINER;
 
 // TODO make this thread safe
@@ -49,30 +50,15 @@ public abstract class Widget {
   private Container container = NULL_CONTAINER;
 
   @Getter @Setter
-  private Attribute[] focusedAttributes = new Attribute[]{Attribute.NONE};
+  private AnsiFormat focusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
 
   @Getter @Setter
-  private Attribute[] unfocusedAttributes = new Attribute[]{Attribute.NONE};
-
-  @Getter @Setter
-  private Foreground focusedForeground = Foreground.NONE;
-
-  @Getter @Setter
-  private Foreground unfocusedForeground = Foreground.NONE;
-
-  @Getter @Setter
-  private Background focusedBackground = Background.NONE;
-
-  @Getter @Setter
-  private Background unfocusedBackground = Background.NONE;
+  private AnsiFormat unfocusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
 
   private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
 
   private String emptyRow;
   private String emptyContentRow;
-
-  // TODO no, this is wrong
-  public static String NORMAL = AnsiTextFormatBuilder.build(Attribute.NORMAL);
 
   public abstract int getNeededWidth();
   public abstract int getNeededHeight();
@@ -110,14 +96,6 @@ public abstract class Widget {
     return getY() + padding.getTop();
   }
 
-  public void setFocusedAttribute(Attribute attribute) {
-    setFocusedAttributes(new Attribute[]{attribute});
-  }
-
-  public void setUnfocusedAttribute(Attribute attribute) {
-    setUnfocusedAttributes(new Attribute[]{attribute});
-  }
-
   public void addKeyAction(String key, KeyTask action) {
     Set<KeyTask> keyTasks = keyActionsMap.getOrDefault(key, new HashSet<>());
     keyTasks.add(action);
@@ -141,29 +119,23 @@ public abstract class Widget {
     emptyContentRow = new String(new char[getContentWidth()]).replace('\0', ' ');
   }
 
-  public String getTextFormattingPrefix() {
+  public String getAnsiFormatPrefix() {
     String prefix;
     if (isFocused()) {
-      prefix = AnsiTextFormatBuilder.build(
-          getFocusedForeground(),
-          getFocusedBackground(),
-          getFocusedAttributes());
+      prefix = focusedFormat.getFormatString();
     } else {
-      prefix = AnsiTextFormatBuilder.build(
-          getUnfocusedForeground(),
-          getUnfocusedBackground(),
-          getUnfocusedAttributes());
+      prefix = unfocusedFormat.getFormatString();
     }
 
     return prefix;
   }
 
   private String getEmptyRow() {
-    return getTextFormattingPrefix() + emptyRow + NORMAL;
+    return getAnsiFormatPrefix() + emptyRow + NORMAL.getFormatString();
   }
 
   public String getEmptyContentRow() {
-    return getTextFormattingPrefix() + emptyContentRow + NORMAL;
+    return getAnsiFormatPrefix() + emptyContentRow + NORMAL.getFormatString();
   }
 
   public final void print() {

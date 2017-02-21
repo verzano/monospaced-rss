@@ -1,15 +1,19 @@
 package com.verzano.terminalrss.ui.widget.scrollable.list;
 
 import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormatBuilder;
+import com.verzano.terminalrss.ui.widget.ansi.AnsiFormat;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
+import com.verzano.terminalrss.ui.widget.ansi.Background;
+import com.verzano.terminalrss.ui.widget.ansi.Foreground;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
 import com.verzano.terminalrss.ui.widget.scrollable.ScrollableWidget;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.verzano.terminalrss.ui.widget.ansi.AnsiFormat.NORMAL;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.widget.constants.Key.UP_ARROW;
 
@@ -22,8 +26,8 @@ public class ListWidget<T> extends ScrollableWidget {
 
   private int topLine;
 
-  private static final String SELECTED_LINE_PREFIX = AnsiTextFormatBuilder.build(Attribute.INVERSE_ON);
-  private static final String SELECTED_LINE_POSTFIX = AnsiTextFormatBuilder.build(Attribute.INVERSE_OFF);
+  @Getter @Setter
+  private AnsiFormat selectedRowFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.INVERSE_ON);
 
   public ListWidget() {
     this(new LinkedList<>());
@@ -115,7 +119,7 @@ public class ListWidget<T> extends ScrollableWidget {
         }
 
         if (index == selectedLine) {
-          toPrint = SELECTED_LINE_PREFIX + toPrint + SELECTED_LINE_POSTFIX;
+          toPrint = selectedRowFormat.getFormatString() + toPrint + NORMAL.getFormatString();
         }
 
         TerminalUI.print(toPrint);

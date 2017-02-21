@@ -1,22 +1,25 @@
 package com.verzano.terminalrss.ui.widget.text.entry;
 
-import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormatBuilder;
+import com.verzano.terminalrss.ui.widget.ansi.AnsiFormat;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
+import com.verzano.terminalrss.ui.widget.ansi.Background;
+import com.verzano.terminalrss.ui.widget.ansi.Foreground;
 import com.verzano.terminalrss.ui.widget.text.TextWidget;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.stream.IntStream;
 
-import static com.verzano.terminalrss.ui.widget.ansi.Attribute.BLINK_OFF;
+import static com.verzano.terminalrss.ui.widget.ansi.AnsiFormat.NORMAL;
 import static com.verzano.terminalrss.ui.widget.ansi.Attribute.BLINK_ON;
-import static com.verzano.terminalrss.ui.widget.ansi.Attribute.UNDERLINE_OFF;
 import static com.verzano.terminalrss.ui.widget.ansi.Attribute.UNDERLINE_ON;
 import static com.verzano.terminalrss.ui.widget.constants.Key.DELETE;
 import static com.verzano.terminalrss.ui.widget.constants.Orientation.HORIZONTAL;
 import static com.verzano.terminalrss.ui.widget.constants.Position.CENTER_LEFT;
 
 public class TextEntryWidget extends TextWidget {
-  private static final String CARET_PREFIX = AnsiTextFormatBuilder.build(UNDERLINE_ON, BLINK_ON);
-  private static final String CARET_POSTFIX = AnsiTextFormatBuilder.build(UNDERLINE_OFF, BLINK_OFF);
+  @Getter @Setter
+  private AnsiFormat caretFormat = new AnsiFormat(Background.NONE, Foreground.NONE, UNDERLINE_ON, BLINK_ON);
 
   public TextEntryWidget() {
     super("", HORIZONTAL, CENTER_LEFT);
@@ -31,12 +34,12 @@ public class TextEntryWidget extends TextWidget {
       reprint();
     });
 
-    setFocusedAttribute(Attribute.NORMAL);
-    setUnfocusedAttribute(Attribute.NORMAL);
+    getFocusedFormat().setAttributes(Attribute.NORMAL);
+    getUnfocusedFormat().setAttributes(Attribute.NORMAL);
   }
 
   private String getCaret() {
-    return isFocused() ? CARET_PREFIX + " " + CARET_POSTFIX : " ";
+    return isFocused() ? caretFormat.getFormatString() + " " + NORMAL.getFormatString() : " ";
   }
 
   @Override

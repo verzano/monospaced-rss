@@ -59,8 +59,8 @@ public class AddSourceFloater extends BinaryChoiceFloater {
 
     setDisplayWidget(displayWidget);
 
-    getBaseWidget().setUnfocusedAttribute(Attribute.INVERSE_ON);
-    getBaseWidget().setFocusedAttribute(Attribute.INVERSE_ON);
+    getBaseWidget().getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
+    getBaseWidget().getUnfocusedFormat().setAttributes(Attribute.INVERSE_ON);
   }
 
   public String getUri() {

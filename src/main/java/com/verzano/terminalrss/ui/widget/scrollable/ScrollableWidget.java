@@ -2,11 +2,16 @@ package com.verzano.terminalrss.ui.widget.scrollable;
 
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.widget.Widget;
-import com.verzano.terminalrss.ui.widget.ansi.AnsiTextFormatBuilder;
+import com.verzano.terminalrss.ui.widget.ansi.AnsiFormat;
 import com.verzano.terminalrss.ui.widget.ansi.Attribute;
+import com.verzano.terminalrss.ui.widget.ansi.Background;
+import com.verzano.terminalrss.ui.widget.ansi.Foreground;
 import com.verzano.terminalrss.ui.widget.constants.Direction;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import static com.verzano.terminalrss.ui.widget.ansi.AnsiFormat.NORMAL;
 
 // TODO allow this to have vertical and horizontal bars
 // TODO make this a container
@@ -15,14 +20,15 @@ import lombok.Setter;
 public abstract class ScrollableWidget extends Widget {
   private double internalHeight = 1;
 
+  @Getter @Setter
+  private AnsiFormat scrollbarFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.INVERSE_ON);
+
   @Setter
   private double viewTop = 0;
 
   private int barLength;
 
   public abstract void scroll(Direction direction, int distance);
-
-  private static final String SCROLLBAR_PIXEL = AnsiTextFormatBuilder.build(Attribute.INVERSE_ON) + " " + AnsiTextFormatBuilder.build(Attribute.INVERSE_OFF);
 
   public void setInternalHeight(double internalHeight) {
     this.internalHeight = internalHeight;
@@ -38,7 +44,7 @@ public abstract class ScrollableWidget extends Widget {
     for (int row = 0; row <= getContentHeight(); row++) {
       TerminalUI.move(x, getContentY() + row);
       if (row >= barStart && row <= barEnd) {
-        TerminalUI.print(SCROLLBAR_PIXEL);
+        TerminalUI.print(scrollbarFormat.getFormatString() + " " + NORMAL.getFormatString());
       } else {
         TerminalUI.print(" ");
       }

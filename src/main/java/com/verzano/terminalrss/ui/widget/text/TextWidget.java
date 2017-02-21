@@ -8,6 +8,8 @@ import com.verzano.terminalrss.ui.widget.constants.Position;
 import lombok.Getter;
 import lombok.Setter;
 
+import static com.verzano.terminalrss.ui.widget.ansi.AnsiFormat.NORMAL;
+
 public class TextWidget extends Widget {
   @Getter @Setter
   private String text;
@@ -23,8 +25,8 @@ public class TextWidget extends Widget {
     this.textPosition = textPosition;
     this.orientation = orientation;
 
-    setFocusedAttribute(Attribute.INVERSE_ON);
-    setUnfocusedAttribute(Attribute.INVERSE_ON);
+    getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
+    getUnfocusedFormat().setAttributes(Attribute.INVERSE_ON);
   }
 
   protected String getRowForText(String text) {
@@ -65,7 +67,7 @@ public class TextWidget extends Widget {
       }
     }
 
-    return getTextFormattingPrefix() + text + NORMAL;
+    return getAnsiFormatPrefix() + text + NORMAL.getFormatString();
   }
 
   private void printHorizontal() {
@@ -145,9 +147,9 @@ public class TextWidget extends Widget {
         for (int row = 0; row < getContentHeight(); row++) {
           TerminalUI.move(getContentX(), getContentY() + row);
           if (row < toPrint.length()) {
-            TerminalUI.print(getTextFormattingPrefix() + toPrint.charAt(row) + NORMAL);
+            TerminalUI.print(getAnsiFormatPrefix() + toPrint.charAt(row) + NORMAL.getFormatString());
           } else {
-            TerminalUI.print(getTextFormattingPrefix() + " " + NORMAL);
+            TerminalUI.print(getAnsiFormatPrefix() + " " + NORMAL.getFormatString());
           }
         }
         break;
