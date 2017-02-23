@@ -154,7 +154,6 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
 
   @Override
   public void printContent() {
-    // TODO test this to make sure it really does what you want, might want to call print()...
     getContainedWidgets().forEach(Widget::printContent);
   }
 

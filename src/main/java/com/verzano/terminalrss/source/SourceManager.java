@@ -65,7 +65,6 @@ public class SourceManager {
     return source;
   }
 
-  // TODO catch this and if it fails put the Source back in
   public static boolean deleteSource(Long id) throws IOException {
     boolean removed;
     removed = SOURCES.remove(id) != null;
@@ -87,5 +86,4 @@ public class SourceManager {
   private static synchronized void saveSources() throws IOException {
     Persistence.save(SOURCES.values(), SOURCES_FILE);
   }
-
 }

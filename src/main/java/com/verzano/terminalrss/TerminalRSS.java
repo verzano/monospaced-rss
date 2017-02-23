@@ -36,8 +36,6 @@ import static com.verzano.terminalrss.ui.constants.Orientation.VERTICAL;
 import static com.verzano.terminalrss.ui.constants.Position.CENTER_LEFT;
 import static com.verzano.terminalrss.ui.metrics.Size.FILL_CONTAINER;
 
-// TODO handle bad urls
-// TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
 /*
     addSource("https://techcrunch.com/feed/", CLASS_CONTENT, "article-entry");
     addSource("https://news.vice.com/feed", CLASS_CONTENT, "content");
@@ -46,8 +44,11 @@ import static com.verzano.terminalrss.ui.metrics.Size.FILL_CONTAINER;
     addSource("http://motherboard.vice.com/rss", CLASS_CONTENT, "article-content");
     addSource("http://feeds.gawker.com/kotaku/full", CLASS_CONTENT, "entry-content");
  */
-// TODO sort Sources by name
-// TODO sort Articles by date
+// TODO add in some sort of monitoring to see progress of adding sources and updating articles
+// TODO use futures for that ^
+// TODO editing of sources and deleting of sources/articles
+// TODO handle the exceptions thrown by the Persistence class
+// TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
 public class TerminalRSS {
   private static Shelf baseContainer;
 
@@ -67,7 +68,6 @@ public class TerminalRSS {
   private static Source selectedSource = Source.NULL_SOURCE;
 
   private static final Source ADD_SOURCE = new Source(-1, "", NULL_TYPE, "", null, "+ Add Source");
-  // TODO maybe make this 'load newer'/'load older'
   private static final Article REFRESH_SOURCE = new Article(-1, "", -1, null, "\u21BB Refresh Source", "", null);
 
   public static void main(String[] args) throws IOException, FeedException {
@@ -248,7 +248,6 @@ public class TerminalRSS {
               articlesListWidget.reprint();
             } catch (IOException | ArticleExistsException e) {
               // TODO logging
-              int i = 0;
             }
           }));
         } catch(FeedException | IOException e) {

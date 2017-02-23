@@ -210,7 +210,6 @@ public class Enclosure extends Container<EnclosureOptions> {
     Arrays.stream(CardinalDirection.values()).forEach(cd -> widgetMap.put(cd, NULL_WIDGET));
   }
 
-  // TODO this could be better I think
   @Override
   public int getNeededWidth() {
     int northWidth = widgetMap.getOrDefault(NORTH, NULL_WIDGET).getNeededWidth();

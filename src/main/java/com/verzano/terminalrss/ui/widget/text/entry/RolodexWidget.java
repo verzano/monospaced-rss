@@ -12,8 +12,7 @@ import static com.verzano.terminalrss.ui.constants.Key.UP_ARROW;
 import static com.verzano.terminalrss.ui.constants.Orientation.HORIZONTAL;
 import static com.verzano.terminalrss.ui.constants.Position.CENTER_LEFT;
 
-// TODO both this and the list widget should be backed by some kind of list model
-// TODO allow setting of the height
+// TODO this should be backed by some kind of list model
 public class RolodexWidget<T> extends TextWidget {
   private List<T> items;
 
@@ -72,7 +71,6 @@ public class RolodexWidget<T> extends TextWidget {
     return s;
   }
 
-  // TODO this is basically duplicated from TextWidget
   private void printItem(T item, int y) {
     int middleRow = getHeight()/2;
     for (int i = 0; i < getHeight(); i++) {

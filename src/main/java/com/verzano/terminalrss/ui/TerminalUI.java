@@ -96,7 +96,6 @@ public class TerminalUI {
         printTaskQueue.take().print();
         terminal.writer().flush();
       } catch (InterruptedException e) {
-        // TODO logging
         throw new RuntimeException(e);
       }
     }
@@ -124,7 +123,6 @@ public class TerminalUI {
         }
       }
     } catch (IOException e) {
-      // TODO logging
       throw new RuntimeException(e);
     }
   }
@@ -140,9 +138,7 @@ public class TerminalUI {
       }
       try {
         Thread.sleep(200);
-      } catch (InterruptedException ignored) {
-        // TODO probably log this...
-      }
+      } catch (InterruptedException ignored) { }
     }
   }
 
@@ -154,14 +150,11 @@ public class TerminalUI {
         printingThread.join();
         keyActionThread.join();
         resizingThread.join();
-      } catch (InterruptedException ignored) {
-        // TODO logging...
-      }
+      } catch (InterruptedException ignored) { }
 
       try {
         terminal.close();
       } catch (IOException e) {
-        // TODO logging
         throw new RuntimeException(e);
       }
     }).start();
