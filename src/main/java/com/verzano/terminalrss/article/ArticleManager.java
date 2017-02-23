@@ -2,13 +2,14 @@ package com.verzano.terminalrss.article;
 
 import com.google.gson.reflect.TypeToken;
 import com.verzano.terminalrss.content.ContentRetriever;
-import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
+import com.verzano.terminalrss.source.Source;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,9 +19,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-// TODO allow only N of the newest articles to be stored but allow N + M in memory
 public class ArticleManager {
   private ArticleManager() { }
+
+  public static final Comparator<Article> UPDATED_AT_COMPARATOR = Comparator.comparing(Article::getPublishedAt).reversed();
+
+  private static final int MAX_STORED_ARTICLES = 25;
 
   private static final Map<Long, Map<Long, Article>> ARTICLES = new ConcurrentHashMap<>();
   private static final AtomicLong ARTICLE_ID = new AtomicLong(0);
@@ -43,21 +47,18 @@ public class ArticleManager {
     }
   }
 
-  // TODO maybe just have this take a Source...
-  public static Long createArticle(
-      Long sourceId,
-      ContentType contentType,
-      String contentTag,
+  public static Article createArticle(
+      Source source,
       String uri,
       Date publishedDate,
       String title,
       Date updatedDate)
       throws IOException, ArticleExistsException {
-    if (getArticles(sourceId).stream().anyMatch(a -> a.getUri().equals(uri))) {
+    if (getArticles(source).stream().anyMatch(a -> a.getUri().equals(uri))) {
       throw new ArticleExistsException("Article already exists for uri: " + uri);
     }
 
-    String content = ContentRetriever.getContent(uri, contentType, contentTag);
+    String content = ContentRetriever.getContent(uri, source.getContentType(), source.getContentTag());
 
     Long id;
     synchronized (ARTICLE_ID) {
@@ -68,20 +69,20 @@ public class ArticleManager {
     Article article = new Article(
         id,
         uri,
-        sourceId,
+        source.getId(),
         publishedDate,
         title,
         content,
         updatedDate);
 
     synchronized (ARTICLES) {
-      Map<Long, Article> articles = ARTICLES.getOrDefault(sourceId, new HashMap<>());
+      Map<Long, Article> articles = ARTICLES.getOrDefault(source.getId(), new HashMap<>());
       articles.put(id, article);
-      ARTICLES.put(sourceId, articles);
+      ARTICLES.put(source.getId(), articles);
       saveArticles();
     }
 
-    return id;
+    return article;
   }
 
   public static boolean deleteArticle(Long sourceId, Long articleId) throws IOException {
@@ -108,8 +109,8 @@ public class ArticleManager {
     return removed;
   }
 
-  public static Collection<Article> getArticles(Long sourceId) {
-    return ARTICLES.getOrDefault(sourceId, new HashMap<>()).values();
+  public static Collection<Article> getArticles(Source source) {
+    return ARTICLES.getOrDefault(source.getId(), new HashMap<>()).values();
   }
 
   public static Article getArticle(Long id) {
@@ -125,9 +126,12 @@ public class ArticleManager {
   }
 
   private static void saveArticles() throws IOException {
-    List<Article> articles = ARTICLES.values().stream()
-        .flatMap(map -> map.values().stream())
-        .collect(Collectors.toList());
-    Persistence.save(articles, ARTICLES_FILE);
+    Persistence.save(ARTICLES.values()
+        .stream()
+        .flatMap(map -> {
+          List<Article> articles = new LinkedList<>(map.values());
+          return articles.subList(0, Math.min(map.values().size(), MAX_STORED_ARTICLES)).stream();
+        }).sorted(UPDATED_AT_COMPARATOR)
+        .collect(Collectors.toList()), ARTICLES_FILE);
   }
 }

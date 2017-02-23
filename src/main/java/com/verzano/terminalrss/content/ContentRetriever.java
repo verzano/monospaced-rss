@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class ContentRetriever {
   private ContentRetriever() { }
@@ -14,7 +15,12 @@ public class ContentRetriever {
       ContentType contentType,
       String contentTag)
       throws IOException {
-    Document doc = Jsoup.connect(uri).get();
+    Document doc;
+    try {
+      doc = Jsoup.connect(uri).get();
+    } catch(IllegalArgumentException e) {
+      throw new MalformedURLException(e.getMessage());
+    }
 
     StringBuilder builder = new StringBuilder();
     switch (contentType) {

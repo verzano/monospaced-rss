@@ -8,6 +8,7 @@ import com.verzano.terminalrss.persistence.Persistence;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 
 public class SourceManager {
   private SourceManager() {}
+
+  public static final Comparator<Source> TITLE_COMPARATOR = Comparator.comparing(Source::getTitle).reversed();
 
   private static final Map<Long, Source> SOURCES = new ConcurrentHashMap<>();
   private static final AtomicLong SOURCE_ID = new AtomicLong(0);
@@ -38,7 +41,7 @@ public class SourceManager {
     }
   }
 
-  public static Long createSource(
+  public static Source createSource(
       String uri,
       ContentType contentType,
       String contentTag,
@@ -59,7 +62,7 @@ public class SourceManager {
     SOURCES.put(id, source);
     saveSources();
 
-    return id;
+    return source;
   }
 
   // TODO catch this and if it fails put the Source back in

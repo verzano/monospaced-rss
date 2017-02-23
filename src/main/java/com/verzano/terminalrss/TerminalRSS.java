@@ -18,12 +18,12 @@ import com.verzano.terminalrss.ui.container.shelf.Shelf;
 import com.verzano.terminalrss.ui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.ui.metrics.Size;
 import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
+import com.verzano.terminalrss.ui.widget.scrollable.list.model.SortedListModel;
 import com.verzano.terminalrss.ui.widget.scrollable.text.TextAreaWidget;
 import com.verzano.terminalrss.ui.widget.text.TextWidget;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -86,13 +86,21 @@ public class TerminalRSS {
   private static void buildSourceWidgets() {
     sourceTextWidget = new TextWidget("Sources:", HORIZONTAL, CENTER_LEFT);
 
-    sourcesListWidget = new ListWidget<>(
-        new LinkedList<>(SourceManager.getSources())
-    );
-    sourcesListWidget.addRow(ADD_SOURCE);
+    sourcesListWidget = new ListWidget<>(new SortedListModel<Source>(SourceManager.TITLE_COMPARATOR) {
+      @Override
+      public Source getItemAt(int index) {
+        return index == super.getItemCount() ? ADD_SOURCE : super.getItemAt(index);
+      }
+
+      @Override
+      public int getItemCount() {
+        return super.getItemCount() + 1;
+      }
+    });
+    sourcesListWidget.setItems(SourceManager.getSources());
 
     sourcesListWidget.addKeyAction(ENTER, () -> {
-      Source source = sourcesListWidget.getSelectedRow();
+      Source source = sourcesListWidget.getSelectedItem();
       if (source == ADD_SOURCE) {
         addSourceFloater.clear();
         addSourceFloater.showFloater();
@@ -103,8 +111,7 @@ public class TerminalRSS {
 
         sourceTextWidget.setText("Source: " + source.getTitle());
 
-        articlesListWidget.setRows(new LinkedList<>(ArticleManager.getArticles(source.getId())));
-        articlesListWidget.addRow(REFRESH_SOURCE);
+        articlesListWidget.setItems(ArticleManager.getArticles(source));
         articlesListWidget.setFocused();
       }
       TerminalUI.reprint();
@@ -133,10 +140,20 @@ public class TerminalRSS {
   private static void buildArticleWidgets() {
     articleTextWidget = new TextWidget("Articles:", HORIZONTAL, CENTER_LEFT);
 
-    articlesListWidget = new ListWidget<>();
+    articlesListWidget = new ListWidget<>(new SortedListModel<Article>(ArticleManager.UPDATED_AT_COMPARATOR) {
+      @Override
+      public Article getItemAt(int index) {
+        return index == super.getItemCount() ? REFRESH_SOURCE : super.getItemAt(index);
+      }
+
+      @Override
+      public int getItemCount() {
+        return super.getItemCount() + 1;
+      }
+    });
 
     articlesListWidget.addKeyAction(ENTER, () -> {
-      Article article = articlesListWidget.getSelectedRow();
+      Article article = articlesListWidget.getSelectedItem();
 
       if (article == REFRESH_SOURCE) {
         updateSource(selectedSource.getId());
@@ -197,20 +214,17 @@ public class TerminalRSS {
     sourceExecutor.execute(() -> {
       try {
         SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(uri)));
-        SourceManager.createSource(
+        Source source = SourceManager.createSource(
             uri,
             contentType,
             contentTag,
             feed.getPublishedDate(),
             feed.getTitle());
-        sourcesListWidget.setRows(new LinkedList<>(SourceManager.getSources()));
-        sourcesListWidget.addRow(ADD_SOURCE);
+        sourcesListWidget.addItem(source);
         sourcesListWidget.reprint();
       } catch (SourceExistsException | FeedException | IOException e) {
         // TODO logging
       }
-
-      sourcesListWidget.reprint();
     });
   }
 
@@ -223,22 +237,18 @@ public class TerminalRSS {
         try {
           SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(source.getUri())));
           ((List<SyndEntryImpl>) feed.getEntries()).forEach(entry -> articleExecutor.execute(() -> {
-
             try {
-              ArticleManager.createArticle(
-                  sourceId,
-                  source.getContentType(),
-                  source.getContentTag(),
+              Article article = ArticleManager.createArticle(
+                  source,
                   entry.getUri(),
                   entry.getPublishedDate(),
                   entry.getTitle(),
                   entry.getUpdatedDate());
-              // TODO this is inefficient and migt happen out of order
-              articlesListWidget.setRows(new LinkedList<>(ArticleManager.getArticles(source.getId())));
-              articlesListWidget.addRow(REFRESH_SOURCE);
+              articlesListWidget.addItem(article);
               articlesListWidget.reprint();
             } catch (IOException | ArticleExistsException e) {
               // TODO logging
+              int i = 0;
             }
           }));
         } catch(FeedException | IOException e) {

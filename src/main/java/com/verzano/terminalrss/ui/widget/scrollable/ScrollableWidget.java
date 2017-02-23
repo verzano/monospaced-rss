@@ -23,8 +23,8 @@ public abstract class ScrollableWidget extends Widget {
   @Getter @Setter
   private AnsiFormat scrollbarFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.INVERSE_ON);
 
-  @Setter
-  private double viewTop = 0;
+  @Getter @Setter
+  private int viewTop = 0;
 
   private int barLength;
 
@@ -37,7 +37,7 @@ public abstract class ScrollableWidget extends Widget {
 
   @Override
   public void printContent() {
-    int barStart = (int)Math.floor(getContentHeight()*viewTop/internalHeight);
+    int barStart = (int)Math.floor(getContentHeight()*(double)viewTop/internalHeight);
     int barEnd = barStart + barLength;
 
     int x = getContentX() + getContentWidth();
