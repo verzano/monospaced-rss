@@ -2,20 +2,18 @@ package com.verzano.terminalrss.tui.widget.text.entry;
 
 import com.verzano.terminalrss.tui.TUIStringable;
 import com.verzano.terminalrss.tui.TerminalUI;
+import com.verzano.terminalrss.tui.widget.scrollable.list.model.ListModel;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 import static com.verzano.terminalrss.tui.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
 import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
 import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
 
-// TODO this should be backed by some kind of list model
 public class RolodexWidget<T extends TUIStringable> extends TextWidget {
-  private List<T> items;
+  private ListModel<T> listModel;
 
   @Getter
   private volatile int selectedIndex = 0;
@@ -26,9 +24,9 @@ public class RolodexWidget<T extends TUIStringable> extends TextWidget {
   @Getter @Setter
   private int itemsAfter;
 
-  public RolodexWidget(List<T> items, int itemsBefore, int itemsAfter) {
+  public RolodexWidget(ListModel<T> listModel, int itemsBefore, int itemsAfter) {
     super("", HORIZONTAL, CENTER_LEFT);
-    this.items = items;
+    this.listModel = listModel;
     this.itemsBefore = itemsBefore;
     this.itemsAfter = itemsAfter;
 
@@ -45,23 +43,23 @@ public class RolodexWidget<T extends TUIStringable> extends TextWidget {
 
   public void setSelectedIndex(int selectedIndex) {
     this.selectedIndex = selectedIndex;
-    setText(items.get(this.selectedIndex).toTUIString());
+    setText(listModel.getItemAt(this.selectedIndex).toTUIString());
   }
 
   public T getSelectedItem() {
-    return items.get(selectedIndex);
+    return listModel.getItemAt(selectedIndex);
   }
 
   public void setSelectedItem(T item) {
-    setSelectedIndex(items.indexOf(item));
+    setSelectedIndex(listModel.getItemIndex(item));
   }
 
   private int getPreviousIndex(int index) {
-    return index == 0 ? items.size() - 1 : index - 1;
+    return index == 0 ? listModel.getItemCount() - 1 : index - 1;
   }
 
   private int getNextIndex(int index) {
-    return index == items.size() - 1 ? 0 : index + 1;
+    return index == listModel.getItemCount() - 1 ? 0 : index + 1;
   }
 
   private void printItem(T item, int y) {
@@ -78,7 +76,7 @@ public class RolodexWidget<T extends TUIStringable> extends TextWidget {
 
   @Override
   public int getNeededWidth() {
-    return items.stream()
+    return listModel.getItems().stream()
         .mapToInt(item -> item.toTUIString().length())
         .max()
         .orElseGet(() -> 0);
@@ -97,13 +95,13 @@ public class RolodexWidget<T extends TUIStringable> extends TextWidget {
       int index = selectedIndex;
       for (int i = 1; i <= itemsBefore; i++) {
         index = getPreviousIndex(index);
-        printItem(items.get(index), getContentY() - i*getContentHeight());
+        printItem(listModel.getItemAt(index), getContentY() - i*getContentHeight());
       }
 
       index = selectedIndex;
       for (int i = 1; i <= itemsAfter; i++) {
         index = getNextIndex(index);
-        printItem(items.get(index), getContentY() + i*getContentHeight());
+        printItem(listModel.getItemAt(index), getContentY() + i*getContentHeight());
       }
     }
   }

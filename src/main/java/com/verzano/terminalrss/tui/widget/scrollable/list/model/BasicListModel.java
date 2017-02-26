@@ -3,40 +3,48 @@ package com.verzano.terminalrss.tui.widget.scrollable.list.model;
 import com.verzano.terminalrss.tui.TUIStringable;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BasicListModel<T extends TUIStringable> implements ListModel<T> {
+  private List<T> items;
+
+  public BasicListModel(Collection<T> items) {
+    setItems(items);
+  }
+
   @Override
   public boolean addItem(T item) {
-    return false;
+    return items.add(item);
   }
 
   @Override
   public boolean removeItem(T item) {
-    return false;
+    return items.remove(item);
   }
 
   @Override
   public T getItemAt(int index) {
-    return null;
+    return items.get(index);
   }
 
   @Override
   public int getItemIndex(T item) {
-    return 0;
+    return items.indexOf(item);
   }
 
   @Override
   public Collection<T> getItems() {
-    return null;
+    return items;
   }
 
   @Override
   public void setItems(Collection<T> items) {
-
+    this.items = new LinkedList<>(items);
   }
 
   @Override
   public int getItemCount() {
-    return 0;
+    return items.size();
   }
 }

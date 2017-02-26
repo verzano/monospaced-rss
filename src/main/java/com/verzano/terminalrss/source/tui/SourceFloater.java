@@ -9,6 +9,7 @@ import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.tui.floater.binary.BinaryChoiceFloater;
 import com.verzano.terminalrss.tui.metrics.Size;
 import com.verzano.terminalrss.tui.task.key.KeyTask;
+import com.verzano.terminalrss.tui.widget.scrollable.list.model.BasicListModel;
 import com.verzano.terminalrss.tui.widget.text.entry.RolodexWidget;
 import com.verzano.terminalrss.tui.widget.text.entry.TextEntryWidget;
 import lombok.Getter;
@@ -50,7 +51,7 @@ public class SourceFloater {
     List<ContentType> types = Arrays.stream(ContentType.values())
         .filter(ct -> ct != ContentType.NULL_TYPE)
         .collect(Collectors.toList());
-    contentTypeRolodex = new RolodexWidget<>(types, 3, 3);
+    contentTypeRolodex = new RolodexWidget<>(new BasicListModel<>(types), 3, 3);
     contentTypeRolodex.addKeyAction(TAB, () -> {
       contentTagEntry.setFocused();
       TerminalUI.reprint();
