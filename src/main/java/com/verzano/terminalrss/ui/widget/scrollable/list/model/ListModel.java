@@ -1,8 +1,10 @@
 package com.verzano.terminalrss.ui.widget.scrollable.list.model;
 
+import com.verzano.terminalrss.ui.TUIStringable;
+
 import java.util.Collection;
 
-public interface ListModel<T> {
+public interface ListModel<T extends TUIStringable> {
   void addItem(T item);
 
   T getItemAt(int index);

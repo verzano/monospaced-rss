@@ -1,6 +1,7 @@
 package com.verzano.terminalrss.article;
 
 import com.google.gson.annotations.SerializedName;
+import com.verzano.terminalrss.ui.TUIStringable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import java.util.Date;
 
 @Getter
 @AllArgsConstructor
-public class Article {
+public class Article implements TUIStringable {
   public static final Article NULL_ARTICLE = new Article(-1L, "", -1L, new Date(0), "", "", new Date(0));
 
   @SerializedName("id")
@@ -37,7 +38,7 @@ public class Article {
   private Date updatedAt;
 
   @Override
-  public String toString() {
+  public String toTUIString() {
     return title;
   }
 }

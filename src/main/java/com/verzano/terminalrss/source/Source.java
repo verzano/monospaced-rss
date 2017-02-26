@@ -2,6 +2,7 @@ package com.verzano.terminalrss.source;
 
 import com.google.gson.annotations.SerializedName;
 import com.verzano.terminalrss.content.ContentType;
+import com.verzano.terminalrss.ui.TUIStringable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
 
 @Getter
 @AllArgsConstructor
-public class Source {
+public class Source implements TUIStringable {
   public static final Source NULL_SOURCE = new Source(-1L, "", NULL_TYPE, "", new Date(0), "");
 
   @SerializedName("id")
@@ -21,6 +22,7 @@ public class Source {
   @SerializedName("uri")
   private final String uri;
 
+  @Setter
   @SerializedName("content_type")
   private final ContentType contentType;
 
@@ -37,7 +39,7 @@ public class Source {
   private String title;
 
   @Override
-  public String toString() {
+  public String toTUIString() {
     return title;
   }
 }

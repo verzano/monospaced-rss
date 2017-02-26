@@ -1,12 +1,14 @@
 package com.verzano.terminalrss.ui.widget.scrollable.list.model;
 
+import com.verzano.terminalrss.ui.TUIStringable;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 // TODO return copies so that you can't dick with stuff
-public class SortedListModel<T> implements ListModel<T> {
+public class SortedListModel<T extends TUIStringable> implements ListModel<T> {
   private List<T> items = new LinkedList<>();
   private Comparator<T> sortOrder;
 

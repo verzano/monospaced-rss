@@ -1,5 +1,6 @@
 package com.verzano.terminalrss.ui.widget.scrollable.list;
 
+import com.verzano.terminalrss.ui.TUIStringable;
 import com.verzano.terminalrss.ui.TerminalUI;
 import com.verzano.terminalrss.ui.ansi.AnsiFormat;
 import com.verzano.terminalrss.ui.ansi.Attribute;
@@ -17,7 +18,7 @@ import static com.verzano.terminalrss.ui.ansi.AnsiFormat.NORMAL;
 import static com.verzano.terminalrss.ui.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.ui.constants.Key.UP_ARROW;
 
-public class ListWidget<T> extends ScrollableWidget {
+public class ListWidget<T extends TUIStringable> extends ScrollableWidget {
   private ListModel<T> listModel;
 
   private int selectedItemIndex;
@@ -85,7 +86,7 @@ public class ListWidget<T> extends ScrollableWidget {
   @Override
   public int getNeededWidth() {
     return listModel.getItems().stream()
-        .mapToInt(item -> item.toString().length())
+        .mapToInt(item -> item.toTUIString().length())
         .max()
         .orElseGet(() -> 0) + 1;
   }
@@ -108,7 +109,7 @@ public class ListWidget<T> extends ScrollableWidget {
       if (index >= listModel.getItemCount()) {
         TerminalUI.printn(" ", width);
       } else {
-        String toPrint = listModel.getItemAt(index).toString();
+        String toPrint = listModel.getItemAt(index).toTUIString();
         if (toPrint.length() > width) {
           toPrint = toPrint.substring(0, width);
         } else if(toPrint.length() < width) {

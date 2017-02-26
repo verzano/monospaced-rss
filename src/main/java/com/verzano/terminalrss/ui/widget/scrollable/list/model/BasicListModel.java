@@ -1,8 +1,10 @@
 package com.verzano.terminalrss.ui.widget.scrollable.list.model;
 
+import com.verzano.terminalrss.ui.TUIStringable;
+
 import java.util.Collection;
 
-public class BasicListModel<T> implements ListModel<T> {
+public class BasicListModel<T extends TUIStringable> implements ListModel<T> {
   @Override
   public void addItem(T item) {
 
