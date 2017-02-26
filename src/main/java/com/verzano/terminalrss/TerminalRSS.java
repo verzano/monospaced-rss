@@ -21,12 +21,14 @@ import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
 import com.verzano.terminalrss.ui.widget.scrollable.list.model.SortedListModel;
 import com.verzano.terminalrss.ui.widget.scrollable.text.TextAreaWidget;
 import com.verzano.terminalrss.ui.widget.text.TextWidget;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 
 import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
 import static com.verzano.terminalrss.ui.constants.Key.DELETE;
@@ -49,6 +51,7 @@ import static com.verzano.terminalrss.ui.metrics.Size.FILL_CONTAINER;
 // TODO editing of sources and deleting of sources/articles
 // TODO handle the exceptions thrown by the Persistence class
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
+@Log
 public class TerminalRSS {
   private static Shelf baseContainer;
 
@@ -222,8 +225,10 @@ public class TerminalRSS {
             feed.getTitle());
         sourcesListWidget.addItem(source);
         sourcesListWidget.reprint();
-      } catch (SourceExistsException | FeedException | IOException e) {
-        // TODO logging
+      } catch (SourceExistsException e) {
+        log.warning(e.getMessage());
+      } catch (FeedException | IOException e) {
+        log.log(Level.SEVERE, e.getMessage(), e);
       }
     });
   }
@@ -231,7 +236,7 @@ public class TerminalRSS {
   private static void updateSource(Long sourceId) {
     Source source = SourceManager.getSource(sourceId);
     if (source == Source.NULL_SOURCE) {
-      // TODO logggggg
+      log.warning("No source exists for sourceId: " + sourceId);
     } else {
       sourceExecutor.execute(() -> {
         try {
@@ -246,12 +251,14 @@ public class TerminalRSS {
                   entry.getUpdatedDate());
               articlesListWidget.addItem(article);
               articlesListWidget.reprint();
-            } catch (IOException | ArticleExistsException e) {
-              // TODO logging
+            } catch (ArticleExistsException e) {
+              log.warning(e.getMessage());
+            } catch (IOException e) {
+              log.log(Level.SEVERE, e.getMessage(), e);
             }
           }));
         } catch(FeedException | IOException e) {
-          // TODO logging
+          log.log(Level.SEVERE, e.getMessage(), e);
         }
       });
     }
