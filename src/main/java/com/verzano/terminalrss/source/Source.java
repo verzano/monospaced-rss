@@ -24,7 +24,7 @@ public class Source implements TUIStringable {
 
   @Setter
   @SerializedName("content_type")
-  private final ContentType contentType;
+  private ContentType contentType;
 
   @Setter
   @SerializedName("content_tag")
