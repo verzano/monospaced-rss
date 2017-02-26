@@ -5,7 +5,9 @@ import com.verzano.terminalrss.tui.TUIStringable;
 import java.util.Collection;
 
 public interface ListModel<T extends TUIStringable> {
-  void addItem(T item);
+  boolean addItem(T item);
+
+  boolean removeItem(T item);
 
   T getItemAt(int index);
 

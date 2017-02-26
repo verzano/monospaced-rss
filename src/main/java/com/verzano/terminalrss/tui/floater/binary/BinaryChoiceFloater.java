@@ -36,10 +36,10 @@ public class BinaryChoiceFloater extends Floater {
     this.displayWidget = displayWidget;
     buttonContainer = new Shelf(HORIZONTAL, 1);
 
-    positiveButton = new ButtonWidget(positiveTask, positiveText, CENTER, new Size(FILL_NEEDED, FILL_NEEDED));
+    positiveButton = new ButtonWidget(positiveTask, positiveText, CENTER);
     buttonContainer.addWidget(positiveButton, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
 
-    negativeButton = new ButtonWidget(negativeTask, negativeText, CENTER, new Size(FILL_NEEDED, FILL_NEEDED));
+    negativeButton = new ButtonWidget(negativeTask, negativeText, CENTER);
     buttonContainer.addWidget(negativeButton, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
 
     positiveButton.addKeyAction(TAB, () -> {

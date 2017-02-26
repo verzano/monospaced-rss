@@ -6,8 +6,13 @@ import java.util.Collection;
 
 public class BasicListModel<T extends TUIStringable> implements ListModel<T> {
   @Override
-  public void addItem(T item) {
+  public boolean addItem(T item) {
+    return false;
+  }
 
+  @Override
+  public boolean removeItem(T item) {
+    return false;
   }
 
   @Override

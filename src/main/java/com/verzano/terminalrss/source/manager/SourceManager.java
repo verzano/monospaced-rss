@@ -18,6 +18,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import static com.verzano.terminalrss.source.Source.NULL_SOURCE;
+
+// TODO throw more exceptions? or less exceptions...
 public class SourceManager {
   private SourceManager() {}
 
@@ -48,7 +51,7 @@ public class SourceManager {
       String contentTag,
       Date publishedDate,
       String title)
-      throws IOException, SourceExistsException {
+      throws SourceExistsException {
     if (SOURCES.values().stream().anyMatch(s -> s.getUri().equals(uri))) {
       throw new SourceExistsException("Source already exists for uri: " + uri);
     }
@@ -56,32 +59,69 @@ public class SourceManager {
     Long id;
     synchronized (SOURCE_ID) {
       id = SOURCE_ID.incrementAndGet();
-      Persistence.save(id, SOURCES_ID_FILE);
+      try {
+        Persistence.save(id, SOURCES_ID_FILE);
+      } catch (IOException e) {
+        return NULL_SOURCE;
+      }
     }
 
     Source source = new Source(id, uri, contentType, contentTag, publishedDate, title);
     SOURCES.put(id, source);
-    saveSources();
+    try {
+      saveSources();
+    } catch (IOException e) {
+      SOURCES.remove(id);
+      source = NULL_SOURCE;
+    }
 
     return source;
   }
 
-  public static boolean deleteSource(Long id) throws IOException {
-    boolean removed;
-    removed = SOURCES.remove(id) != null;
-    if (removed) {
-      saveSources();
-    }
-
-    return removed;
-  }
-
-  public static Collection<Source> getSources() {
+  public static Collection<Source> readSources() {
     return SOURCES.values();
   }
 
-  public static Source getSource(Long id) {
-    return SOURCES.getOrDefault(id, Source.NULL_SOURCE);
+  public static Source readSource(Long id) {
+    return SOURCES.getOrDefault(id, NULL_SOURCE);
+  }
+
+  // TODO allow editing of title?
+  public static boolean updateSource(Long id, ContentType contentType, String contentTag) {
+    Source source = SOURCES.get(id);
+    boolean updated = source != null;
+    if (updated) {
+      String oldContentTag = source.getContentTag();
+      source.setContentTag(contentTag);
+
+      ContentType oldContentType = source.getContentType();
+      source.setContentType(contentType);
+
+      try {
+        saveSources();
+      } catch (IOException e) {
+        updated = false;
+        source.setContentTag(oldContentTag);
+        source.setContentType(oldContentType);
+      }
+    }
+
+    return updated;
+  }
+
+  public static boolean deleteSource(Long id) {
+    Source source = SOURCES.remove(id);
+    boolean removed = source != null;
+    if (removed) {
+      try {
+        saveSources();
+      } catch (IOException e) {
+        SOURCES.put(id, source);
+        removed = false;
+      }
+    }
+
+    return removed;
   }
 
   private static synchronized void saveSources() throws IOException {

@@ -100,12 +100,13 @@ public class TerminalRSS {
         return super.getItemCount() + 1;
       }
     });
-    sourcesListWidget.setItems(SourceManager.getSources());
+    sourcesListWidget.setItems(SourceManager.readSources());
 
     sourcesListWidget.addKeyAction(ENTER, () -> {
       Source source = sourcesListWidget.getSelectedItem();
       if (source == ADD_SOURCE) {
-        sourceFloater.clear();
+        sourceFloater.clearSource();
+        sourceFloater.setMode(false);
         sourceFloater.showFloater();
       } else {
         showArticlesList();
@@ -116,8 +117,27 @@ public class TerminalRSS {
 
         articlesListWidget.setItems(ArticleManager.getArticles(source));
         articlesListWidget.setFocused();
+        TerminalUI.reprint();
       }
-      TerminalUI.reprint();
+    });
+
+    sourcesListWidget.addKeyAction("e", () -> {
+      Source source = sourcesListWidget.getSelectedItem();
+      if (source != ADD_SOURCE) {
+        sourceFloater.setSource(source);
+        sourceFloater.setMode(true);
+        sourceFloater.showFloater();
+      }
+    });
+
+    sourcesListWidget.addKeyAction("d", () -> {
+      Source source = sourcesListWidget.getSelectedItem();
+      if (source != ADD_SOURCE) {
+        if (SourceManager.deleteSource(source.getId())) {
+          sourcesListWidget.removeItem(source);
+          sourcesListWidget.reprint();
+        }
+      }
     });
 
     sourcesListWidget.addKeyAction(DELETE, () -> {
@@ -128,10 +148,20 @@ public class TerminalRSS {
 
     sourceFloater = new SourceFloater(
         () -> {
+          // TODO these two lines should be part of the TerminalUI so that I don't have to put them everywhere
           TerminalUI.removeFloater();
           sourcesListWidget.setFocused();
           TerminalUI.reprint();
           addSource(sourceFloater.getUri(), sourceFloater.getContentType(), sourceFloater.getContentTag());
+        },
+        () -> {
+          TerminalUI.removeFloater();
+          sourcesListWidget.setFocused();
+          TerminalUI.reprint();
+          modifySource(
+              sourceFloater.getSourceId(),
+              sourceFloater.getContentType(),
+              sourceFloater.getContentTag());
         },
         () -> {
           TerminalUI.removeFloater();
@@ -159,7 +189,7 @@ public class TerminalRSS {
       Article article = articlesListWidget.getSelectedItem();
 
       if (article == REFRESH_SOURCE) {
-        updateSource(selectedSource.getId());
+        refreshSource(selectedSource.getId());
       } else {
         showArticle();
         articleTextWidget.setText("Article: " + article.getTitle());
@@ -223,7 +253,14 @@ public class TerminalRSS {
             contentTag,
             feed.getPublishedDate(),
             feed.getTitle());
-        sourcesListWidget.addItem(source);
+
+        if (source == Source.NULL_SOURCE) {
+          log.warning("Failed to create source for uri: " + uri
+              + ", contentType: " + contentType
+              + ", contentTag: " + contentTag);
+        } else {
+          sourcesListWidget.addItem(source);
+        }
         sourcesListWidget.reprint();
       } catch (SourceExistsException e) {
         log.warning(e.getMessage());
@@ -233,8 +270,16 @@ public class TerminalRSS {
     });
   }
 
-  private static void updateSource(Long sourceId) {
-    Source source = SourceManager.getSource(sourceId);
+  private static void modifySource(Long sourceId, ContentType contentType, String contentTag) {
+    if (!SourceManager.updateSource(sourceId, contentType, contentTag)) {
+      log.warning("Failed to update source for sourceId: " + sourceId);
+    }
+
+    sourcesListWidget.reprint();
+  }
+
+  private static void refreshSource(Long sourceId) {
+    Source source = SourceManager.readSource(sourceId);
     if (source == Source.NULL_SOURCE) {
       log.warning("No source exists for sourceId: " + sourceId);
     } else {

@@ -101,6 +101,10 @@ public abstract class Widget {
     keyActionsMap.put(key, keyTasks);
   }
 
+  public void clearKeyActions(String key) {
+    keyActionsMap.remove(key);
+  }
+
   public void fireKeyActions(String key) {
     keyActionsMap.getOrDefault(key, Collections.emptySet()).forEach(KeyTask::fire);
   }

@@ -47,11 +47,21 @@ public class ListWidget<T extends TUIStringable> extends ScrollableWidget {
   }
 
   public void addItem(T item) {
-    listModel.addItem(item);
-    if (listModel.getItemCount() > 1 && listModel.getItemIndex(item) <= selectedItemIndex) {
-      selectedItemIndex++;
+    if (listModel.addItem(item)) {
+      if (listModel.getItemCount() > 1 && listModel.getItemIndex(item) <= selectedItemIndex) {
+        selectedItemIndex++;
+      }
+      setInternalHeight(listModel.getItemCount());
     }
-    setInternalHeight(listModel.getItemCount());
+  }
+
+  public void removeItem(T item) {
+    if (listModel.removeItem(item)) {
+      if (selectedItemIndex == listModel.getItemCount()) {
+        selectedItemIndex = Math.max(0, selectedItemIndex - 1);
+      }
+      setInternalHeight(listModel.getItemCount());
+    }
   }
 
   public void setItems(Collection<T> items) {

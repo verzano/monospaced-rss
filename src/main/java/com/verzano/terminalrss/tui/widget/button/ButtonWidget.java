@@ -3,16 +3,21 @@ package com.verzano.terminalrss.tui.widget.button;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.constants.Orientation;
 import com.verzano.terminalrss.tui.constants.Position;
-import com.verzano.terminalrss.tui.metrics.Size;
 import com.verzano.terminalrss.tui.task.key.KeyTask;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
+import lombok.Setter;
 
 import static com.verzano.terminalrss.tui.constants.Key.ENTER;
 
 public class ButtonWidget extends TextWidget {
-  public ButtonWidget(KeyTask onPress, String text, Position textPosition, Size size) {
+  @Setter
+  private KeyTask onPress;
+
+  public ButtonWidget(KeyTask onPress, String text, Position textPosition) {
     super(text, Orientation.HORIZONTAL, textPosition);
-    addKeyAction(ENTER, onPress);
+    this.onPress = onPress;
+    // TODO this might be a silly way to do this
+    addKeyAction(ENTER, () -> this.onPress.fire());
     getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
     getUnfocusedFormat().setAttributes(Attribute.NORMAL);
   }

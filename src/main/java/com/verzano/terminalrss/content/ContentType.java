@@ -1,5 +1,22 @@
 package com.verzano.terminalrss.content;
 
-public enum ContentType {
-  NULL_TYPE, CLASS_CONTENT, ID_CONTENT
+import com.verzano.terminalrss.tui.TUIStringable;
+
+public enum ContentType implements TUIStringable {
+  NULL_TYPE {
+    @Override
+    public String toTUIString() {
+      return toString();
+    }
+  }, CLASS_CONTENT {
+    @Override
+    public String toTUIString() {
+      return toString();
+    }
+  }, ID_CONTENT {
+    @Override
+    public String toTUIString() {
+      return toString();
+    }
+  }
 }

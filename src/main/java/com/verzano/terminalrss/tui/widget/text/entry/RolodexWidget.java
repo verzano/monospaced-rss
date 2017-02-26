@@ -1,5 +1,6 @@
 package com.verzano.terminalrss.tui.widget.text.entry;
 
+import com.verzano.terminalrss.tui.TUIStringable;
 import com.verzano.terminalrss.tui.TerminalUI;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
 import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
 
 // TODO this should be backed by some kind of list model
-public class RolodexWidget<T> extends TextWidget {
+public class RolodexWidget<T extends TUIStringable> extends TextWidget {
   private List<T> items;
 
   @Getter
@@ -44,11 +45,15 @@ public class RolodexWidget<T> extends TextWidget {
 
   public void setSelectedIndex(int selectedIndex) {
     this.selectedIndex = selectedIndex;
-    setText(items.get(this.selectedIndex).toString());
+    setText(items.get(this.selectedIndex).toTUIString());
   }
 
   public T getSelectedItem() {
     return items.get(selectedIndex);
+  }
+
+  public void setSelectedItem(T item) {
+    setSelectedIndex(items.indexOf(item));
   }
 
   private int getPreviousIndex(int index) {
@@ -59,35 +64,22 @@ public class RolodexWidget<T> extends TextWidget {
     return index == items.size() - 1 ? 0 : index + 1;
   }
 
-  private String cropOrPad(String s) {
-    int maxWidth = getWidth();
-
-    if (s.length() < maxWidth) {
-      s += new String(new char[maxWidth - s.length()]).replace('\0', ' ');
-    } else if (s.length() > maxWidth) {
-      s = s.substring(0, maxWidth);
-    }
-
-    return s;
-  }
-
   private void printItem(T item, int y) {
     int middleRow = getHeight()/2;
     for (int i = 0; i < getHeight(); i++) {
       TerminalUI.move(getContentX(), y + i);
       if (i == middleRow) {
-        TerminalUI.print(getRowForText(item.toString()));
+        TerminalUI.print(getRowForText(item.toTUIString()));
       } else {
         TerminalUI.print(getEmptyContentRow());
       }
     }
   }
 
-  // TODO this gets a little fucky if any of the toStrings prints a newline... which nothing should ever do
   @Override
   public int getNeededWidth() {
     return items.stream()
-        .mapToInt(item -> item.toString().length())
+        .mapToInt(item -> item.toTUIString().length())
         .max()
         .orElseGet(() -> 0);
   }

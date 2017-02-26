@@ -17,9 +17,18 @@ public class SortedListModel<T extends TUIStringable> implements ListModel<T> {
   }
 
   @Override
-  public void addItem(T item) {
-    items.add(item);
-    items.sort(sortOrder);
+  public boolean addItem(T item) {
+    boolean added = items.add(item);
+    if (added) {
+      items.sort(sortOrder);
+    }
+
+    return added;
+  }
+
+  @Override
+  public boolean removeItem(T item) {
+    return items.remove(item);
   }
 
   @Override
