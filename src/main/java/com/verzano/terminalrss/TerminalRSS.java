@@ -11,16 +11,16 @@ import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.source.Source;
-import com.verzano.terminalrss.source.SourceManager;
-import com.verzano.terminalrss.ui.AddSourceFloater;
-import com.verzano.terminalrss.ui.TerminalUI;
-import com.verzano.terminalrss.ui.container.shelf.Shelf;
-import com.verzano.terminalrss.ui.container.shelf.ShelfOptions;
-import com.verzano.terminalrss.ui.metrics.Size;
-import com.verzano.terminalrss.ui.widget.scrollable.list.ListWidget;
-import com.verzano.terminalrss.ui.widget.scrollable.list.model.SortedListModel;
-import com.verzano.terminalrss.ui.widget.scrollable.text.TextAreaWidget;
-import com.verzano.terminalrss.ui.widget.text.TextWidget;
+import com.verzano.terminalrss.source.manager.SourceManager;
+import com.verzano.terminalrss.source.tui.SourceFloater;
+import com.verzano.terminalrss.tui.TerminalUI;
+import com.verzano.terminalrss.tui.container.shelf.Shelf;
+import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
+import com.verzano.terminalrss.tui.metrics.Size;
+import com.verzano.terminalrss.tui.widget.scrollable.list.ListWidget;
+import com.verzano.terminalrss.tui.widget.scrollable.list.model.SortedListModel;
+import com.verzano.terminalrss.tui.widget.scrollable.text.TextAreaWidget;
+import com.verzano.terminalrss.tui.widget.text.TextWidget;
 import lombok.extern.java.Log;
 
 import java.io.IOException;
@@ -31,12 +31,12 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
-import static com.verzano.terminalrss.ui.constants.Key.DELETE;
-import static com.verzano.terminalrss.ui.constants.Key.ENTER;
-import static com.verzano.terminalrss.ui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.ui.constants.Orientation.VERTICAL;
-import static com.verzano.terminalrss.ui.constants.Position.CENTER_LEFT;
-import static com.verzano.terminalrss.ui.metrics.Size.FILL_CONTAINER;
+import static com.verzano.terminalrss.tui.constants.Key.DELETE;
+import static com.verzano.terminalrss.tui.constants.Key.ENTER;
+import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constants.Orientation.VERTICAL;
+import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
+import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
 
 /*
     addSource("https://techcrunch.com/feed/", CLASS_CONTENT, "article-entry");
@@ -63,7 +63,7 @@ public class TerminalRSS {
 
   private static TextAreaWidget contentTextAreaWidget;
 
-  private static AddSourceFloater addSourceFloater;
+  private static SourceFloater sourceFloater;
 
   private static final ExecutorService sourceExecutor = Executors.newFixedThreadPool(3);
   private static final ExecutorService articleExecutor = Executors.newFixedThreadPool(6);
@@ -105,8 +105,8 @@ public class TerminalRSS {
     sourcesListWidget.addKeyAction(ENTER, () -> {
       Source source = sourcesListWidget.getSelectedItem();
       if (source == ADD_SOURCE) {
-        addSourceFloater.clear();
-        addSourceFloater.showFloater();
+        sourceFloater.clear();
+        sourceFloater.showFloater();
       } else {
         showArticlesList();
 
@@ -126,12 +126,12 @@ public class TerminalRSS {
       sourceExecutor.shutdownNow();
     });
 
-    addSourceFloater = new AddSourceFloater(
+    sourceFloater = new SourceFloater(
         () -> {
           TerminalUI.removeFloater();
           sourcesListWidget.setFocused();
           TerminalUI.reprint();
-          addSource(addSourceFloater.getUri(), addSourceFloater.getContentType(), addSourceFloater.getContentTag());
+          addSource(sourceFloater.getUri(), sourceFloater.getContentType(), sourceFloater.getContentTag());
         },
         () -> {
           TerminalUI.removeFloater();

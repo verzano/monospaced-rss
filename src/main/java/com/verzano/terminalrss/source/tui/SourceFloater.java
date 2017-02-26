@@ -1,0 +1,84 @@
+package com.verzano.terminalrss.source.tui;
+
+import com.verzano.terminalrss.content.ContentType;
+import com.verzano.terminalrss.tui.TerminalUI;
+import com.verzano.terminalrss.tui.ansi.Attribute;
+import com.verzano.terminalrss.tui.container.shelf.Shelf;
+import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
+import com.verzano.terminalrss.tui.floater.binary.BinaryChoiceFloater;
+import com.verzano.terminalrss.tui.metrics.Size;
+import com.verzano.terminalrss.tui.task.key.KeyTask;
+import com.verzano.terminalrss.tui.widget.text.entry.RolodexWidget;
+import com.verzano.terminalrss.tui.widget.text.entry.TextEntryWidget;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.verzano.terminalrss.tui.constants.Key.TAB;
+import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
+
+public class SourceFloater {
+  private BinaryChoiceFloater floater;
+
+  private TextEntryWidget uriTextEntry;
+  private RolodexWidget<ContentType> contentTypeRolodex;
+  private TextEntryWidget contentTagEntry;
+
+  public SourceFloater(KeyTask addSourceAction, KeyTask cancelAction) {
+    Shelf displayWidget = new Shelf(HORIZONTAL, 1);
+
+    uriTextEntry = new TextEntryWidget();
+    uriTextEntry.addKeyAction(TAB, () -> {
+      contentTypeRolodex.setFocused();
+      TerminalUI.reprint();
+    });
+
+    List<ContentType> types = Arrays.stream(ContentType.values())
+        .filter(ct -> ct != ContentType.NULL_TYPE)
+        .collect(Collectors.toList());
+    contentTypeRolodex = new RolodexWidget<>(types, 3, 3);
+    contentTypeRolodex.addKeyAction(TAB, () -> {
+      contentTagEntry.setFocused();
+      TerminalUI.reprint();
+    });
+
+    contentTagEntry = new TextEntryWidget();
+    contentTagEntry.addKeyAction(TAB, () -> {
+      floater.getPositiveButton().setFocused();
+      TerminalUI.reprint();
+    });
+
+    displayWidget.addWidget(uriTextEntry, new ShelfOptions(new Size(30, FILL_NEEDED)));
+    displayWidget.addWidget(contentTypeRolodex, new ShelfOptions(new Size(20, FILL_NEEDED)));
+    displayWidget.addWidget(contentTagEntry, new ShelfOptions(new Size(20, FILL_NEEDED)));
+
+    floater = new BinaryChoiceFloater(displayWidget, addSourceAction, "Add Source", cancelAction, "Cancel");
+
+    floater.getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
+    floater.getUnfocusedFormat().setAttributes(Attribute.INVERSE_ON);
+  }
+
+  public String getUri() {
+    return uriTextEntry.getText();
+  }
+
+  public ContentType getContentType() {
+    return contentTypeRolodex.getSelectedItem();
+  }
+
+  public String getContentTag() {
+    return contentTagEntry.getText();
+  }
+
+  public void clear() {
+    uriTextEntry.setText("");
+    contentTagEntry.setText("");
+    contentTypeRolodex.setSelectedIndex(0);
+  }
+
+  public void showFloater() {
+    TerminalUI.setFloater(floater);
+  }
+}

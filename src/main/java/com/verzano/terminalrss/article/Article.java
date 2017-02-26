@@ -1,7 +1,7 @@
 package com.verzano.terminalrss.article;
 
 import com.google.gson.annotations.SerializedName;
-import com.verzano.terminalrss.ui.TUIStringable;
+import com.verzano.terminalrss.tui.TUIStringable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
