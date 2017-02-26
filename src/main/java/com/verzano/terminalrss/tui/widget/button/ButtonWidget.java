@@ -16,7 +16,6 @@ public class ButtonWidget extends TextWidget {
   public ButtonWidget(KeyTask onPress, String text, Position textPosition) {
     super(text, Orientation.HORIZONTAL, textPosition);
     this.onPress = onPress;
-    // TODO this might be a silly way to do this
     addKeyAction(ENTER, () -> this.onPress.fire());
     getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
     getUnfocusedFormat().setAttributes(Attribute.NORMAL);

@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO eventually have the contentSize cut off or wrap the contained widgets
 @NoArgsConstructor
 public abstract class Container<T extends ContainerOptions> extends Widget {
   public static final Container<ContainerOptions> NULL_CONTAINER = new Container<ContainerOptions>() {

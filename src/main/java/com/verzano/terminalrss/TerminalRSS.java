@@ -48,8 +48,6 @@ import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
  */
 // TODO add in some sort of monitoring to see progress of adding sources and updating articles
 // TODO use futures for that ^
-// TODO editing of sources and deleting of sources/articles
-// TODO handle the exceptions thrown by the Persistence class
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
 @Log
 public class TerminalRSS {
