@@ -1,6 +1,6 @@
 package com.verzano.terminalrss.tui.floater;
 
-import com.verzano.terminalrss.tui.TerminalUis;
+import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.container.enclosure.Enclosure;
 import lombok.NoArgsConstructor;
 
@@ -21,11 +21,11 @@ public abstract class Floater extends Enclosure {
 
   @Override
   public final int getX() {
-    return TerminalUis.getWidth() / 2 - getWidth() / 2;
+    return TerminalUi.getWidth() / 2 - getWidth() / 2;
   }
 
   @Override
   public final int getY() {
-    return TerminalUis.getHeight() / 2 - getHeight() / 2;
+    return TerminalUi.getHeight() / 2 - getHeight() / 2;
   }
 }

@@ -5,7 +5,7 @@ import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
 import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
 import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
 
-import com.verzano.terminalrss.tui.TerminalUis;
+import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.TuiStringable;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.ListModel;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
@@ -68,11 +68,11 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   private void printItem(T item, int y) {
     int middleRow = getHeight() / 2;
     for (int i = 0; i < getHeight(); i++) {
-      TerminalUis.move(getContentX(), y + i);
+      TerminalUi.move(getContentX(), y + i);
       if (i == middleRow) {
-        TerminalUis.print(getRowForText(item.toTuiString()));
+        TerminalUi.print(getRowForText(item.toTuiString()));
       } else {
-        TerminalUis.print(getEmptyContentRow());
+        TerminalUi.print(getEmptyContentRow());
       }
     }
   }

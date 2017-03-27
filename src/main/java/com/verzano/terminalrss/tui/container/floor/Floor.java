@@ -3,7 +3,7 @@ package com.verzano.terminalrss.tui.container.floor;
 import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
 import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
 
-import com.verzano.terminalrss.tui.TerminalUis;
+import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.widget.Widget;
 import java.util.Collection;
@@ -16,12 +16,12 @@ public class Floor extends Container<FloorOptions> {
 
   @Override
   public int getHeight() {
-    return TerminalUis.getHeight();
+    return TerminalUi.getHeight();
   }
 
   @Override
   public int getWidth() {
-    return TerminalUis.getWidth();
+    return TerminalUi.getWidth();
   }
 
   @Override
@@ -54,7 +54,7 @@ public class Floor extends Container<FloorOptions> {
   public int calculateWidgetWidth(Widget widget) {
     switch (options.getSize().getWidth()) {
       case FILL_CONTAINER:
-        return TerminalUis.getWidth();
+        return TerminalUi.getWidth();
       case FILL_NEEDED:
         return widget.getNeededWidth();
       default:
@@ -66,7 +66,7 @@ public class Floor extends Container<FloorOptions> {
   public int calculateWidgetHeight(Widget widget) {
     switch (options.getSize().getHeight()) {
       case FILL_CONTAINER:
-        return TerminalUis.getHeight();
+        return TerminalUi.getHeight();
       case FILL_NEEDED:
         return widget.getNeededHeight();
       default:
@@ -86,11 +86,11 @@ public class Floor extends Container<FloorOptions> {
 
   @Override
   public int getNeededWidth() {
-    return TerminalUis.getWidth();
+    return TerminalUi.getWidth();
   }
 
   @Override
   public int getNeededHeight() {
-    return TerminalUis.getHeight();
+    return TerminalUi.getHeight();
   }
 }

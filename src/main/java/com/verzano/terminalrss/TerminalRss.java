@@ -21,7 +21,7 @@ import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.source.Source;
 import com.verzano.terminalrss.source.manager.SourceManager;
 import com.verzano.terminalrss.source.tui.SourceFloater;
-import com.verzano.terminalrss.tui.TerminalUis;
+import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.container.shelf.Shelf;
 import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.tui.metrics.Size;
@@ -49,7 +49,7 @@ import lombok.extern.java.Log;
 // TODO use futures for that ^
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
 @Log
-public class TerminalRsss {
+public class TerminalRss {
 
   private static final ExecutorService sourceExecutor = Executors.newFixedThreadPool(3);
   private static final ExecutorService articleExecutor = Executors.newFixedThreadPool(6);
@@ -79,9 +79,9 @@ public class TerminalRsss {
     baseContainer = new Shelf(VERTICAL, 0);
     showToSourcesList();
 
-    TerminalUis.setBaseWidget(baseContainer);
+    TerminalUi.setBaseWidget(baseContainer);
     sourcesListWidget.setFocused();
-    TerminalUis.reprint();
+    TerminalUi.reprint();
   }
 
   private static void buildSourceWidgets() {
@@ -116,7 +116,7 @@ public class TerminalRsss {
 
         articlesListWidget.setItems(ArticleManager.getArticles(source));
         articlesListWidget.setFocused();
-        TerminalUis.reprint();
+        TerminalUi.reprint();
       }
     });
 
@@ -140,33 +140,33 @@ public class TerminalRsss {
     });
 
     sourcesListWidget.addKeyAction(DELETE, () -> {
-      TerminalUis.shutdown();
+      TerminalUi.shutdown();
       articleExecutor.shutdownNow();
       sourceExecutor.shutdownNow();
     });
 
     sourceFloater = new SourceFloater(
         () -> {
-          // TODO these two lines should be part of the TerminalUis so that I don't have to put them everywhere
-          TerminalUis.removeFloater();
+          // TODO these two lines should be part of the TerminalUi so that I don't have to put them everywhere
+          TerminalUi.removeFloater();
           sourcesListWidget.setFocused();
-          TerminalUis.reprint();
+          TerminalUi.reprint();
           addSource(sourceFloater.getUri(), sourceFloater.getContentType(),
               sourceFloater.getContentTag());
         },
         () -> {
-          TerminalUis.removeFloater();
+          TerminalUi.removeFloater();
           sourcesListWidget.setFocused();
-          TerminalUis.reprint();
+          TerminalUi.reprint();
           modifySource(
               sourceFloater.getSourceId(),
               sourceFloater.getContentType(),
               sourceFloater.getContentTag());
         },
         () -> {
-          TerminalUis.removeFloater();
+          TerminalUi.removeFloater();
           sourcesListWidget.setFocused();
-          TerminalUis.reprint();
+          TerminalUi.reprint();
         });
   }
 
@@ -197,7 +197,7 @@ public class TerminalRsss {
 
         contentTextAreaWidget.setText(article.getContent());
         contentTextAreaWidget.setFocused();
-        TerminalUis.reprint();
+        TerminalUi.reprint();
       }
     });
 
@@ -208,7 +208,7 @@ public class TerminalRsss {
       sourceTextWidget.setText("Sources:");
 
       sourcesListWidget.setFocused();
-      TerminalUis.reprint();
+      TerminalUi.reprint();
     });
   }
 
@@ -220,7 +220,7 @@ public class TerminalRsss {
       articleTextWidget.setText("Articles:");
 
       articlesListWidget.setFocused();
-      TerminalUis.reprint();
+      TerminalUi.reprint();
     });
   }
 
@@ -228,7 +228,7 @@ public class TerminalRsss {
     baseContainer.removeWidgets();
     baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
     baseContainer.addWidget(sourcesListWidget,
-        new ShelfOptions(new Size(FILL_CONTAINER, TerminalUis.getHeight() - 1)));
+        new ShelfOptions(new Size(FILL_CONTAINER, TerminalUi.getHeight() - 1)));
   }
 
   private static void showArticlesList() {
@@ -236,7 +236,7 @@ public class TerminalRsss {
     baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
     baseContainer.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
     baseContainer.addWidget(articlesListWidget,
-        new ShelfOptions(new Size(FILL_CONTAINER, TerminalUis.getHeight() - 2)));
+        new ShelfOptions(new Size(FILL_CONTAINER, TerminalUi.getHeight() - 2)));
   }
 
   private static void showArticle() {
@@ -244,7 +244,7 @@ public class TerminalRsss {
     baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
     baseContainer.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
     baseContainer.addWidget(contentTextAreaWidget,
-        new ShelfOptions(new Size(FILL_CONTAINER, TerminalUis.getHeight() - 3)));
+        new ShelfOptions(new Size(FILL_CONTAINER, TerminalUi.getHeight() - 3)));
   }
 
   private static void addSource(String uri, ContentType contentType, String contentTag) {

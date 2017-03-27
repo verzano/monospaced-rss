@@ -4,7 +4,7 @@ import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
 import static com.verzano.terminalrss.tui.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
 
-import com.verzano.terminalrss.tui.TerminalUis;
+import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.TuiStringable;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
@@ -115,11 +115,11 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
     int width = getContentWidth() - 1;
 
     for (int row = 0; row < getContentHeight(); row++) {
-      TerminalUis.move(getContentX(), getContentY() + row);
+      TerminalUi.move(getContentX(), getContentY() + row);
       int index = row + getViewTop();
 
       if (index >= listModel.getItemCount()) {
-        TerminalUis.printn(" ", width);
+        TerminalUi.printn(" ", width);
       } else {
         String toPrint = listModel.getItemAt(index).toTuiString();
         if (toPrint.length() > width) {
@@ -132,7 +132,7 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
           toPrint = selectedItemFormat.getFormatString() + toPrint + NORMAL.getFormatString();
         }
 
-        TerminalUis.print(toPrint);
+        TerminalUi.print(toPrint);
       }
     }
   }

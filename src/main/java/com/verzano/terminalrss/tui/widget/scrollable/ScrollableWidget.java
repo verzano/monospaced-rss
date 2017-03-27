@@ -2,7 +2,7 @@ package com.verzano.terminalrss.tui.widget.scrollable;
 
 import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
 
-import com.verzano.terminalrss.tui.TerminalUis;
+import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
@@ -46,11 +46,11 @@ public abstract class ScrollableWidget extends Widget {
 
     int x = getContentX() + getContentWidth();
     for (int row = 0; row <= getContentHeight(); row++) {
-      TerminalUis.move(x, getContentY() + row);
+      TerminalUi.move(x, getContentY() + row);
       if (row >= barStart && row <= barEnd) {
-        TerminalUis.print(scrollbarFormat.getFormatString() + " " + NORMAL.getFormatString());
+        TerminalUi.print(scrollbarFormat.getFormatString() + " " + NORMAL.getFormatString());
       } else {
-        TerminalUis.print(" ");
+        TerminalUi.print(" ");
       }
     }
   }

@@ -24,7 +24,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 // TODO use an executor to schedule events
-public class TerminalUI {
+public class TerminalUi {
 
   private static final AtomicBoolean run = new AtomicBoolean(true);
   private static final BlockingDeque<PrintTask> printTaskQueue = new LinkedBlockingDeque<>();
@@ -36,11 +36,11 @@ public class TerminalUI {
   @Getter
   @Setter
   private static Widget focusedWidget = NULL_WIDGET;
-  private static final Thread keyActionThread = new Thread(TerminalUI::keyActionLoop, "Key Action");
+  private static final Thread keyActionThread = new Thread(TerminalUi::keyActionLoop, "Key Action");
   @Getter
   private static Size size;
-  private static final Thread printingThread = new Thread(TerminalUI::printingLoop, "Printing");
-  private static final Thread resizingThread = new Thread(TerminalUI::resizingLoop, "Resizing");
+  private static final Thread printingThread = new Thread(TerminalUi::printingLoop, "Printing");
+  private static final Thread resizingThread = new Thread(TerminalUi::resizingLoop, "Resizing");
 
   static {
     try {
@@ -58,16 +58,16 @@ public class TerminalUI {
     }
   }
 
-  private TerminalUI() {}
+  private TerminalUi() {}
 
   // TODO only permit one at a time... or have a stack...
   public static void setFloater(Floater floater) {
-    TerminalUI.floater = floater;
-    TerminalUI.floater.setFocused();
+    TerminalUi.floater = floater;
+    TerminalUi.floater.setFocused();
   }
 
   public static void removeFloater() {
-    TerminalUI.floater = NULL_FLOATER;
+    TerminalUi.floater = NULL_FLOATER;
   }
 
   public static int getWidth() {
@@ -110,6 +110,7 @@ public class TerminalUI {
                 focusedWidget.fireKeyActions(ESCAPED_PREFIX + (char) terminal.reader().read());
                 break;
             }
+            break;
           case -2:
             break;
           default:
@@ -167,7 +168,7 @@ public class TerminalUI {
 
   public static void resize() {
     if (Thread.currentThread() != printingThread) {
-      printTaskQueue.addFirst(TerminalUI::resize);
+      printTaskQueue.addFirst(TerminalUi::resize);
     } else {
       floor.arrange();
       if (floater != NULL_FLOATER) {
@@ -178,7 +179,7 @@ public class TerminalUI {
 
   public static void reprint() {
     if (Thread.currentThread() != printingThread) {
-      printTaskQueue.add(TerminalUI::reprint);
+      printTaskQueue.add(TerminalUi::reprint);
     } else {
       floor.print();
       if (floater != NULL_FLOATER) {
