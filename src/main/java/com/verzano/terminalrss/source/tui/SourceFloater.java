@@ -37,8 +37,6 @@ public class SourceFloater {
     this.addSourceTask = addSourceTask;
     this.editSourceTask = editSourceTask;
 
-    Shelf displayWidget = new Shelf(HORIZONTAL, 1);
-
     contentTagEntry = new TextEntryWidget();
     contentTagEntry.addKeyAction(TAB, () -> {
       floater.getPositiveButton().setFocused();
@@ -60,6 +58,7 @@ public class SourceFloater {
       TerminalUi.reprint();
     });
 
+    Shelf displayWidget = new Shelf(HORIZONTAL, 1);
     displayWidget.addWidget(uriTextEntry, new ShelfOptions(new Size(30, FILL_NEEDED)));
     displayWidget.addWidget(contentTypeRolodex, new ShelfOptions(new Size(20, FILL_NEEDED)));
     displayWidget.addWidget(contentTagEntry, new ShelfOptions(new Size(20, FILL_NEEDED)));

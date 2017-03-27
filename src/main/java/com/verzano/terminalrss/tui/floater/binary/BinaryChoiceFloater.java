@@ -51,7 +51,7 @@ public class BinaryChoiceFloater extends Floater {
       TerminalUi.reprint();
     });
 
-    addWidget(displayWidget, new EnclosureOptions(CardinalDirection.CENTER));
+    addWidget(this.displayWidget, new EnclosureOptions(CardinalDirection.CENTER));
     addWidget(buttonContainer, new EnclosureOptions(CardinalDirection.SOUTH));
   }
 }

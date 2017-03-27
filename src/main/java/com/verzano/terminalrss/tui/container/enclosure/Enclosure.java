@@ -129,8 +129,9 @@ public class Enclosure extends Container<EnclosureOptions> {
         width = widget.getNeededWidth();
         break;
       case CENTER:
-        width =
-            getWidth() - getWidgetWidth(widgetMap.get(EAST)) - getWidgetWidth(widgetMap.get(WEST));
+        width = getWidth()
+            - getWidgetWidth(widgetMap.get(EAST))
+            - getWidgetWidth(widgetMap.get(WEST));
         break;
     }
     return width;
@@ -148,8 +149,9 @@ public class Enclosure extends Container<EnclosureOptions> {
       case EAST:
       case WEST:
       case CENTER:
-        height = getHeight() - getWidgetHeight(widgetMap.get(NORTH)) - getWidgetHeight(
-            widgetMap.get(SOUTH));
+        height = getHeight()
+            - getWidgetHeight(widgetMap.get(NORTH))
+            - getWidgetHeight(widgetMap.get(SOUTH));
         break;
     }
     return height;
@@ -164,10 +166,10 @@ public class Enclosure extends Container<EnclosureOptions> {
       case WEST:
         break;
       case EAST:
-        x += getWidgetWidth(widgetMap.get(CENTER));
+        x += getWidgetWidth(widgetMap.get(CENTER)) + getWidgetWidth(widgetMap.get(CENTER));
         break;
       case CENTER:
-        x += getWidgetWidth(widgetMap.get(CENTER)) + getWidgetWidth(widgetMap.get(WEST));
+        x += getWidgetWidth(widgetMap.get(WEST));
         break;
     }
     return x;
