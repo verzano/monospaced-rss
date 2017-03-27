@@ -5,7 +5,7 @@ import static com.verzano.terminalrss.tui.constants.Direction.UP;
 import static com.verzano.terminalrss.tui.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
 
-import com.verzano.terminalrss.tui.TerminalUI;
+import com.verzano.terminalrss.tui.TerminalUis;
 import com.verzano.terminalrss.tui.constants.Direction;
 import com.verzano.terminalrss.tui.widget.scrollable.ScrollableWidget;
 import java.util.LinkedList;
@@ -117,12 +117,12 @@ public class TextAreaWidget extends ScrollableWidget {
     int width = getContentWidth() - 1;
 
     for (int row = 0; row <= getContentHeight(); row++) {
-      TerminalUI.move(getContentX(), getContentY() + row);
+      TerminalUis.move(getContentX(), getContentY() + row);
       int line = row + topLine;
       if (line < lines.size()) {
-        TerminalUI.print(lines.get(line));
+        TerminalUis.print(lines.get(line));
       } else {
-        TerminalUI.printn(" ", width);
+        TerminalUis.printn(" ", width);
       }
     }
   }

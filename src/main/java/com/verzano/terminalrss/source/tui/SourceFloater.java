@@ -6,7 +6,7 @@ import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
 
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.source.Source;
-import com.verzano.terminalrss.tui.TerminalUI;
+import com.verzano.terminalrss.tui.TerminalUis;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.container.shelf.Shelf;
 import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
@@ -42,7 +42,7 @@ public class SourceFloater {
     contentTagEntry = new TextEntryWidget();
     contentTagEntry.addKeyAction(TAB, () -> {
       floater.getPositiveButton().setFocused();
-      TerminalUI.reprint();
+      TerminalUis.reprint();
     });
 
     List<ContentType> types = Arrays.stream(ContentType.values())
@@ -51,13 +51,13 @@ public class SourceFloater {
     contentTypeRolodex = new RolodexWidget<>(new BasicListModel<>(types), 3, 3);
     contentTypeRolodex.addKeyAction(TAB, () -> {
       contentTagEntry.setFocused();
-      TerminalUI.reprint();
+      TerminalUis.reprint();
     });
 
     uriTextEntry = new TextEntryWidget();
     uriTextEntry.addKeyAction(TAB, () -> {
       contentTypeRolodex.setFocused();
-      TerminalUI.reprint();
+      TerminalUis.reprint();
     });
 
     displayWidget.addWidget(uriTextEntry, new ShelfOptions(new Size(30, FILL_NEEDED)));
@@ -115,7 +115,7 @@ public class SourceFloater {
   }
 
   public void showFloater() {
-    TerminalUI.setFloater(floater);
-    TerminalUI.getFloater().reprint();
+    TerminalUis.setFloater(floater);
+    TerminalUis.getFloater().reprint();
   }
 }

@@ -1,20 +1,19 @@
 package com.verzano.terminalrss.tui.container.enclosure;
 
-import com.verzano.terminalrss.tui.constants.CardinalDirection;
-import com.verzano.terminalrss.tui.container.Container;
-import com.verzano.terminalrss.tui.widget.Widget;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import static com.verzano.terminalrss.tui.constants.CardinalDirection.CENTER;
 import static com.verzano.terminalrss.tui.constants.CardinalDirection.EAST;
 import static com.verzano.terminalrss.tui.constants.CardinalDirection.NORTH;
 import static com.verzano.terminalrss.tui.constants.CardinalDirection.SOUTH;
 import static com.verzano.terminalrss.tui.constants.CardinalDirection.WEST;
+
+import com.verzano.terminalrss.tui.constants.CardinalDirection;
+import com.verzano.terminalrss.tui.container.Container;
+import com.verzano.terminalrss.tui.widget.Widget;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Enclosure extends Container<EnclosureOptions> {
 
@@ -166,8 +165,9 @@ public class Enclosure extends Container<EnclosureOptions> {
         break;
       case EAST:
         x += getWidgetWidth(widgetMap.get(CENTER));
+        break;
       case CENTER:
-        x += getWidgetWidth(widgetMap.get(WEST));
+        x += getWidgetWidth(widgetMap.get(CENTER)) + getWidgetWidth(widgetMap.get(WEST));
         break;
     }
     return x;

@@ -2,7 +2,7 @@ package com.verzano.terminalrss.tui.widget.text;
 
 import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
 
-import com.verzano.terminalrss.tui.TerminalUI;
+import com.verzano.terminalrss.tui.TerminalUis;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.constants.Orientation;
 import com.verzano.terminalrss.tui.constants.Position;
@@ -79,11 +79,11 @@ public class TextWidget extends Widget {
       case TOP_LEFT:
       case TOP_CENTER:
       case TOP_RIGHT:
-        TerminalUI.move(getContentX(), getContentY());
-        TerminalUI.print(getRowForText(text));
+        TerminalUis.move(getContentX(), getContentY());
+        TerminalUis.print(getRowForText(text));
         for (int i = 1; i < getContentHeight(); i++) {
-          TerminalUI.move(getContentX(), getContentY() + i);
-          TerminalUI.print(getEmptyContentRow());
+          TerminalUis.move(getContentX(), getContentY() + i);
+          TerminalUis.print(getEmptyContentRow());
         }
         break;
       case CENTER_LEFT:
@@ -91,23 +91,23 @@ public class TextWidget extends Widget {
       case CENTER_RIGHT:
         int middleRow = getHeight() / 2;
         for (int i = 0; i < getHeight(); i++) {
-          TerminalUI.move(getContentX(), getContentY() + i);
+          TerminalUis.move(getContentX(), getContentY() + i);
           if (i == middleRow) {
-            TerminalUI.print(getRowForText(text));
+            TerminalUis.print(getRowForText(text));
           } else {
-            TerminalUI.print(getEmptyContentRow());
+            TerminalUis.print(getEmptyContentRow());
           }
         }
         break;
       case BOTTOM_LEFT:
       case BOTTOM_CENTER:
       case BOTTOM_RIGHT:
-        TerminalUI.move(getContentX(), getContentY());
+        TerminalUis.move(getContentX(), getContentY());
         for (int i = 1; i < getContentHeight(); i++) {
-          TerminalUI.print(getEmptyContentRow());
-          TerminalUI.move(getContentX(), getContentY() + i);
+          TerminalUis.print(getEmptyContentRow());
+          TerminalUis.move(getContentX(), getContentY() + i);
         }
-        TerminalUI.print(getRowForText(text));
+        TerminalUis.print(getRowForText(text));
         break;
     }
   }
@@ -145,15 +145,15 @@ public class TextWidget extends Widget {
     switch (orientation) {
       // TODO make vertical printContent correctly
       case VERTICAL:
-        TerminalUI.move(getContentX(), getContentY());
+        TerminalUis.move(getContentX(), getContentY());
         String toPrint = text;
         for (int row = 0; row < getContentHeight(); row++) {
-          TerminalUI.move(getContentX(), getContentY() + row);
+          TerminalUis.move(getContentX(), getContentY() + row);
           if (row < toPrint.length()) {
-            TerminalUI
+            TerminalUis
                 .print(getAnsiFormatPrefix() + toPrint.charAt(row) + NORMAL.getFormatString());
           } else {
-            TerminalUI.print(getAnsiFormatPrefix() + " " + NORMAL.getFormatString());
+            TerminalUis.print(getAnsiFormatPrefix() + " " + NORMAL.getFormatString());
           }
         }
         break;

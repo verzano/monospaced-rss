@@ -3,7 +3,7 @@ package com.verzano.terminalrss.tui.widget;
 import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
 import static com.verzano.terminalrss.tui.container.Container.NULL_CONTAINER;
 
-import com.verzano.terminalrss.tui.TerminalUI;
+import com.verzano.terminalrss.tui.TerminalUis;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
@@ -113,11 +113,11 @@ public abstract class Widget {
   }
 
   public boolean isFocused() {
-    return TerminalUI.getFocusedWidget() == this;
+    return TerminalUis.getFocusedWidget() == this;
   }
 
   public void setFocused() {
-    TerminalUI.setFocusedWidget(this);
+    TerminalUis.setFocusedWidget(this);
   }
 
   public void size() {
@@ -146,14 +146,14 @@ public abstract class Widget {
 
   public final void print() {
     for (int row = 0; row < getHeight(); row++) {
-      TerminalUI.move(getX(), getY() + row);
-      TerminalUI.print(getEmptyRow());
+      TerminalUis.move(getX(), getY() + row);
+      TerminalUis.print(getEmptyRow());
     }
 
     printContent();
   }
 
   public void reprint() {
-    TerminalUI.schedulePrintTask(this::print);
+    TerminalUis.schedulePrintTask(this::print);
   }
 }

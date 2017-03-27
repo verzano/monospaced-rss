@@ -5,7 +5,7 @@ import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
 import static com.verzano.terminalrss.tui.constants.Position.CENTER;
 import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
 
-import com.verzano.terminalrss.tui.TerminalUI;
+import com.verzano.terminalrss.tui.TerminalUis;
 import com.verzano.terminalrss.tui.constants.CardinalDirection;
 import com.verzano.terminalrss.tui.container.enclosure.EnclosureOptions;
 import com.verzano.terminalrss.tui.container.shelf.Shelf;
@@ -44,11 +44,11 @@ public class BinaryChoiceFloater extends Floater {
 
     positiveButton.addKeyAction(TAB, () -> {
       negativeButton.setFocused();
-      TerminalUI.reprint();
+      TerminalUis.reprint();
     });
     negativeButton.addKeyAction(TAB, () -> {
       this.displayWidget.setFocused();
-      TerminalUI.reprint();
+      TerminalUis.reprint();
     });
 
     addWidget(displayWidget, new EnclosureOptions(CardinalDirection.CENTER));
