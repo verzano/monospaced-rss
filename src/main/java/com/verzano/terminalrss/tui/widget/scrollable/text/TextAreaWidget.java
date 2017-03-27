@@ -1,19 +1,19 @@
 package com.verzano.terminalrss.tui.widget.scrollable.text;
 
-import com.verzano.terminalrss.tui.TerminalUI;
-import com.verzano.terminalrss.tui.constants.Direction;
-import com.verzano.terminalrss.tui.widget.scrollable.ScrollableWidget;
-import lombok.Getter;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import static com.verzano.terminalrss.tui.constants.Direction.DOWN;
 import static com.verzano.terminalrss.tui.constants.Direction.UP;
 import static com.verzano.terminalrss.tui.constants.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
 
+import com.verzano.terminalrss.tui.TerminalUI;
+import com.verzano.terminalrss.tui.constants.Direction;
+import com.verzano.terminalrss.tui.widget.scrollable.ScrollableWidget;
+import java.util.LinkedList;
+import java.util.List;
+import lombok.Getter;
+
 public class TextAreaWidget extends ScrollableWidget {
+
   @Getter
   private String text;
 
@@ -84,7 +84,7 @@ public class TextAreaWidget extends ScrollableWidget {
     return lines.stream()
         .mapToInt(String::length)
         .max()
-        .orElseGet(() -> 0) + 1;
+        .orElse(0) + 1;
   }
 
   @Override
@@ -92,7 +92,7 @@ public class TextAreaWidget extends ScrollableWidget {
     int width = getWidth() - 1;
 
     return lines.stream()
-        .mapToInt(row -> (int)Math.ceil(row.length()/width))
+        .mapToInt(row -> (int) Math.ceil(row.length() / width))
         .sum();
   }
 

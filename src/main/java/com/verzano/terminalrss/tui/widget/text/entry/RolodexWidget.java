@@ -1,27 +1,30 @@
 package com.verzano.terminalrss.tui.widget.text.entry;
 
-import com.verzano.terminalrss.tui.TUIStringable;
+import static com.verzano.terminalrss.tui.constants.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
+import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
+
+import com.verzano.terminalrss.tui.TuiStringable;
 import com.verzano.terminalrss.tui.TerminalUI;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.ListModel;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
 import lombok.Getter;
 import lombok.Setter;
 
-import static com.verzano.terminalrss.tui.constants.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
-import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
+public class RolodexWidget<T extends TuiStringable> extends TextWidget {
 
-public class RolodexWidget<T extends TUIStringable> extends TextWidget {
   private ListModel<T> listModel;
 
   @Getter
   private volatile int selectedIndex = 0;
 
-  @Getter @Setter
+  @Getter
+  @Setter
   private int itemsBefore;
 
-  @Getter @Setter
+  @Getter
+  @Setter
   private int itemsAfter;
 
   public RolodexWidget(ListModel<T> listModel, int itemsBefore, int itemsAfter) {
@@ -43,7 +46,7 @@ public class RolodexWidget<T extends TUIStringable> extends TextWidget {
 
   public void setSelectedIndex(int selectedIndex) {
     this.selectedIndex = selectedIndex;
-    setText(listModel.getItemAt(this.selectedIndex).toTUIString());
+    setText(listModel.getItemAt(this.selectedIndex).toTuiString());
   }
 
   public T getSelectedItem() {
@@ -63,11 +66,11 @@ public class RolodexWidget<T extends TUIStringable> extends TextWidget {
   }
 
   private void printItem(T item, int y) {
-    int middleRow = getHeight()/2;
+    int middleRow = getHeight() / 2;
     for (int i = 0; i < getHeight(); i++) {
       TerminalUI.move(getContentX(), y + i);
       if (i == middleRow) {
-        TerminalUI.print(getRowForText(item.toTUIString()));
+        TerminalUI.print(getRowForText(item.toTuiString()));
       } else {
         TerminalUI.print(getEmptyContentRow());
       }
@@ -77,9 +80,9 @@ public class RolodexWidget<T extends TUIStringable> extends TextWidget {
   @Override
   public int getNeededWidth() {
     return listModel.getItems().stream()
-        .mapToInt(item -> item.toTUIString().length())
+        .mapToInt(item -> item.toTuiString().length())
         .max()
-        .orElseGet(() -> 0);
+        .orElse(0);
   }
 
   @Override
@@ -95,13 +98,13 @@ public class RolodexWidget<T extends TUIStringable> extends TextWidget {
       int index = selectedIndex;
       for (int i = 1; i <= itemsBefore; i++) {
         index = getPreviousIndex(index);
-        printItem(listModel.getItemAt(index), getContentY() - i*getContentHeight());
+        printItem(listModel.getItemAt(index), getContentY() - i * getContentHeight());
       }
 
       index = selectedIndex;
       for (int i = 1; i <= itemsAfter; i++) {
         index = getNextIndex(index);
-        printItem(listModel.getItemAt(index), getContentY() + i*getContentHeight());
+        printItem(listModel.getItemAt(index), getContentY() + i * getContentHeight());
       }
     }
   }

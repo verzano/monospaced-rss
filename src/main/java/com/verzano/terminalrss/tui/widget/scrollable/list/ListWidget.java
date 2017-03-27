@@ -1,6 +1,10 @@
 package com.verzano.terminalrss.tui.widget.scrollable.list;
 
-import com.verzano.terminalrss.tui.TUIStringable;
+import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.tui.constants.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
+
+import com.verzano.terminalrss.tui.TuiStringable;
 import com.verzano.terminalrss.tui.TerminalUI;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
@@ -9,22 +13,20 @@ import com.verzano.terminalrss.tui.ansi.Foreground;
 import com.verzano.terminalrss.tui.constants.Direction;
 import com.verzano.terminalrss.tui.widget.scrollable.ScrollableWidget;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.ListModel;
+import java.util.Collection;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Collection;
+public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
 
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.tui.constants.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
-
-public class ListWidget<T extends TUIStringable> extends ScrollableWidget {
   private ListModel<T> listModel;
 
   private int selectedItemIndex;
 
-  @Getter @Setter
-  private AnsiFormat selectedItemFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.INVERSE_ON);
+  @Getter
+  @Setter
+  private AnsiFormat selectedItemFormat = new AnsiFormat(Background.NONE, Foreground.NONE,
+      Attribute.INVERSE_ON);
 
   public ListWidget(ListModel<T> listModel) {
     setListModel(listModel);
@@ -96,9 +98,9 @@ public class ListWidget<T extends TUIStringable> extends ScrollableWidget {
   @Override
   public int getNeededWidth() {
     return listModel.getItems().stream()
-        .mapToInt(item -> item.toTUIString().length())
+        .mapToInt(item -> item.toTuiString().length())
         .max()
-        .orElseGet(() -> 0) + 1;
+        .orElse(0) + 1;
   }
 
   @Override
@@ -119,10 +121,10 @@ public class ListWidget<T extends TUIStringable> extends ScrollableWidget {
       if (index >= listModel.getItemCount()) {
         TerminalUI.printn(" ", width);
       } else {
-        String toPrint = listModel.getItemAt(index).toTUIString();
+        String toPrint = listModel.getItemAt(index).toTuiString();
         if (toPrint.length() > width) {
           toPrint = toPrint.substring(0, width);
-        } else if(toPrint.length() < width) {
+        } else if (toPrint.length() < width) {
           toPrint = toPrint + new String(new char[width - toPrint.length()]).replace('\0', ' ');
         }
 

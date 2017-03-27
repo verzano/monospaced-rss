@@ -1,3 +1,3 @@
 package com.verzano.terminalrss.tui.container;
 
-public abstract class ContainerOptions { }
+public abstract class ContainerOptions {}

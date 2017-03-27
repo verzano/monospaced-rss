@@ -1,5 +1,7 @@
 package com.verzano.terminalrss.tui.widget.text;
 
+import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
+
 import com.verzano.terminalrss.tui.TerminalUI;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.constants.Orientation;
@@ -8,16 +10,18 @@ import com.verzano.terminalrss.tui.widget.Widget;
 import lombok.Getter;
 import lombok.Setter;
 
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-
 public class TextWidget extends Widget {
-  @Getter @Setter
+
+  @Getter
+  @Setter
   private String text;
 
-  @Getter @Setter
+  @Getter
+  @Setter
   private Orientation orientation;
 
-  @Getter @Setter
+  @Getter
+  @Setter
   private Position textPosition;
 
   public TextWidget(String text, Orientation orientation, Position textPosition) {
@@ -45,14 +49,14 @@ public class TextWidget extends Widget {
         case CENTER:
         case BOTTOM_CENTER:
           if (text.length() > getWidth()) {
-            double halfExtra = (text.length() - getWidth())/2D;
+            double halfExtra = (text.length() - getWidth()) / 2D;
 
-            text = text.substring((int)halfExtra, text.length() - (int)Math.ceil(halfExtra));
+            text = text.substring((int) halfExtra, text.length() - (int) Math.ceil(halfExtra));
           } else {
-            double halfRemaining = (text.length() - getWidth())/2D;
-            text = new String(new char[(int)Math.ceil(halfRemaining)]).replace('\0', ' ')
+            double halfRemaining = (text.length() - getWidth()) / 2D;
+            text = new String(new char[(int) Math.ceil(halfRemaining)]).replace('\0', ' ')
                 + text
-                + new String(new char[(int)halfRemaining]).replace('\0', ' ');
+                + new String(new char[(int) halfRemaining]).replace('\0', ' ');
           }
           break;
         case TOP_RIGHT:
@@ -85,7 +89,7 @@ public class TextWidget extends Widget {
       case CENTER_LEFT:
       case CENTER:
       case CENTER_RIGHT:
-        int middleRow = getHeight()/2;
+        int middleRow = getHeight() / 2;
         for (int i = 0; i < getHeight(); i++) {
           TerminalUI.move(getContentX(), getContentY() + i);
           if (i == middleRow) {
@@ -146,7 +150,8 @@ public class TextWidget extends Widget {
         for (int row = 0; row < getContentHeight(); row++) {
           TerminalUI.move(getContentX(), getContentY() + row);
           if (row < toPrint.length()) {
-            TerminalUI.print(getAnsiFormatPrefix() + toPrint.charAt(row) + NORMAL.getFormatString());
+            TerminalUI
+                .print(getAnsiFormatPrefix() + toPrint.charAt(row) + NORMAL.getFormatString());
           } else {
             TerminalUI.print(getAnsiFormatPrefix() + " " + NORMAL.getFormatString());
           }

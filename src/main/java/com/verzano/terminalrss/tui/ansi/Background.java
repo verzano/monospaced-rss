@@ -9,7 +9,7 @@ public enum Background {
   NONE(""),
 
   DEFAULT("49"),
-  
+
   // 8/16 colors
   BLACK("40"),
   RED("41"),

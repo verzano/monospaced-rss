@@ -1,5 +1,10 @@
 package com.verzano.terminalrss.tui.floater.binary;
 
+import static com.verzano.terminalrss.tui.constants.Key.TAB;
+import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constants.Position.CENTER;
+import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
+
 import com.verzano.terminalrss.tui.TerminalUI;
 import com.verzano.terminalrss.tui.constants.CardinalDirection;
 import com.verzano.terminalrss.tui.container.enclosure.EnclosureOptions;
@@ -12,13 +17,7 @@ import com.verzano.terminalrss.tui.widget.Widget;
 import com.verzano.terminalrss.tui.widget.button.ButtonWidget;
 import lombok.Getter;
 
-import static com.verzano.terminalrss.tui.constants.Key.TAB;
-import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.constants.Position.CENTER;
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
-
 public class BinaryChoiceFloater extends Floater {
-  private Widget displayWidget;
 
   @Getter
   private final Shelf buttonContainer;
@@ -26,6 +25,7 @@ public class BinaryChoiceFloater extends Floater {
   private final ButtonWidget positiveButton;
   @Getter
   private final ButtonWidget negativeButton;
+  private Widget displayWidget;
 
   public BinaryChoiceFloater(
       Widget displayWidget,

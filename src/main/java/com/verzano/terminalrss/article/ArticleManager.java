@@ -5,7 +5,6 @@ import com.verzano.terminalrss.content.ContentRetriever;
 import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 import com.verzano.terminalrss.source.Source;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -20,23 +19,21 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class ArticleManager {
-  private ArticleManager() { }
 
-  public static final Comparator<Article> UPDATED_AT_COMPARATOR = Comparator.comparing(Article::getPublishedAt).reversed();
-
+  public static final Comparator<Article> UPDATED_AT_COMPARATOR = Comparator
+      .comparing(Article::getPublishedAt)
+      .reversed();
   private static final int MAX_STORED_ARTICLES = 25;
-
   private static final Map<Long, Map<Long, Article>> ARTICLES = new ConcurrentHashMap<>();
   private static final AtomicLong ARTICLE_ID = new AtomicLong(0);
-
   private static final String ARTICLES_FILE = "articles.json";
   private static final String ARTICLES_ID_FILE = "articles.id";
-
-  private static final Type ARTICLES_FILE_TYPE = new TypeToken<List<Article>>(){}.getType();
+  private static final Type ARTICLES_FILE_TYPE = new TypeToken<List<Article>>() {}.getType();
 
   static {
     try {
-      List<Article> articles = Persistence.load(ARTICLES_FILE, ARTICLES_FILE_TYPE, new LinkedList<>());
+      List<Article> articles = Persistence
+          .load(ARTICLES_FILE, ARTICLES_FILE_TYPE, new LinkedList<>());
       ARTICLES.putAll(articles.stream().collect(Collectors.groupingBy(
           Article::getSourceId,
           Collectors.toMap(Article::getId, article -> article))));
@@ -45,6 +42,9 @@ public class ArticleManager {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private ArticleManager() {
   }
 
   public static Article createArticle(
@@ -58,7 +58,8 @@ public class ArticleManager {
       throw new ArticleExistsException("Article already exists for uri: " + uri);
     }
 
-    String content = ContentRetriever.getContent(uri, source.getContentType(), source.getContentTag());
+    String content = ContentRetriever
+        .getContent(uri, source.getContentType(), source.getContentTag());
 
     Long id;
     synchronized (ARTICLE_ID) {

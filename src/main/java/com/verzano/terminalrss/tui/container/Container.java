@@ -3,15 +3,15 @@ package com.verzano.terminalrss.tui.container;
 import com.verzano.terminalrss.tui.metrics.Point;
 import com.verzano.terminalrss.tui.metrics.Size;
 import com.verzano.terminalrss.tui.widget.Widget;
-import lombok.NoArgsConstructor;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public abstract class Container<T extends ContainerOptions> extends Widget {
+
   public static final Container<ContainerOptions> NULL_CONTAINER = new Container<ContainerOptions>() {
     @Override
     public Collection<Widget> getContainedWidgets() {
@@ -39,13 +39,13 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
     }
 
     @Override
-    public void addWidgetAux(Widget widget, ContainerOptions options) { }
+    public void addWidgetAux(Widget widget, ContainerOptions options) {}
 
     @Override
-    public void removeWidgetAux(Widget widget) { }
+    public void removeWidgetAux(Widget widget) {}
 
     @Override
-    public void removeWidgetsAux() { }
+    public void removeWidgetsAux() {}
 
     @Override
     public int getNeededWidth() {
@@ -57,25 +57,27 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
       return 0;
     }
   };
-
+  private static final Size NO_SIZE = new Size(0, 0);
+  private static final Point NO_LOCATION = new Point(0, 0);
   private final Map<Widget, Size> widgetSizes = new HashMap<>();
   private final Map<Widget, Point> widgetLocations = new HashMap<>();
 
   public abstract Collection<Widget> getContainedWidgets();
 
   public abstract int calculateWidgetWidth(Widget widget);
+
   public abstract int calculateWidgetHeight(Widget widget);
 
   public abstract int calculateWidgetX(Widget widget);
+
   public abstract int calculateWidgetY(Widget widget);
 
   // TODO need better names
   public abstract void addWidgetAux(Widget widget, T options);
-  public abstract void removeWidgetAux(Widget widget);
-  public abstract void removeWidgetsAux();
 
-  private static final Size NO_SIZE = new Size(0, 0);
-  private static final Point NO_LOCATION = new Point(0, 0);
+  public abstract void removeWidgetAux(Widget widget);
+
+  public abstract void removeWidgetsAux();
 
   public int getWidgetWidth(Widget widget) {
     return widgetSizes.getOrDefault(widget, NO_SIZE).getWidth();
@@ -144,7 +146,7 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
       setWidgetY(widget);
 
       if (widget instanceof Container) {
-        ((Container)widget).arrange();
+        ((Container) widget).arrange();
       }
     });
 

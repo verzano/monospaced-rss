@@ -8,6 +8,8 @@ import lombok.Setter;
 
 @AllArgsConstructor
 public class ShelfOptions extends ContainerOptions {
-  @Getter @Setter
+
+  @Getter
+  @Setter
   private Size size;
 }

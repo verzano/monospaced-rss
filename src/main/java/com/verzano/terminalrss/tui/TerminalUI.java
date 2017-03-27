@@ -1,22 +1,5 @@
 package com.verzano.terminalrss.tui;
 
-import com.verzano.terminalrss.tui.container.floor.Floor;
-import com.verzano.terminalrss.tui.container.floor.FloorOptions;
-import com.verzano.terminalrss.tui.floater.Floater;
-import com.verzano.terminalrss.tui.metrics.Point;
-import com.verzano.terminalrss.tui.metrics.Size;
-import com.verzano.terminalrss.tui.task.print.PrintTask;
-import com.verzano.terminalrss.tui.widget.Widget;
-import lombok.Getter;
-import lombok.Setter;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-
-import java.io.IOException;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import static com.verzano.terminalrss.tui.ansi.Ansi.ESC;
 import static com.verzano.terminalrss.tui.ansi.Ansi.SET_POSITION;
 import static com.verzano.terminalrss.tui.constants.Key.ESCAPED_PREFIX;
@@ -24,32 +7,41 @@ import static com.verzano.terminalrss.tui.floater.Floater.NULL_FLOATER;
 import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
 import static com.verzano.terminalrss.tui.widget.Widget.NULL_WIDGET;
 
+import com.verzano.terminalrss.tui.container.floor.Floor;
+import com.verzano.terminalrss.tui.container.floor.FloorOptions;
+import com.verzano.terminalrss.tui.floater.Floater;
+import com.verzano.terminalrss.tui.metrics.Point;
+import com.verzano.terminalrss.tui.metrics.Size;
+import com.verzano.terminalrss.tui.task.print.PrintTask;
+import com.verzano.terminalrss.tui.widget.Widget;
+import java.io.IOException;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.Getter;
+import lombok.Setter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+
 // TODO use an executor to schedule events
 public class TerminalUI {
-  private TerminalUI() { }
-
-  private static Floor floor = new Floor();
-
-  @Getter
-  private static Floater floater = NULL_FLOATER;
-
-  // TODO needs to be a tree of focus
-  @Getter @Setter
-  private static Widget focusedWidget = NULL_WIDGET;
 
   private static final AtomicBoolean run = new AtomicBoolean(true);
-
-  private static final Thread keyActionThread = new Thread(TerminalUI::keyActionLoop, "Key Action");
-
-  private static final Thread printingThread = new Thread(TerminalUI::printingLoop, "Printing");
   private static final BlockingDeque<PrintTask> printTaskQueue = new LinkedBlockingDeque<>();
-
-  private static final Thread resizingThread = new Thread(TerminalUI::resizingLoop, "Resizing");
-
+  private static final Terminal terminal;
+  private static Floor floor = new Floor();
+  @Getter
+  private static Floater floater = NULL_FLOATER;
+  // TODO needs to be a tree of focus
+  @Getter
+  @Setter
+  private static Widget focusedWidget = NULL_WIDGET;
+  private static final Thread keyActionThread = new Thread(TerminalUI::keyActionLoop, "Key Action");
   @Getter
   private static Size size;
+  private static final Thread printingThread = new Thread(TerminalUI::printingLoop, "Printing");
+  private static final Thread resizingThread = new Thread(TerminalUI::resizingLoop, "Resizing");
 
-  private static final Terminal terminal;
   static {
     try {
       terminal = TerminalBuilder.terminal();
@@ -65,6 +57,8 @@ public class TerminalUI {
       throw new RuntimeException(e);
     }
   }
+
+  private TerminalUI() {}
 
   // TODO only permit one at a time... or have a stack...
   public static void setFloater(Floater floater) {
@@ -85,7 +79,8 @@ public class TerminalUI {
   }
 
   public static void setBaseWidget(Widget baseWidget) {
-    floor.addWidget(baseWidget, new FloorOptions(new Size(FILL_CONTAINER, FILL_CONTAINER), new Point(1, 1)));
+    floor.addWidget(baseWidget,
+        new FloorOptions(new Size(FILL_CONTAINER, FILL_CONTAINER), new Point(1, 1)));
   }
 
   private static void printingLoop() {
@@ -112,13 +107,13 @@ public class TerminalUI {
           case ESC:
             switch (terminal.reader().read()) {
               case '[':
-                focusedWidget.fireKeyActions(ESCAPED_PREFIX + (char)terminal.reader().read());
+                focusedWidget.fireKeyActions(ESCAPED_PREFIX + (char) terminal.reader().read());
                 break;
             }
           case -2:
             break;
           default:
-            focusedWidget.fireKeyActions((char)key + "");
+            focusedWidget.fireKeyActions((char) key + "");
             break;
         }
       }

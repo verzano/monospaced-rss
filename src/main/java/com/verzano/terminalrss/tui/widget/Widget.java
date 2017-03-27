@@ -1,5 +1,8 @@
 package com.verzano.terminalrss.tui.widget;
 
+import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.tui.container.Container.NULL_CONTAINER;
+
 import com.verzano.terminalrss.tui.TerminalUI;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
@@ -8,18 +11,14 @@ import com.verzano.terminalrss.tui.ansi.Foreground;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.metrics.Padding;
 import com.verzano.terminalrss.tui.task.key.KeyTask;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.tui.container.Container.NULL_CONTAINER;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 // TODO make this thread safe
 // TODO padding will drastically effect how something is printed...
@@ -27,6 +26,7 @@ import static com.verzano.terminalrss.tui.container.Container.NULL_CONTAINER;
 // TODO a child widget should also mark its container as focused...
 @NoArgsConstructor
 public abstract class Widget {
+
   public static final Widget NULL_WIDGET = new Widget() {
     @Override
     public int getNeededWidth() {
@@ -39,28 +39,31 @@ public abstract class Widget {
     }
 
     @Override
-    public void printContent() { }
+    public void printContent() {
+    }
   };
-
-  @Getter @Setter
-  private Padding padding = new Padding(0, 0, 0, 0);
-
-  @Getter @Setter
-  private Container container = NULL_CONTAINER;
-
-  @Getter @Setter
-  private AnsiFormat focusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
-
-  @Getter @Setter
-  private AnsiFormat unfocusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
-
   private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
-
+  @Getter
+  @Setter
+  private Padding padding = new Padding(0, 0, 0, 0);
+  @Getter
+  @Setter
+  private Container container = NULL_CONTAINER;
+  @Getter
+  @Setter
+  private AnsiFormat focusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE,
+      Attribute.NONE);
+  @Getter
+  @Setter
+  private AnsiFormat unfocusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE,
+      Attribute.NONE);
   private String emptyRow;
   private String emptyContentRow;
 
   public abstract int getNeededWidth();
+
   public abstract int getNeededHeight();
+
   public abstract void printContent();
 
   public int getWidth() {

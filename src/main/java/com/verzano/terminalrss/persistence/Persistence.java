@@ -1,7 +1,6 @@
 package com.verzano.terminalrss.persistence;
 
 import com.google.gson.Gson;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -9,10 +8,11 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 public class Persistence {
+
   private static final Gson GSON = new Gson();
   private static final String DATA_DIR = "data" + File.separator;
 
-  private Persistence() { }
+  private Persistence() {}
 
   public static <T> T load(String pathname, Type type, T defaultValue) throws IOException {
     File jsonFile = getOrCreateFile(DATA_DIR + pathname);

@@ -1,14 +1,17 @@
 package com.verzano.terminalrss.tui.ansi;
 
-import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Getter;
 
 public class AnsiFormat {
-  public static final AnsiFormat NORMAL = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NORMAL);
+
+  public static final AnsiFormat NORMAL = new AnsiFormat(
+      Background.NONE,
+      Foreground.NONE,
+      Attribute.NORMAL);
 
   @Getter
   private Background background;
@@ -31,6 +34,12 @@ public class AnsiFormat {
     this.background = background;
     this.foreground = foreground;
     this.attributes = attributes;
+  }
+
+  private static boolean compareSets(Set<Attribute> set1, Set<Attribute> set2) {
+    return !(set1 == null || set2 == null)
+        && set1.size() == set2.size()
+        && set1.containsAll(set2);
   }
 
   public void setBackground(Background background) {
@@ -95,11 +104,5 @@ public class AnsiFormat {
     }
 
     return formatString;
-  }
-
-  private static boolean compareSets(Set<Attribute> set1, Set<Attribute> set2) {
-    return !(set1 == null || set2 == null)
-        && set1.size() == set2.size()
-        && set1.containsAll(set2);
   }
 }

@@ -1,12 +1,12 @@
 package com.verzano.terminalrss.tui.widget.scrollable.list.model;
 
-import com.verzano.terminalrss.tui.TUIStringable;
-
+import com.verzano.terminalrss.tui.TuiStringable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BasicListModel<T extends TUIStringable> implements ListModel<T> {
+public class BasicListModel<T extends TuiStringable> implements ListModel<T> {
+
   private List<T> items;
 
   public BasicListModel(Collection<T> items) {

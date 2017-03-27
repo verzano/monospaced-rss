@@ -4,22 +4,23 @@ import com.verzano.terminalrss.tui.constants.Orientation;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.metrics.Size;
 import com.verzano.terminalrss.tui.widget.Widget;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Shelf extends Container<ShelfOptions> {
+
   private List<Widget> widgetStack = new LinkedList<>();
   private Map<Widget, ShelfOptions> optionsMap = new HashMap<>();
 
   private Orientation orientation;
 
-  @Getter @Setter
+  @Getter
+  @Setter
   private int spacing;
 
   public Shelf(Orientation orientation, int spacing) {
@@ -127,7 +128,7 @@ public class Shelf extends Container<ShelfOptions> {
           width = widgetStack.stream()
               .mapToInt(Widget::getWidth)
               .max()
-              .orElseGet(() -> 0);
+              .orElse(0);
           break;
       }
     }
@@ -143,7 +144,7 @@ public class Shelf extends Container<ShelfOptions> {
           height = widgetStack.stream()
               .mapToInt(Widget::getHeight)
               .max()
-              .orElseGet(() -> 0);
+              .orElse(0);
           break;
         case VERTICAL:
           height = (widgetStack.size() - 1) * spacing

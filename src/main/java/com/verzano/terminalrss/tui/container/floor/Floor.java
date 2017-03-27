@@ -1,16 +1,16 @@
 package com.verzano.terminalrss.tui.container.floor;
 
-import com.verzano.terminalrss.tui.TerminalUI;
-import com.verzano.terminalrss.tui.container.Container;
-import com.verzano.terminalrss.tui.widget.Widget;
-
-import java.util.Collection;
-import java.util.Collections;
-
 import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
 import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
 
+import com.verzano.terminalrss.tui.TerminalUI;
+import com.verzano.terminalrss.tui.container.Container;
+import com.verzano.terminalrss.tui.widget.Widget;
+import java.util.Collection;
+import java.util.Collections;
+
 public class Floor extends Container<FloorOptions> {
+
   private FloorOptions options = null;
   private Widget widget = NULL_WIDGET;
 

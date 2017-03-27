@@ -17,6 +17,7 @@ import static com.verzano.terminalrss.tui.constants.CardinalDirection.SOUTH;
 import static com.verzano.terminalrss.tui.constants.CardinalDirection.WEST;
 
 public class Enclosure extends Container<EnclosureOptions> {
+
   // TODO a bidi map would be noice
   private Map<Widget, EnclosureOptions> optionsMap = new HashMap<>();
   private Map<CardinalDirection, Widget> widgetMap = new HashMap<>();
@@ -58,7 +59,7 @@ public class Enclosure extends Container<EnclosureOptions> {
       setWidgetHeight(center);
       setWidgetWidth(center);
     }
-    
+
     // Location
     if (north != NULL_WIDGET) {
       setWidgetX(north);
@@ -86,25 +87,25 @@ public class Enclosure extends Container<EnclosureOptions> {
     }
 
     if (north instanceof Container) {
-      ((Container)north).arrange();
+      ((Container) north).arrange();
     }
 
     if (south instanceof Container) {
-      ((Container)south).arrange();
+      ((Container) south).arrange();
     }
 
     if (east instanceof Container) {
-      ((Container)east).arrange();
+      ((Container) east).arrange();
     }
 
     if (west instanceof Container) {
-      ((Container)west).arrange();
+      ((Container) west).arrange();
     }
 
     if (center instanceof Container) {
-      ((Container)center).arrange();
+      ((Container) center).arrange();
     }
-    
+
     size();
   }
 
@@ -129,7 +130,8 @@ public class Enclosure extends Container<EnclosureOptions> {
         width = widget.getNeededWidth();
         break;
       case CENTER:
-        width = getWidth() - getWidgetWidth(widgetMap.get(EAST)) - getWidgetWidth(widgetMap.get(WEST));
+        width =
+            getWidth() - getWidgetWidth(widgetMap.get(EAST)) - getWidgetWidth(widgetMap.get(WEST));
         break;
     }
     return width;
@@ -147,7 +149,8 @@ public class Enclosure extends Container<EnclosureOptions> {
       case EAST:
       case WEST:
       case CENTER:
-        height = getHeight() - getWidgetHeight(widgetMap.get(NORTH)) - getWidgetHeight(widgetMap.get(SOUTH));
+        height = getHeight() - getWidgetHeight(widgetMap.get(NORTH)) - getWidgetHeight(
+            widgetMap.get(SOUTH));
         break;
     }
     return height;
@@ -225,9 +228,15 @@ public class Enclosure extends Container<EnclosureOptions> {
     int northHeight = widgetMap.getOrDefault(NORTH, NULL_WIDGET).getNeededHeight();
     int southHeight = widgetMap.getOrDefault(SOUTH, NULL_WIDGET).getNeededHeight();
 
-    int leftHeight = northHeight + widgetMap.getOrDefault(WEST, NULL_WIDGET).getNeededHeight() + southHeight;
-    int middleHeight = northHeight + widgetMap.getOrDefault(CENTER, NULL_WIDGET).getNeededHeight() + southHeight;
-    int rightHeight = northHeight + widgetMap.getOrDefault(EAST, NULL_WIDGET).getNeededHeight() + southHeight;
+    int leftHeight = northHeight
+        + widgetMap.getOrDefault(WEST, NULL_WIDGET).getNeededHeight()
+        + southHeight;
+    int middleHeight = northHeight
+        + widgetMap.getOrDefault(CENTER, NULL_WIDGET).getNeededHeight()
+        + southHeight;
+    int rightHeight = northHeight
+        + widgetMap.getOrDefault(EAST, NULL_WIDGET).getNeededHeight()
+        + southHeight;
     return Math.max(leftHeight, Math.max(middleHeight, rightHeight));
   }
 }

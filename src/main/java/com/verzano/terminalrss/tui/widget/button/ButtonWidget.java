@@ -1,5 +1,7 @@
 package com.verzano.terminalrss.tui.widget.button;
 
+import static com.verzano.terminalrss.tui.constants.Key.ENTER;
+
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.constants.Orientation;
 import com.verzano.terminalrss.tui.constants.Position;
@@ -7,9 +9,8 @@ import com.verzano.terminalrss.tui.task.key.KeyTask;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
 import lombok.Setter;
 
-import static com.verzano.terminalrss.tui.constants.Key.ENTER;
-
 public class ButtonWidget extends TextWidget {
+
   @Setter
   private KeyTask onPress;
 

@@ -1,11 +1,12 @@
 package com.verzano.terminalrss.source.manager;
 
+import static com.verzano.terminalrss.source.Source.NULL_SOURCE;
+
 import com.google.gson.reflect.TypeToken;
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 import com.verzano.terminalrss.source.Source;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -18,25 +19,24 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static com.verzano.terminalrss.source.Source.NULL_SOURCE;
-
 // TODO throw more exceptions? or less exceptions...
 public class SourceManager {
-  private SourceManager() {}
 
-  public static final Comparator<Source> TITLE_COMPARATOR = Comparator.comparing(Source::getTitle).reversed();
-
+  public static final Comparator<Source> TITLE_COMPARATOR = Comparator
+      .comparing(Source::getTitle)
+      .reversed();
   private static final Map<Long, Source> SOURCES = new ConcurrentHashMap<>();
   private static final AtomicLong SOURCE_ID = new AtomicLong(0);
-
   private static final String SOURCES_FILE = "sources.json";
   private static final String SOURCES_ID_FILE = "sources.id";
-
-  private static final Type SOURCES_FILE_TYPE = new TypeToken<LinkedList<Source>>(){}.getType();
+  private static final Type SOURCES_FILE_TYPE = new TypeToken<LinkedList<Source>>() {}.getType();
 
   static {
     try {
-      List<Source> sources = Persistence.load(SOURCES_FILE, SOURCES_FILE_TYPE, new LinkedList<Source>());
+      List<Source> sources = Persistence.load(
+          SOURCES_FILE,
+          SOURCES_FILE_TYPE,
+          new LinkedList<Source>());
       SOURCES.putAll(sources.stream().collect(Collectors.toMap(Source::getId, source -> source)));
 
       SOURCE_ID.set(Persistence.load(SOURCES_ID_FILE, Long.class, 0L));
@@ -44,6 +44,8 @@ public class SourceManager {
       throw new RuntimeException(e);
     }
   }
+
+  private SourceManager() {}
 
   public static Source createSource(
       String uri,

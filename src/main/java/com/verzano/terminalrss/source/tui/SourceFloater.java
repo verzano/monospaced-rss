@@ -1,5 +1,9 @@
 package com.verzano.terminalrss.source.tui;
 
+import static com.verzano.terminalrss.tui.constants.Key.TAB;
+import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
+
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.source.Source;
 import com.verzano.terminalrss.tui.TerminalUI;
@@ -12,27 +16,20 @@ import com.verzano.terminalrss.tui.task.key.KeyTask;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.BasicListModel;
 import com.verzano.terminalrss.tui.widget.text.entry.RolodexWidget;
 import com.verzano.terminalrss.tui.widget.text.entry.TextEntryWidget;
-import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.verzano.terminalrss.tui.constants.Key.TAB;
-import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
+import lombok.Getter;
 
 // TODO this should probably extends the biChoiceFloater...
 public class SourceFloater {
-  private BinaryChoiceFloater floater;
-
-  private TextEntryWidget uriTextEntry;
-  private RolodexWidget<ContentType> contentTypeRolodex;
-  private TextEntryWidget contentTagEntry;
 
   private final KeyTask addSourceTask;
   private final KeyTask editSourceTask;
-
+  private BinaryChoiceFloater floater;
+  private TextEntryWidget uriTextEntry;
+  private RolodexWidget<ContentType> contentTypeRolodex;
+  private TextEntryWidget contentTagEntry;
   @Getter
   private Long sourceId = -1L;
 
@@ -67,7 +64,12 @@ public class SourceFloater {
     displayWidget.addWidget(contentTypeRolodex, new ShelfOptions(new Size(20, FILL_NEEDED)));
     displayWidget.addWidget(contentTagEntry, new ShelfOptions(new Size(20, FILL_NEEDED)));
 
-    floater = new BinaryChoiceFloater(displayWidget, addSourceTask, "Add Source", cancelTask, "Cancel");
+    floater = new BinaryChoiceFloater(
+        displayWidget,
+        addSourceTask,
+        "Add Source",
+        cancelTask,
+        "Cancel");
 
     floater.getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
     floater.getUnfocusedFormat().setAttributes(Attribute.INVERSE_ON);
