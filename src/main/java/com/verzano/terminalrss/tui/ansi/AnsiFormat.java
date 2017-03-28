@@ -84,7 +84,7 @@ public class AnsiFormat {
           formatString += cleanAttributes.stream()
               .map(Attribute::getCode)
               .reduce((a, b) -> a + ";" + b)
-              .orElseGet(() -> "0");
+              .orElse("0");
           hasOne = true;
         }
 

@@ -55,7 +55,9 @@ public abstract class Widget {
       Attribute.NONE);
   @Getter
   @Setter
-  private AnsiFormat unfocusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE,
+  private AnsiFormat unfocusedFormat = new AnsiFormat(
+      Background.NONE,
+      Foreground.NONE,
       Attribute.NONE);
   private String emptyRow;
   private String emptyContentRow;
@@ -126,14 +128,7 @@ public abstract class Widget {
   }
 
   public String getAnsiFormatPrefix() {
-    String prefix;
-    if (isFocused()) {
-      prefix = focusedFormat.getFormatString();
-    } else {
-      prefix = unfocusedFormat.getFormatString();
-    }
-
-    return prefix;
+    return isFocused() ? focusedFormat.getFormatString() : unfocusedFormat.getFormatString();
   }
 
   private String getEmptyRow() {

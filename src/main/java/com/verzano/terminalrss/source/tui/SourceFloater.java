@@ -11,6 +11,7 @@ import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.container.shelf.Shelf;
 import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.tui.floater.binary.BinaryChoiceFloater;
+import com.verzano.terminalrss.tui.metrics.Padding;
 import com.verzano.terminalrss.tui.metrics.Size;
 import com.verzano.terminalrss.tui.task.key.KeyTask;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.BasicListModel;
@@ -62,6 +63,7 @@ public class SourceFloater {
     displayWidget.addWidget(uriTextEntry, new ShelfOptions(new Size(30, FILL_NEEDED)));
     displayWidget.addWidget(contentTypeRolodex, new ShelfOptions(new Size(20, FILL_NEEDED)));
     displayWidget.addWidget(contentTagEntry, new ShelfOptions(new Size(20, FILL_NEEDED)));
+    displayWidget.setPadding(new Padding(1));
 
     floater = new BinaryChoiceFloater(
         displayWidget,
