@@ -51,7 +51,9 @@ public abstract class Widget {
   private Container container = NULL_CONTAINER;
   @Getter
   @Setter
-  private AnsiFormat focusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE,
+  private AnsiFormat focusedFormat = new AnsiFormat(
+      Background.NONE,
+      Foreground.NONE,
       Attribute.NONE);
   @Getter
   @Setter

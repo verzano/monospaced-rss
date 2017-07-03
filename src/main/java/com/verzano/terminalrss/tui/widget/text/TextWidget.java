@@ -1,8 +1,7 @@
 package com.verzano.terminalrss.tui.widget.text;
 
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-
 import com.verzano.terminalrss.tui.TerminalUi;
+import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.constants.Orientation;
 import com.verzano.terminalrss.tui.constants.Position;
@@ -53,7 +52,7 @@ public class TextWidget extends Widget {
 
             text = text.substring((int) halfExtra, text.length() - (int) Math.ceil(halfExtra));
           } else {
-            double halfRemaining = (text.length() - getWidth()) / 2D;
+            double halfRemaining = (getWidth() - text.length()) / 2D;
             text = new String(new char[(int) Math.ceil(halfRemaining)]).replace('\0', ' ')
                 + text
                 + new String(new char[(int) halfRemaining]).replace('\0', ' ');
@@ -68,10 +67,13 @@ public class TextWidget extends Widget {
             text = new String(new char[getWidth() - text.length()]).replace('\0', ' ') + text;
           }
           break;
+        default:
+          break;
+
       }
     }
 
-    return getAnsiFormatPrefix() + text + NORMAL.getFormatString();
+    return getAnsiFormatPrefix() + text + AnsiFormat.NORMAL.getFormatString();
   }
 
   private void printHorizontal() {
@@ -109,6 +111,8 @@ public class TextWidget extends Widget {
         }
         TerminalUi.print(getRowForText(text));
         break;
+      default:
+        break;
     }
   }
 
@@ -121,6 +125,8 @@ public class TextWidget extends Widget {
         break;
       case HORIZONTAL:
         width = text.length();
+        break;
+      default:
         break;
     }
     return width;
@@ -136,6 +142,8 @@ public class TextWidget extends Widget {
       case HORIZONTAL:
         height = 1;
         break;
+      default:
+        break;
     }
     return height;
   }
@@ -150,15 +158,19 @@ public class TextWidget extends Widget {
         for (int row = 0; row < getContentHeight(); row++) {
           TerminalUi.move(getContentX(), getContentY() + row);
           if (row < toPrint.length()) {
-            TerminalUi
-                .print(getAnsiFormatPrefix() + toPrint.charAt(row) + NORMAL.getFormatString());
+            TerminalUi.print(
+                getAnsiFormatPrefix()
+                    + toPrint.charAt(row)
+                    + AnsiFormat.NORMAL.getFormatString());
           } else {
-            TerminalUi.print(getAnsiFormatPrefix() + " " + NORMAL.getFormatString());
+            TerminalUi.print(getAnsiFormatPrefix() + " " + AnsiFormat.NORMAL.getFormatString());
           }
         }
         break;
       case HORIZONTAL:
         printHorizontal();
+        break;
+      default:
         break;
     }
   }

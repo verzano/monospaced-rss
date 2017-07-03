@@ -23,7 +23,9 @@ public abstract class ScrollableWidget extends Widget {
 
   @Getter
   @Setter
-  private AnsiFormat scrollbarFormat = new AnsiFormat(Background.NONE, Foreground.NONE,
+  private AnsiFormat scrollbarFormat = new AnsiFormat(
+      Background.NONE,
+      Foreground.NONE,
       Attribute.INVERSE_ON);
 
   @Getter
