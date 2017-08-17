@@ -24,6 +24,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 // TODO use an executor to schedule events
+// TODO add defaults for attributes as well as some css style waterfall thing for getting them maybe...
 public class TerminalUi {
 
   private static final AtomicBoolean run = new AtomicBoolean(true);
@@ -32,7 +33,7 @@ public class TerminalUi {
   private static Floor floor = new Floor();
   @Getter
   private static Floater floater = NULL_FLOATER;
-  // TODO needs to be a tree of focus
+  // TODO needs to be a stack of focus
   @Getter
   @Setter
   private static Widget focusedWidget = NULL_WIDGET;
