@@ -44,6 +44,8 @@ public abstract class Widget {
   };
   private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
   @Getter
+  private long altitude;
+  @Getter
   @Setter
   private Padding padding = new Padding(0, 0, 0, 0);
   @Getter
@@ -100,6 +102,19 @@ public abstract class Widget {
 
   public int getContentY() {
     return getY() + padding.getTop();
+  }
+
+  public void setAltitude(long altitude) {
+    if (altitude < 0) {
+      throw new IllegalArgumentException("A widget cannot have a negative altitude");
+    } else if (altitude <= container.getAltitude()) {
+      throw new IllegalArgumentException(
+          "A widget's altitude must be greater than it's container's."
+              + "  Supplied altitude is " + altitude
+              + " container's altitude os " + container.getAltitude());
+    }
+
+    this.altitude = altitude;
   }
 
   public void addKeyAction(String key, KeyTask action) {
