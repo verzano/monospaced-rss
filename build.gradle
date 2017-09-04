@@ -20,7 +20,7 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
     compile group: 'rome', name: 'rome', version: '1.0'
 
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.12'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
 
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0-M4'
 }
