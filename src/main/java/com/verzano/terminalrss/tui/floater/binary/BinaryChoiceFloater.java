@@ -11,7 +11,7 @@ import com.verzano.terminalrss.tui.container.enclosure.EnclosureOptions;
 import com.verzano.terminalrss.tui.container.shelf.Shelf;
 import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.tui.floater.Floater;
-import com.verzano.terminalrss.tui.metrics.Margin;
+import com.verzano.terminalrss.tui.metrics.Margins;
 import com.verzano.terminalrss.tui.metrics.Size;
 import com.verzano.terminalrss.tui.task.key.KeyTask;
 import com.verzano.terminalrss.tui.widget.Widget;
@@ -35,10 +35,10 @@ public class BinaryChoiceFloater extends Floater {
       KeyTask negativeTask,
       String negativeText) {
     this.displayWidget = displayWidget;
-    this.displayWidget.setMargin(new Margin(1, 1, 1, 0));
+    this.setMargins(new Margins(1, 1, 1, 0));
 
     buttonContainer = new Shelf(HORIZONTAL, 1);
-    buttonContainer.setMargin(new Margin(1));
+    this.setMargins(new Margins(1));
 
     positiveButton = new ButtonWidget(positiveTask, positiveText, CENTER);
     buttonContainer.addWidget(positiveButton, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));

@@ -17,8 +17,8 @@ public class Margins {
     this(0);
   }
 
-  public Margins(int margin) {
-    this(margin, margin);
+  public Margins(int pad) {
+    this(pad, pad);
   }
 
   public Margins(int leftRight, int topBottom) {

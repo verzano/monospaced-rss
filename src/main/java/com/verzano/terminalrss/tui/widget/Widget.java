@@ -9,7 +9,7 @@ import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
 import com.verzano.terminalrss.tui.ansi.Foreground;
 import com.verzano.terminalrss.tui.container.Container;
-import com.verzano.terminalrss.tui.metrics.Margin;
+import com.verzano.terminalrss.tui.metrics.Margins;
 import com.verzano.terminalrss.tui.task.key.KeyTask;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 // TODO make this thread safe
-// TODO margin will drastically effect how something is printed...
+// TODO margins will drastically effect how something is printed...
 // TODO add borders eventually...
 // TODO a child widget should also mark its container as focused...
 @NoArgsConstructor
@@ -47,7 +47,7 @@ public abstract class Widget {
   private long altitude;
   @Getter
   @Setter
-  private Margin margin = new Margin();
+  private Margins margins = new Margins();
   @Getter
   @Setter
   private Container container = NULL_CONTAINER;
@@ -77,7 +77,7 @@ public abstract class Widget {
   }
 
   public int getContentWidth() {
-    return Math.max(getWidth() - margin.getLeft() - margin.getRight(), 0);
+    return Math.max(getWidth() - margins.getLeft() - margins.getRight(), 0);
   }
 
   public int getHeight() {
@@ -85,7 +85,7 @@ public abstract class Widget {
   }
 
   public int getContentHeight() {
-    return Math.max(getHeight() - margin.getTop() - margin.getBottom(), 0);
+    return Math.max(getHeight() - margins.getTop() - margins.getBottom(), 0);
   }
 
   public int getX() {
@@ -93,7 +93,7 @@ public abstract class Widget {
   }
 
   public int getContentX() {
-    return getX() + margin.getLeft();
+    return getX() + margins.getLeft();
   }
 
   public int getY() {
@@ -101,7 +101,7 @@ public abstract class Widget {
   }
 
   public int getContentY() {
-    return getY() + margin.getTop();
+    return getY() + margins.getTop();
   }
 
   public void setAltitude(long altitude) {
