@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Ansi {
-
   public static final char ESC = '\u001b';
 
   // Movement

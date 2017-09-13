@@ -1,5 +1,7 @@
 package com.verzano.terminalrss;
 
+import static com.verzano.terminalrss.content.ContentType.CLASS_CONTENT;
+import static com.verzano.terminalrss.content.ContentType.ID_CONTENT;
 import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
 import static com.verzano.terminalrss.tui.constants.Key.DELETE;
 import static com.verzano.terminalrss.tui.constants.Key.ENTER;
@@ -48,6 +50,8 @@ import lombok.extern.java.Log;
 // TODO add in some sort of monitoring to see progress of adding sources and updating articles
 // TODO use futures for that ^
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
+// TODO handle Exceptions better...
+// TODO progress bar doesn't resize well...
 @Log
 public class TerminalRss {
 

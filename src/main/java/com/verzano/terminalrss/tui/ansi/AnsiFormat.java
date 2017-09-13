@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 
 public class AnsiFormat {
-
   public static final AnsiFormat NORMAL = new AnsiFormat(
       Background.NONE,
       Foreground.NONE,

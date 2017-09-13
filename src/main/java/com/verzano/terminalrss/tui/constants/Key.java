@@ -1,8 +1,11 @@
 package com.verzano.terminalrss.tui.constants;
 
-// TODO fill out this class a lot more
-public class Key {
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+// TODO fill out this class a lot more
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class Key {
   public static final String ESCAPED_PREFIX = "\u001b[";
   // Escaped keys
   public static final String UP_ARROW = ESCAPED_PREFIX + "A";
@@ -13,6 +16,4 @@ public class Key {
   public static final String TAB = (char) 9 + "";
   public static final String ENTER = (char) 13 + "";
   public static final String DELETE = (char) 127 + "";
-
-  private Key() {}
 }
