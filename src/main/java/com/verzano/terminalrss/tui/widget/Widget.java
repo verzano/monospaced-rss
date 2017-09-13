@@ -9,7 +9,7 @@ import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
 import com.verzano.terminalrss.tui.ansi.Foreground;
 import com.verzano.terminalrss.tui.container.Container;
-import com.verzano.terminalrss.tui.metrics.Padding;
+import com.verzano.terminalrss.tui.metrics.Margin;
 import com.verzano.terminalrss.tui.task.key.KeyTask;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 // TODO make this thread safe
-// TODO padding will drastically effect how something is printed...
+// TODO margin will drastically effect how something is printed...
 // TODO add borders eventually...
 // TODO a child widget should also mark its container as focused...
 @NoArgsConstructor
@@ -47,7 +47,7 @@ public abstract class Widget {
   private long altitude;
   @Getter
   @Setter
-  private Padding padding = new Padding(0, 0, 0, 0);
+  private Margin margin = new Margin();
   @Getter
   @Setter
   private Container container = NULL_CONTAINER;
@@ -77,7 +77,7 @@ public abstract class Widget {
   }
 
   public int getContentWidth() {
-    return getWidth() - padding.getLeft() - padding.getRight();
+    return Math.max(getWidth() - margin.getLeft() - margin.getRight(), 0);
   }
 
   public int getHeight() {
@@ -85,7 +85,7 @@ public abstract class Widget {
   }
 
   public int getContentHeight() {
-    return getHeight() - padding.getTop() - padding.getBottom();
+    return Math.max(getHeight() - margin.getTop() - margin.getBottom(), 0);
   }
 
   public int getX() {
@@ -93,7 +93,7 @@ public abstract class Widget {
   }
 
   public int getContentX() {
-    return getX() + padding.getLeft();
+    return getX() + margin.getLeft();
   }
 
   public int getY() {
@@ -101,17 +101,19 @@ public abstract class Widget {
   }
 
   public int getContentY() {
-    return getY() + padding.getTop();
+    return getY() + margin.getTop();
   }
 
   public void setAltitude(long altitude) {
     if (altitude < 0) {
-      throw new IllegalArgumentException("A widget cannot have a negative altitude");
+      throw new IllegalArgumentException(
+          "A widget cannot have a negative altitude."
+              + "  Supplied altitude is " + altitude);
     } else if (altitude <= container.getAltitude()) {
       throw new IllegalArgumentException(
           "A widget's altitude must be greater than it's container's."
               + "  Supplied altitude is " + altitude
-              + " container's altitude os " + container.getAltitude());
+              + " container's altitude is " + container.getAltitude());
     }
 
     this.altitude = altitude;

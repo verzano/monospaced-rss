@@ -94,7 +94,7 @@ public class Shelf extends Container<ShelfOptions> {
         x += getWidgetWidth(w) + spacing;
       }
     }
-    return x + getPadding().getLeft();
+    return x + this.getMargin().getLeft();
   }
 
   // TODO NPE if widget not in map
@@ -110,7 +110,7 @@ public class Shelf extends Container<ShelfOptions> {
         y += getWidgetHeight(w) + spacing;
       }
     }
-    return y + getPadding().getTop();
+    return y + this.getMargin().getTop();
   }
 
   @Override
@@ -132,7 +132,7 @@ public class Shelf extends Container<ShelfOptions> {
           break;
       }
     }
-    return width + getPadding().getLeft() + getPadding().getRight();
+    return width + this.getMargin().getLeft() + this.getMargin().getRight();
   }
 
   @Override
@@ -155,6 +155,6 @@ public class Shelf extends Container<ShelfOptions> {
       }
     }
 
-    return height + getPadding().getTop() + getPadding().getBottom();
+    return height + this.getMargin().getTop() + this.getMargin().getBottom();
   }
 }

@@ -14,4 +14,8 @@ public class Size {
 
   private int width;
   private int height;
+
+  public Size() {
+    this(0, 0);
+  }
 }

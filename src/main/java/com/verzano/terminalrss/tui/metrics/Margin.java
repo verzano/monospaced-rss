@@ -7,18 +7,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Padding {
-
+public class Margin {
   private int left;
   private int top;
   private int right;
   private int bottom;
 
-  public Padding(int pad) {
-    this(pad, pad, pad, pad);
+  public Margin() {
+    this(0);
   }
 
-  public Padding(int leftRight, int topBottom) {
+  public Margin(int pad) {
+    this(pad, pad);
+  }
+
+  public Margin(int leftRight, int topBottom) {
     this(leftRight, topBottom, leftRight, topBottom);
   }
 }
