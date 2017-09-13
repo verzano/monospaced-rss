@@ -7,6 +7,7 @@ import static com.verzano.terminalrss.tui.floater.Floater.NULL_FLOATER;
 import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
 import static com.verzano.terminalrss.tui.widget.Widget.NULL_WIDGET;
 
+import com.verzano.terminalrss.tui.ansi.Ansi;
 import com.verzano.terminalrss.tui.container.floor.Floor;
 import com.verzano.terminalrss.tui.container.floor.FloorOptions;
 import com.verzano.terminalrss.tui.floater.Floater;
@@ -54,6 +55,8 @@ public class TerminalUi {
       printingThread.start();
       keyActionThread.start();
       resizingThread.start();
+
+      print(Ansi.HIDE_CURSOR);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

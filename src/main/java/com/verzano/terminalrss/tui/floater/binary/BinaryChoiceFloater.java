@@ -35,10 +35,10 @@ public class BinaryChoiceFloater extends Floater {
       KeyTask negativeTask,
       String negativeText) {
     this.displayWidget = displayWidget;
-    this.setMargins(new Margins(1, 1, 1, 0));
+    this.displayWidget.setMargins(new Margins(1, 1, 1, 0));
 
     buttonContainer = new Shelf(HORIZONTAL, 1);
-    this.setMargins(new Margins(1));
+    buttonContainer.setMargins(new Margins(1));
 
     positiveButton = new ButtonWidget(positiveTask, positiveText, CENTER);
     buttonContainer.addWidget(positiveButton, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
