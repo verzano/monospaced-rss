@@ -1,6 +1,6 @@
 #!/bin/bash
 
-../gradlew -q assembleDist
+./gradlew -q assembleDist
 
 cd build/distributions
 

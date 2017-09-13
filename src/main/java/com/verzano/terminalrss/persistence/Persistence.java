@@ -1,18 +1,22 @@
 package com.verzano.terminalrss.persistence;
 
 import com.google.gson.Gson;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Persistence {
 
   private static final Gson GSON = new Gson();
-  private static final String DATA_DIR = "data" + File.separator;
-
-  private Persistence() {}
+  // TODO for now just use the tmp dir... allow this to be configured later
+  private static final String DATA_DIR = System.getProperty("java.io.tmpdir") + File.separator
+      + "data" + File.separator;
 
   public static <T> T load(String pathname, Type type, T defaultValue) throws IOException {
     File jsonFile = getOrCreateFile(DATA_DIR + pathname);
