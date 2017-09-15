@@ -2,23 +2,17 @@ package com.verzano.terminalrss.article;
 
 import com.google.gson.annotations.SerializedName;
 import com.verzano.terminalrss.tui.TuiStringable;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Getter
 @AllArgsConstructor
 public class Article implements TuiStringable {
 
-  public static final Article NULL_ARTICLE = new Article(
-      -1L,
-      "",
-      -1L,
-      new Date(0),
-      "",
-      "",
-      new Date(0));
+  public static final Article NULL_ARTICLE = new Article(-1L, "", -1L, new Date(0), "", "", new Date(0));
 
   @SerializedName("id")
   private final long id;

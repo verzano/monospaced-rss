@@ -1,12 +1,5 @@
 package com.verzano.terminalrss.tui;
 
-import static com.verzano.terminalrss.tui.ansi.Ansi.ESC;
-import static com.verzano.terminalrss.tui.ansi.Ansi.SET_POSITION;
-import static com.verzano.terminalrss.tui.constants.Key.ESCAPED_PREFIX;
-import static com.verzano.terminalrss.tui.floater.Floater.NULL_FLOATER;
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
-import static com.verzano.terminalrss.tui.widget.Widget.NULL_WIDGET;
-
 import com.verzano.terminalrss.tui.ansi.Ansi;
 import com.verzano.terminalrss.tui.container.floor.Floor;
 import com.verzano.terminalrss.tui.container.floor.FloorOptions;
@@ -15,14 +8,21 @@ import com.verzano.terminalrss.tui.metrics.Point;
 import com.verzano.terminalrss.tui.metrics.Size;
 import com.verzano.terminalrss.tui.task.print.PrintTask;
 import com.verzano.terminalrss.tui.widget.Widget;
-import java.io.IOException;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Getter;
 import lombok.Setter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+
+import java.io.IOException;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.verzano.terminalrss.tui.ansi.Ansi.*;
+import static com.verzano.terminalrss.tui.constants.Key.ESCAPED_PREFIX;
+import static com.verzano.terminalrss.tui.floater.Floater.NULL_FLOATER;
+import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
+import static com.verzano.terminalrss.tui.widget.Widget.NULL_WIDGET;
 
 // TODO use an executor to schedule events
 // TODO add defaults for attributes as well as some css style waterfall thing for getting them maybe...
@@ -56,7 +56,7 @@ public class TerminalUi {
       keyActionThread.start();
       resizingThread.start();
 
-      print(Ansi.HIDE_CURSOR);
+      printTaskQueue.addFirst(() -> print(Ansi.HIDE_CURSOR));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -144,6 +144,7 @@ public class TerminalUi {
 
   public static void shutdown() {
     new Thread(() -> {
+      printTaskQueue.addFirst(() -> print(SHOW_CURSOR));
       printTaskQueue.addFirst(() -> run.set(false));
 
       try {

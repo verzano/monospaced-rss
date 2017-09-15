@@ -1,15 +1,5 @@
 package com.verzano.terminalrss;
 
-import static com.verzano.terminalrss.content.ContentType.CLASS_CONTENT;
-import static com.verzano.terminalrss.content.ContentType.ID_CONTENT;
-import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
-import static com.verzano.terminalrss.tui.constants.Key.DELETE;
-import static com.verzano.terminalrss.tui.constants.Key.ENTER;
-import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.constants.Orientation.VERTICAL;
-import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
-
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
@@ -31,13 +21,22 @@ import com.verzano.terminalrss.tui.widget.scrollable.list.ListWidget;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.SortedListModel;
 import com.verzano.terminalrss.tui.widget.scrollable.text.TextAreaWidget;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
+import lombok.extern.java.Log;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
-import lombok.extern.java.Log;
+
+import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
+import static com.verzano.terminalrss.tui.constants.Key.*;
+import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constants.Orientation.VERTICAL;
+import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
+import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
 
 /*
     addSource("https://techcrunch.com/feed/", CLASS_CONTENT, "article-entry");
@@ -51,7 +50,6 @@ import lombok.extern.java.Log;
 // TODO use futures for that ^
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
 // TODO handle Exceptions better...
-// TODO progress bar doesn't resize well...
 @Log
 public class TerminalRss {
 
@@ -76,6 +74,8 @@ public class TerminalRss {
   private static Source selectedSource = Source.NULL_SOURCE;
 
   public static void main(String[] args) throws IOException, FeedException {
+    setProgramSettings(args);
+
     buildSourceWidgets();
     buildArticleWidgets();
     buildContentTextAreaWidget();
@@ -86,6 +86,16 @@ public class TerminalRss {
     TerminalUi.setBaseWidget(baseContainer);
     sourcesListWidget.setFocused();
     TerminalUi.reprint();
+  }
+
+  private static void setProgramSettings(String[] args) {
+    String persistenceDir = System.getProperty("java.io.tmpdir") + File.separator + "data" + File.separator;
+
+    if (args.length > 0) {
+      persistenceDir = args[0];
+    }
+
+    System.setProperty("com.verzano.terminalrss.persistencedir", persistenceDir + File.separator);
   }
 
   private static void buildSourceWidgets() {
@@ -124,7 +134,7 @@ public class TerminalRss {
       }
     });
 
-    sourcesListWidget.addKeyAction("e", () -> {
+    sourcesListWidget.addKeyAction(E_LOWER, () -> {
       Source source = sourcesListWidget.getSelectedItem();
       if (source != ADD_SOURCE) {
         sourceFloater.setSource(source);
@@ -133,7 +143,7 @@ public class TerminalRss {
       }
     });
 
-    sourcesListWidget.addKeyAction("d", () -> {
+    sourcesListWidget.addKeyAction(D_LOWER, () -> {
       Source source = sourcesListWidget.getSelectedItem();
       if (source != ADD_SOURCE) {
         if (SourceManager.deleteSource(source.getId())) {
@@ -155,17 +165,13 @@ public class TerminalRss {
           TerminalUi.removeFloater();
           sourcesListWidget.setFocused();
           TerminalUi.reprint();
-          addSource(sourceFloater.getUri(), sourceFloater.getContentType(),
-              sourceFloater.getContentTag());
+          addSource(sourceFloater.getUri(), sourceFloater.getContentType(), sourceFloater.getContentTag());
         },
         () -> {
           TerminalUi.removeFloater();
           sourcesListWidget.setFocused();
           TerminalUi.reprint();
-          modifySource(
-              sourceFloater.getSourceId(),
-              sourceFloater.getContentType(),
-              sourceFloater.getContentTag());
+          modifySource(sourceFloater.getSourceId(), sourceFloater.getContentType(), sourceFloater.getContentTag());
         },
         () -> {
           TerminalUi.removeFloater();

@@ -1,19 +1,19 @@
 package com.verzano.terminalrss.source;
 
-import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
-
 import com.google.gson.annotations.SerializedName;
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.tui.TuiStringable;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
+import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
+
 @Getter
 @AllArgsConstructor
 public class Source implements TuiStringable {
-
   public static final Source NULL_SOURCE = new Source(-1L, "", NULL_TYPE, "", new Date(0), "");
 
   @SerializedName("id")

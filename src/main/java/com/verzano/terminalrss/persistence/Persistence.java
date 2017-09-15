@@ -10,13 +10,12 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 
+// TODO log errors, duh
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Persistence {
-
+  public static final String PERSISTENCE_DIR_KEY = "com.verzano.terminalrss.persistencedir";
   private static final Gson GSON = new Gson();
-  // TODO for now just use the tmp dir... allow this to be configured later
-  private static final String DATA_DIR = System.getProperty("java.io.tmpdir") + File.separator
-      + "data" + File.separator;
+  private static final String DATA_DIR = System.getProperty(PERSISTENCE_DIR_KEY);
 
   public static <T> T load(String pathname, Type type, T defaultValue) throws IOException {
     File jsonFile = getOrCreateFile(DATA_DIR + pathname);

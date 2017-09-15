@@ -1,30 +1,25 @@
 package com.verzano.terminalrss.source.manager;
 
-import static com.verzano.terminalrss.source.Source.NULL_SOURCE;
-
 import com.google.gson.reflect.TypeToken;
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 import com.verzano.terminalrss.source.Source;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-// TODO throw more exceptions? or less exceptions...
-public class SourceManager {
+import static com.verzano.terminalrss.source.Source.NULL_SOURCE;
 
-  public static final Comparator<Source> TITLE_COMPARATOR = Comparator
-      .comparing(Source::getTitle)
-      .reversed();
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class SourceManager {
+  public static final Comparator<Source> TITLE_COMPARATOR = Comparator.comparing(Source::getTitle).reversed();
   private static final Map<Long, Source> SOURCES = new ConcurrentHashMap<>();
   private static final AtomicLong SOURCE_ID = new AtomicLong(0);
   private static final String SOURCES_FILE = "sources.json";
@@ -44,8 +39,6 @@ public class SourceManager {
       throw new RuntimeException(e);
     }
   }
-
-  private SourceManager() {}
 
   public static Source createSource(
       String uri,

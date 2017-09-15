@@ -1,7 +1,5 @@
 package com.verzano.terminalrss.tui.widget.scrollable;
 
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
@@ -13,9 +11,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
+
 // TODO allow this to have vertical and horizontal bars
 // TODO make this a container
 // TODO make the scrollbar its own widget
+// TODO currently scrollbar prints too much when its long
 @NoArgsConstructor
 public abstract class ScrollableWidget extends Widget {
 
@@ -23,10 +24,7 @@ public abstract class ScrollableWidget extends Widget {
 
   @Getter
   @Setter
-  private AnsiFormat scrollbarFormat = new AnsiFormat(
-      Background.NONE,
-      Foreground.NONE,
-      Attribute.INVERSE_ON);
+  private AnsiFormat scrollbarFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.INVERSE_ON);
 
   @Getter
   @Setter

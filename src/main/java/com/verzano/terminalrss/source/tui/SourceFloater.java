@@ -1,9 +1,5 @@
 package com.verzano.terminalrss.source.tui;
 
-import static com.verzano.terminalrss.tui.constants.Key.TAB;
-import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
-
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.source.Source;
 import com.verzano.terminalrss.tui.TerminalUi;
@@ -17,14 +13,18 @@ import com.verzano.terminalrss.tui.task.key.KeyTask;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.BasicListModel;
 import com.verzano.terminalrss.tui.widget.text.entry.RolodexWidget;
 import com.verzano.terminalrss.tui.widget.text.entry.TextEntryWidget;
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.Getter;
+
+import static com.verzano.terminalrss.tui.constants.Key.TAB;
+import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
 
 // TODO this should probably extends the biChoiceFloater...
 public class SourceFloater {
-
   private final KeyTask addSourceTask;
   private final KeyTask editSourceTask;
   private BinaryChoiceFloater floater;
@@ -65,13 +65,7 @@ public class SourceFloater {
     displayWidget.addWidget(contentTagEntry, new ShelfOptions(new Size(20, FILL_NEEDED)));
     displayWidget.setMargins(new Margins(1));
 
-    floater = new BinaryChoiceFloater(
-        displayWidget,
-        addSourceTask,
-        "Add Source",
-        cancelTask,
-        "Cancel");
-
+    floater = new BinaryChoiceFloater(displayWidget, addSourceTask, "Add Source", cancelTask, "Cancel");
     floater.getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
     floater.getUnfocusedFormat().setAttributes(Attribute.INVERSE_ON);
   }

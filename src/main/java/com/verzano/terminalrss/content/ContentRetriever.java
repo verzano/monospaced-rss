@@ -1,20 +1,17 @@
 package com.verzano.terminalrss.content;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class ContentRetriever {
 
   private ContentRetriever() {}
 
-  public static String getContent(
-      String uri,
-      ContentType contentType,
-      String contentTag)
-      throws IOException {
+  public static String getContent(String uri, ContentType contentType, String contentTag) throws IOException {
     Document doc;
     try {
       doc = Jsoup.connect(uri).get();

@@ -5,21 +5,18 @@ import com.verzano.terminalrss.content.ContentRetriever;
 import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 import com.verzano.terminalrss.source.Source;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ArticleManager {
-
   public static final Comparator<Article> UPDATED_AT_COMPARATOR = Comparator
       .comparing(Article::getPublishedAt)
       .reversed();
@@ -32,8 +29,7 @@ public class ArticleManager {
 
   static {
     try {
-      List<Article> articles = Persistence
-          .load(ARTICLES_FILE, ARTICLES_FILE_TYPE, new LinkedList<>());
+      List<Article> articles = Persistence.load(ARTICLES_FILE, ARTICLES_FILE_TYPE, new LinkedList<>());
       ARTICLES.putAll(articles.stream().collect(Collectors.groupingBy(
           Article::getSourceId,
           Collectors.toMap(Article::getId, article -> article))));
@@ -44,22 +40,13 @@ public class ArticleManager {
     }
   }
 
-  private ArticleManager() {
-  }
-
-  public static Article createArticle(
-      Source source,
-      String uri,
-      Date publishedDate,
-      String title,
-      Date updatedDate)
+  public static Article createArticle(Source source, String uri,Date publishedDate, String title, Date updatedDate)
       throws IOException, ArticleExistsException {
     if (getArticles(source).stream().anyMatch(a -> a.getUri().equals(uri))) {
       throw new ArticleExistsException("Article already exists for uri: " + uri);
     }
 
-    String content = ContentRetriever
-        .getContent(uri, source.getContentType(), source.getContentTag());
+    String content = ContentRetriever.getContent(uri, source.getContentType(), source.getContentTag());
 
     Long id;
     synchronized (ARTICLE_ID) {
@@ -122,8 +109,7 @@ public class ArticleManager {
   }
 
   public static Article getArticle(Long sourceId, Long articleId) {
-    return ARTICLES.getOrDefault(sourceId, new HashMap<>())
-        .getOrDefault(articleId, Article.NULL_ARTICLE);
+    return ARTICLES.getOrDefault(sourceId, new HashMap<>()).getOrDefault(articleId, Article.NULL_ARTICLE);
   }
 
   private static void saveArticles() throws IOException {
