@@ -1,13 +1,14 @@
 package com.verzano.terminalrss.tui.container.floor;
 
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
-
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.widget.Widget;
+
 import java.util.Collection;
 import java.util.Collections;
+
+import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
+import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
 
 public class Floor extends Container<FloorOptions> {
 
@@ -25,7 +26,7 @@ public class Floor extends Container<FloorOptions> {
   }
 
   @Override
-  public void addWidgetAux(Widget widget, FloorOptions options) {
+  public void addWidgetInternal(Widget widget, FloorOptions options) {
     if (this.widget != NULL_WIDGET) {
       removeWidget(this.widget);
     }
@@ -34,13 +35,13 @@ public class Floor extends Container<FloorOptions> {
   }
 
   @Override
-  public void removeWidgetAux(Widget widget) {
+  public void removeWidgetInternal(Widget widget) {
     this.widget = NULL_WIDGET;
     options = null;
   }
 
   @Override
-  public void removeWidgetsAux() {
+  public void removeWidgetsInternal() {
     widget = NULL_WIDGET;
     options = null;
   }

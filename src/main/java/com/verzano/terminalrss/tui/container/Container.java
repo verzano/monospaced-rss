@@ -3,11 +3,12 @@ package com.verzano.terminalrss.tui.container;
 import com.verzano.terminalrss.tui.metrics.Point;
 import com.verzano.terminalrss.tui.metrics.Size;
 import com.verzano.terminalrss.tui.widget.Widget;
+import lombok.NoArgsConstructor;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public abstract class Container<T extends ContainerOptions> extends Widget {
@@ -39,13 +40,13 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
     }
 
     @Override
-    public void addWidgetAux(Widget widget, ContainerOptions options) {}
+    public void addWidgetInternal(Widget widget, ContainerOptions options) {}
 
     @Override
-    public void removeWidgetAux(Widget widget) {}
+    public void removeWidgetInternal(Widget widget) {}
 
     @Override
-    public void removeWidgetsAux() {}
+    public void removeWidgetsInternal() {}
 
     @Override
     public int getNeededWidth() {
@@ -72,12 +73,11 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
 
   public abstract int calculateWidgetY(Widget widget);
 
-  // TODO need better names
-  public abstract void addWidgetAux(Widget widget, T options);
+  public abstract void addWidgetInternal(Widget widget, T options);
 
-  public abstract void removeWidgetAux(Widget widget);
+  public abstract void removeWidgetInternal(Widget widget);
 
-  public abstract void removeWidgetsAux();
+  public abstract void removeWidgetsInternal();
 
   public int getWidgetWidth(Widget widget) {
     return widgetSizes.getOrDefault(widget, NO_SIZE).getWidth();
@@ -116,7 +116,7 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
     widgetLocations.put(widget, new Point(0, 0));
     widget.setContainer(this);
 
-    addWidgetAux(widget, options);
+    addWidgetInternal(widget, options);
     arrange();
   }
 
@@ -125,7 +125,7 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
     widgetLocations.remove(widget);
     widget.setContainer(NULL_CONTAINER);
 
-    removeWidgetAux(widget);
+    removeWidgetInternal(widget);
     arrange();
   }
 
@@ -134,7 +134,7 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
     widgetLocations.clear();
     getContainedWidgets().forEach(w -> w.setContainer(NULL_CONTAINER));
 
-    removeWidgetsAux();
+    removeWidgetsInternal();
     arrange();
   }
 

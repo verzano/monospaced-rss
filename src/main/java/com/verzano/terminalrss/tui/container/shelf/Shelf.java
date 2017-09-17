@@ -4,13 +4,10 @@ import com.verzano.terminalrss.tui.constants.Orientation;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.metrics.Size;
 import com.verzano.terminalrss.tui.widget.Widget;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.*;
 
 public class Shelf extends Container<ShelfOptions> {
 
@@ -29,19 +26,19 @@ public class Shelf extends Container<ShelfOptions> {
   }
 
   @Override
-  public void addWidgetAux(Widget widget, ShelfOptions options) {
+  public void addWidgetInternal(Widget widget, ShelfOptions options) {
     optionsMap.put(widget, options);
     widgetStack.add(widget);
   }
 
   @Override
-  public void removeWidgetAux(Widget widget) {
+  public void removeWidgetInternal(Widget widget) {
     optionsMap.remove(widget);
     widgetStack.remove(widget);
   }
 
   @Override
-  public void removeWidgetsAux() {
+  public void removeWidgetsInternal() {
     optionsMap.clear();
     widgetStack.clear();
   }

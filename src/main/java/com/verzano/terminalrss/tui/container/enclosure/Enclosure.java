@@ -1,19 +1,16 @@
 package com.verzano.terminalrss.tui.container.enclosure;
 
-import static com.verzano.terminalrss.tui.constants.CardinalDirection.CENTER;
-import static com.verzano.terminalrss.tui.constants.CardinalDirection.EAST;
-import static com.verzano.terminalrss.tui.constants.CardinalDirection.NORTH;
-import static com.verzano.terminalrss.tui.constants.CardinalDirection.SOUTH;
-import static com.verzano.terminalrss.tui.constants.CardinalDirection.WEST;
-
 import com.verzano.terminalrss.tui.constants.CardinalDirection;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.widget.Widget;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.verzano.terminalrss.tui.constants.CardinalDirection.*;
 
 public class Enclosure extends Container<EnclosureOptions> {
 
@@ -194,7 +191,7 @@ public class Enclosure extends Container<EnclosureOptions> {
   }
 
   @Override
-  public void addWidgetAux(Widget widget, EnclosureOptions options) {
+  public void addWidgetInternal(Widget widget, EnclosureOptions options) {
     Widget oldWidget = widgetMap.get(options.getPosition());
     if (oldWidget != NULL_WIDGET) {
       removeWidget(oldWidget);
@@ -204,13 +201,13 @@ public class Enclosure extends Container<EnclosureOptions> {
   }
 
   @Override
-  public void removeWidgetAux(Widget widget) {
+  public void removeWidgetInternal(Widget widget) {
     EnclosureOptions options = optionsMap.remove(widget);
     widgetMap.remove(options.getPosition());
   }
 
   @Override
-  public void removeWidgetsAux() {
+  public void removeWidgetsInternal() {
     optionsMap.clear();
     Arrays.stream(CardinalDirection.values()).forEach(cd -> widgetMap.put(cd, NULL_WIDGET));
   }
