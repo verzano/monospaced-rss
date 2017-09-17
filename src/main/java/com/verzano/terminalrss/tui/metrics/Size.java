@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Size {
-
   public static final int FILL_CONTAINER = -1;
   public static final int FILL_NEEDED = -2;
 

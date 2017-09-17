@@ -10,6 +10,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class EnclosureOptions extends ContainerOptions {
-
   private CardinalDirection position;
 }

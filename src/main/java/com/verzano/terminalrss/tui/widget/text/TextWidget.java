@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class TextWidget extends Widget {
-
   @Getter
   @Setter
   private String text;

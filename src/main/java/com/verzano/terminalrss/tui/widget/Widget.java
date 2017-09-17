@@ -25,7 +25,6 @@ import lombok.Setter;
 // TODO a child widget should also mark its container as focused...
 @NoArgsConstructor
 public abstract class Widget {
-
   public static final Widget NULL_WIDGET = new Widget() {
     @Override
     public int getNeededWidth() {

@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SortedListModel<T extends TuiStringable> implements ListModel<T> {
-
   private List<T> items = new LinkedList<>();
   private Comparator<T> sortOrder;
 

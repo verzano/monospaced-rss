@@ -27,7 +27,6 @@ import static com.verzano.terminalrss.tui.widget.Widget.NULL_WIDGET;
 // TODO use an executor to schedule events
 // TODO add defaults for attributes as well as some css style waterfall thing for getting them maybe...
 public class TerminalUi {
-
   private static final AtomicBoolean run = new AtomicBoolean(true);
   private static final BlockingDeque<PrintTask> printTaskQueue = new LinkedBlockingDeque<>();
   private static final Terminal terminal;

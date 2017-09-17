@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class BasicListModel<T extends TuiStringable> implements ListModel<T> {
-
   private List<T> items;
 
   public BasicListModel(Collection<T> items) {

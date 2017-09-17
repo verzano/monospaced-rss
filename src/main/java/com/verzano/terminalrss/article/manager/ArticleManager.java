@@ -1,6 +1,7 @@
-package com.verzano.terminalrss.article;
+package com.verzano.terminalrss.article.manager;
 
 import com.google.gson.reflect.TypeToken;
+import com.verzano.terminalrss.article.Article;
 import com.verzano.terminalrss.content.ContentRetriever;
 import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.persistence.Persistence;

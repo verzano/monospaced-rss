@@ -10,7 +10,6 @@ import com.verzano.terminalrss.tui.widget.text.TextWidget;
 import lombok.Setter;
 
 public class ButtonWidget extends TextWidget {
-
   @Setter
   private KeyTask onPress;
 

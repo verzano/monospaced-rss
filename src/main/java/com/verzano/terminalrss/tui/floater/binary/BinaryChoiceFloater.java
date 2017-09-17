@@ -19,7 +19,6 @@ import com.verzano.terminalrss.tui.widget.button.ButtonWidget;
 import lombok.Getter;
 
 public class BinaryChoiceFloater extends Floater {
-
   @Getter
   private final Shelf buttonContainer;
   @Getter

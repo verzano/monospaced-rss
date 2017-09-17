@@ -19,7 +19,6 @@ import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
 // TODO currently scrollbar prints too much when its long
 @NoArgsConstructor
 public abstract class ScrollableWidget extends Widget {
-
   private double internalHeight = 1;
 
   @Getter

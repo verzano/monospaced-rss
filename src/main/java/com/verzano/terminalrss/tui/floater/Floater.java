@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public abstract class Floater extends Enclosure {
-
   public static final Floater NULL_FLOATER = new Floater() {};
 
   @Override

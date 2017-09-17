@@ -3,7 +3,6 @@ package com.verzano.terminalrss.tui.constants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-// TODO fill out this class a lot more
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Key {
   public static final String ESCAPED_PREFIX = "\u001b[";

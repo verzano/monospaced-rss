@@ -11,7 +11,6 @@ import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
 import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
 
 public class Floor extends Container<FloorOptions> {
-
   private FloorOptions options = null;
   private Widget widget = NULL_WIDGET;
 

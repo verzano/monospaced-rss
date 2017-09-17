@@ -13,7 +13,6 @@ import java.util.List;
 import lombok.Getter;
 
 public class TextAreaWidget extends ScrollableWidget {
-
   @Getter
   private String text;
 

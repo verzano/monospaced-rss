@@ -6,7 +6,7 @@ import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 import com.verzano.terminalrss.article.Article;
-import com.verzano.terminalrss.article.ArticleManager;
+import com.verzano.terminalrss.article.manager.ArticleManager;
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.exception.SourceExistsException;
@@ -52,7 +52,6 @@ import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
 // TODO handle Exceptions better...
 @Log
 public class TerminalRss {
-
   private static final ExecutorService sourceExecutor = Executors.newFixedThreadPool(3);
   private static final ExecutorService articleExecutor = Executors.newFixedThreadPool(6);
   private static final Source ADD_SOURCE = new Source(-1, "", NULL_TYPE, "", null, "+ Add Source");

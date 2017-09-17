@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class FloorOptions extends ContainerOptions {
-
   private Size size;
   private Point location;
 }

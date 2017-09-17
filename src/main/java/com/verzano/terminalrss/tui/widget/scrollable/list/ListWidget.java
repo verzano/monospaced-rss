@@ -18,7 +18,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
-
   private ListModel<T> listModel;
 
   private int selectedItemIndex;

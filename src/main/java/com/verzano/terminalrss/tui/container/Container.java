@@ -12,7 +12,6 @@ import java.util.Map;
 
 @NoArgsConstructor
 public abstract class Container<T extends ContainerOptions> extends Widget {
-
   public static final Container<ContainerOptions> NULL_CONTAINER = new Container<ContainerOptions>() {
     @Override
     public Collection<Widget> getContainedWidgets() {

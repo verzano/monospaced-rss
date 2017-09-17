@@ -10,7 +10,6 @@ import lombok.Setter;
 import java.util.*;
 
 public class Shelf extends Container<ShelfOptions> {
-
   private List<Widget> widgetStack = new LinkedList<>();
   private Map<Widget, ShelfOptions> optionsMap = new HashMap<>();
 

@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class RolodexWidget<T extends TuiStringable> extends TextWidget {
-
   private ListModel<T> listModel;
 
   @Getter

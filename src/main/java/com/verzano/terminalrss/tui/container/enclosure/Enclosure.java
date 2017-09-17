@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import static com.verzano.terminalrss.tui.constants.CardinalDirection.*;
 
 public class Enclosure extends Container<EnclosureOptions> {
-
   // TODO a bidi map would be noice
   private Map<Widget, EnclosureOptions> optionsMap = new HashMap<>();
   private Map<CardinalDirection, Widget> widgetMap = new HashMap<>();
