@@ -1,21 +1,22 @@
 package com.verzano.terminalrss.tui.widget.scrollable.list;
 
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.tui.constants.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
-
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.TuiStringable;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
 import com.verzano.terminalrss.tui.ansi.Foreground;
-import com.verzano.terminalrss.tui.constants.Direction;
+import com.verzano.terminalrss.tui.constant.Direction;
 import com.verzano.terminalrss.tui.widget.scrollable.ScrollableWidget;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.ListModel;
-import java.util.Collection;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Collection;
+
+import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.tui.constant.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.tui.constant.Key.UP_ARROW;
 
 public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
   private ListModel<T> listModel;

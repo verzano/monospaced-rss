@@ -1,16 +1,16 @@
 package com.verzano.terminalrss.tui.widget.text.entry;
 
-import static com.verzano.terminalrss.tui.constants.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.tui.constants.Key.UP_ARROW;
-import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
-
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.TuiStringable;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.ListModel;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
 import lombok.Getter;
 import lombok.Setter;
+
+import static com.verzano.terminalrss.tui.constant.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.tui.constant.Key.UP_ARROW;
+import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constant.Position.LEFT;
 
 public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   private ListModel<T> listModel;
@@ -27,7 +27,7 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   private int itemsAfter;
 
   public RolodexWidget(ListModel<T> listModel, int itemsBefore, int itemsAfter) {
-    super("", HORIZONTAL, CENTER_LEFT);
+    super("", HORIZONTAL, LEFT);
     this.listModel = listModel;
     this.itemsBefore = itemsBefore;
     this.itemsAfter = itemsAfter;

@@ -1,22 +1,22 @@
 package com.verzano.terminalrss.tui.widget.text.entry;
 
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.tui.ansi.Attribute.BLINK_ON;
-import static com.verzano.terminalrss.tui.ansi.Attribute.UNDERLINE_ON;
-import static com.verzano.terminalrss.tui.constants.Key.DELETE;
-import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
-
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
 import com.verzano.terminalrss.tui.ansi.Foreground;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
-import java.util.stream.IntStream;
 import lombok.Getter;
 import lombok.Setter;
 
-// TODO add a label
+import java.util.stream.IntStream;
+
+import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.tui.ansi.Attribute.BLINK_ON;
+import static com.verzano.terminalrss.tui.ansi.Attribute.UNDERLINE_ON;
+import static com.verzano.terminalrss.tui.constant.Key.DELETE;
+import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constant.Position.LEFT;
+
 public class TextEntryWidget extends TextWidget {
   @Getter
   @Setter
@@ -27,7 +27,7 @@ public class TextEntryWidget extends TextWidget {
       BLINK_ON);
 
   public TextEntryWidget() {
-    super("", HORIZONTAL, CENTER_LEFT);
+    super("", HORIZONTAL, LEFT);
     // All printable ASCII chars
     IntStream.range(32, 127).forEach(i -> addKeyAction((char) i + "", () -> {
       setText(getText() + (char) i);

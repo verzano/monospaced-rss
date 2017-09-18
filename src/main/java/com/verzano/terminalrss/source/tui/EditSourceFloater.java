@@ -7,53 +7,46 @@ import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.container.shelf.Shelf;
 import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.tui.floater.binary.BinaryChoiceFloater;
-import com.verzano.terminalrss.tui.metrics.Margins;
-import com.verzano.terminalrss.tui.metrics.Size;
+import com.verzano.terminalrss.tui.metric.Margins;
+import com.verzano.terminalrss.tui.metric.Size;
 import com.verzano.terminalrss.tui.task.key.KeyTask;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.BasicListModel;
 import com.verzano.terminalrss.tui.widget.text.entry.RolodexWidget;
 import com.verzano.terminalrss.tui.widget.text.entry.TextEntryWidget;
 import lombok.Getter;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import static com.verzano.terminalrss.source.Source.NULL_SOURCE_ID;
+import static com.verzano.terminalrss.tui.constant.Key.TAB;
+import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.metric.Size.FILL_NEEDED;
 
-import static com.verzano.terminalrss.tui.constants.Key.TAB;
-import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
-
-// TODO this should probably extends the biChoiceFloater...
-public class SourceFloater {
+public class EditSourceFloater extends BinaryChoiceFloater {
   private final KeyTask addSourceTask;
   private final KeyTask editSourceTask;
-  private BinaryChoiceFloater floater;
-  private TextEntryWidget uriTextEntry;
-  private RolodexWidget<ContentType> contentTypeRolodex;
-  private TextEntryWidget contentTagEntry;
+  private final TextEntryWidget uriTextEntry = new TextEntryWidget();
+  private final RolodexWidget<ContentType> contentTypeRolodex = new RolodexWidget<>(
+      new BasicListModel<>(ContentType.nonNullValues()),
+      0,
+      1);
+  private final TextEntryWidget contentTagEntry = new TextEntryWidget();
   @Getter
-  private Long sourceId = -1L;
+  private Long sourceId = NULL_SOURCE_ID;
 
-  public SourceFloater(KeyTask addSourceTask, KeyTask editSourceTask, KeyTask cancelTask) {
+  public EditSourceFloater(KeyTask addSourceTask, KeyTask editSourceTask, KeyTask cancelTask) {
+    super(NULL_WIDGET, addSourceTask, "Add Source", cancelTask, "Cancel");
     this.addSourceTask = addSourceTask;
     this.editSourceTask = editSourceTask;
 
-    contentTagEntry = new TextEntryWidget();
     contentTagEntry.addKeyAction(TAB, () -> {
-      floater.getPositiveButton().setFocused();
+      getPositiveButton().setFocused();
       TerminalUi.reprint();
     });
 
-    List<ContentType> types = Arrays.stream(ContentType.values())
-        .filter(ct -> ct != ContentType.NULL_TYPE)
-        .collect(Collectors.toList());
-    contentTypeRolodex = new RolodexWidget<>(new BasicListModel<>(types), 3, 3);
     contentTypeRolodex.addKeyAction(TAB, () -> {
       contentTagEntry.setFocused();
       TerminalUi.reprint();
     });
 
-    uriTextEntry = new TextEntryWidget();
     uriTextEntry.addKeyAction(TAB, () -> {
       contentTypeRolodex.setFocused();
       TerminalUi.reprint();
@@ -64,10 +57,10 @@ public class SourceFloater {
     displayWidget.addWidget(contentTypeRolodex, new ShelfOptions(new Size(20, FILL_NEEDED)));
     displayWidget.addWidget(contentTagEntry, new ShelfOptions(new Size(20, FILL_NEEDED)));
     displayWidget.setMargins(new Margins(1));
+    setDisplayWidget(displayWidget);
 
-    floater = new BinaryChoiceFloater(displayWidget, addSourceTask, "Add Source", cancelTask, "Cancel");
-    floater.getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
-    floater.getUnfocusedFormat().setAttributes(Attribute.INVERSE_ON);
+    getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
+    getUnfocusedFormat().setAttributes(Attribute.INVERSE_ON);
   }
 
   public String getUri() {
@@ -85,14 +78,14 @@ public class SourceFloater {
   public void setMode(boolean edit) {
     if (edit) {
       // TODO make group these into a single Object like Action in swing
-      floater.getPositiveButton().setText("Save Source");
-      floater.getPositiveButton().setOnPress(editSourceTask);
+      getPositiveButton().setText("Save Source");
+      getPositiveButton().setOnPress(editSourceTask);
     } else {
-      floater.getPositiveButton().setText("Add Source");
-      floater.getPositiveButton().setOnPress(addSourceTask);
+      getPositiveButton().setText("Add Source");
+      getPositiveButton().setOnPress(addSourceTask);
     }
 
-    floater.arrange();
+    arrange();
   }
 
   public void setSource(Source source) {
@@ -103,14 +96,14 @@ public class SourceFloater {
   }
 
   public void clearSource() {
-    sourceId = -1L;
+    sourceId = NULL_SOURCE_ID;
     uriTextEntry.setText("");
     contentTypeRolodex.setSelectedIndex(0);
     contentTagEntry.setText("");
   }
 
   public void showFloater() {
-    TerminalUi.setFloater(floater);
+    TerminalUi.setFloater(this);
     TerminalUi.getFloater().reprint();
   }
 }

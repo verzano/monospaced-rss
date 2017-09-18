@@ -4,8 +4,8 @@ import com.verzano.terminalrss.tui.ansi.Ansi;
 import com.verzano.terminalrss.tui.container.floor.Floor;
 import com.verzano.terminalrss.tui.container.floor.FloorOptions;
 import com.verzano.terminalrss.tui.floater.Floater;
-import com.verzano.terminalrss.tui.metrics.Point;
-import com.verzano.terminalrss.tui.metrics.Size;
+import com.verzano.terminalrss.tui.metric.Point;
+import com.verzano.terminalrss.tui.metric.Size;
 import com.verzano.terminalrss.tui.task.print.PrintTask;
 import com.verzano.terminalrss.tui.widget.Widget;
 import lombok.Getter;
@@ -19,9 +19,9 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.verzano.terminalrss.tui.ansi.Ansi.*;
-import static com.verzano.terminalrss.tui.constants.Key.ESCAPED_PREFIX;
+import static com.verzano.terminalrss.tui.constant.Key.ESCAPED_PREFIX;
 import static com.verzano.terminalrss.tui.floater.Floater.NULL_FLOATER;
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
+import static com.verzano.terminalrss.tui.metric.Size.FILL_CONTAINER;
 import static com.verzano.terminalrss.tui.widget.Widget.NULL_WIDGET;
 
 // TODO use an executor to schedule events

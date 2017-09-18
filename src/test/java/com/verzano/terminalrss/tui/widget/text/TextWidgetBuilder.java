@@ -1,8 +1,8 @@
 package com.verzano.terminalrss.tui.widget.text;
 
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
-import com.verzano.terminalrss.tui.constants.Orientation;
-import com.verzano.terminalrss.tui.constants.Position;
+import com.verzano.terminalrss.tui.constant.Orientation;
+import com.verzano.terminalrss.tui.constant.Position;
 import com.verzano.terminalrss.tui.container.Container;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 class TextWidgetBuilder {
   private String text = "";
   private Orientation orientation = Orientation.HORIZONTAL;
-  private Position textPosition = Position.CENTER_LEFT;
+  private Position textPosition = Position.LEFT;
   private Container container = Container.NULL_CONTAINER;
   private AnsiFormat focusedFormat = AnsiFormat.NORMAL;
   private AnsiFormat unfocusedFormat = AnsiFormat.NORMAL;

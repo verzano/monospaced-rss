@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.tui.metrics;
+package com.verzano.terminalrss.tui.metric;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -7,8 +7,8 @@ import com.verzano.terminalrss.tui.widget.Widget;
 import java.util.Collection;
 import java.util.Collections;
 
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_NEEDED;
+import static com.verzano.terminalrss.tui.metric.Size.FILL_CONTAINER;
+import static com.verzano.terminalrss.tui.metric.Size.FILL_NEEDED;
 
 public class Floor extends Container<FloorOptions> {
   private FloorOptions options = null;

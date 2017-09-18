@@ -9,12 +9,13 @@ import lombok.Setter;
 
 import java.util.Date;
 
-import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
+import static com.verzano.terminalrss.content.ContentType.NULL_CONTENT_TYPE;
 
 @Getter
 @AllArgsConstructor
 public class Source implements TuiStringable {
-  public static final Source NULL_SOURCE = new Source(-1L, "", NULL_TYPE, "", new Date(0), "");
+  public static final long NULL_SOURCE_ID = -1L;
+  public static final Source NULL_SOURCE = new Source(NULL_SOURCE_ID, "", NULL_CONTENT_TYPE, "", new Date(0), "");
 
   @SerializedName("id")
   private final long id;

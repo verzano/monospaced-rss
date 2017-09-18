@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.tui.constants;
+package com.verzano.terminalrss.tui.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

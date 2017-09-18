@@ -1,8 +1,8 @@
 package com.verzano.terminalrss.tui.container.shelf;
 
-import com.verzano.terminalrss.tui.constants.Orientation;
+import com.verzano.terminalrss.tui.constant.Orientation;
 import com.verzano.terminalrss.tui.container.Container;
-import com.verzano.terminalrss.tui.metrics.Size;
+import com.verzano.terminalrss.tui.metric.Size;
 import com.verzano.terminalrss.tui.widget.Widget;
 import lombok.Getter;
 import lombok.Setter;

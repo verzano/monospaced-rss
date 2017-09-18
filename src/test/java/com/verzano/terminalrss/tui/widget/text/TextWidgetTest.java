@@ -1,18 +1,5 @@
 package com.verzano.terminalrss.tui.widget.text;
 
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.constants.Orientation.VERTICAL;
-import static com.verzano.terminalrss.tui.constants.Position.BOTTOM_CENTER;
-import static com.verzano.terminalrss.tui.constants.Position.BOTTOM_RIGHT;
-import static com.verzano.terminalrss.tui.constants.Position.CENTER;
-import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
-import static com.verzano.terminalrss.tui.constants.Position.CENTER_RIGHT;
-import static com.verzano.terminalrss.tui.constants.Position.TOP_CENTER;
-import static com.verzano.terminalrss.tui.constants.Position.TOP_RIGHT;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
@@ -22,6 +9,13 @@ import com.verzano.terminalrss.tui.widget.Widget;
 import com.verzano.terminalrss.tui.widget.container.MockContainerBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constant.Orientation.VERTICAL;
+import static com.verzano.terminalrss.tui.constant.Position.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TextWidgetTest {
   @Test
@@ -70,7 +64,7 @@ class TextWidgetTest {
 
   @Test
   @DisplayName("orientation == HORIZONTAL"
-      + " && textPosition == CENTER_LEFT"
+      + " && textPosition == LEFT"
       + " && focusedFormat as ff"
       + " && text as t"
       + " && widgetWidth == t.length"
@@ -85,7 +79,7 @@ class TextWidgetTest {
     TextWidget testObject = new TextWidgetBuilder()
         .text(text)
         .orientation(HORIZONTAL)
-        .textPosition(CENTER_LEFT)
+        .textPosition(LEFT)
         .container(container)
         .focusedFormat(focusedFormat)
         .build();
@@ -99,7 +93,7 @@ class TextWidgetTest {
 
   @Test
   @DisplayName("orientation == HORIZONTAL"
-      + " && textPosition == CENTER_LEFT"
+      + " && textPosition == LEFT"
       + " && unfocusedFormat as uf"
       + " && text as t"
       + " && widgetWidth == t.length"
@@ -114,7 +108,7 @@ class TextWidgetTest {
     TextWidget testObject = new TextWidgetBuilder()
         .text(text)
         .orientation(HORIZONTAL)
-        .textPosition(CENTER_LEFT)
+        .textPosition(LEFT)
         .container(container)
         .unfocusedFormat(unfocusedFormat)
         .build();
@@ -128,7 +122,7 @@ class TextWidgetTest {
 
   @Test
   @DisplayName("orientation == HORIZONTAL"
-      + " && textPosition == [TOP_LEFT | CENTER_LEFT | BOTTOM_LEFT]"
+      + " && textPosition == [TOP_LEFT | LEFT | BOTTOM_LEFT]"
       + " && unfocusedFormat as uf"
       + " && text as t"
       + " && (widgetWidth as w) < t.length"
@@ -144,21 +138,21 @@ class TextWidgetTest {
     TextWidget testObjectTopLeft = new TextWidgetBuilder()
         .text(text)
         .orientation(HORIZONTAL)
-        .textPosition(CENTER_LEFT)
+        .textPosition(LEFT)
         .container(container)
         .build();
 
     TextWidget testObjectCenterLeft = new TextWidgetBuilder()
         .text(text)
         .orientation(HORIZONTAL)
-        .textPosition(CENTER_LEFT)
+        .textPosition(LEFT)
         .container(container)
         .build();
 
     TextWidget testObjectBottomLeft = new TextWidgetBuilder()
         .text(text)
         .orientation(HORIZONTAL)
-        .textPosition(CENTER_LEFT)
+        .textPosition(LEFT)
         .container(container)
         .build();
 
@@ -182,7 +176,7 @@ class TextWidgetTest {
 
   @Test
   @DisplayName("orientation == HORIZONTAL"
-      + " && textPosition == [TOP_RIGHT | CENTER_RIGHT | BOTTOM_RIGHT]"
+      + " && textPosition == [TOP_RIGHT | RIGHT | BOTTOM_RIGHT]"
       + " && unfocusedFormat as uf"
       + " && text as t"
       + " && (widgetWidth as w) < t.length"
@@ -206,7 +200,7 @@ class TextWidgetTest {
     TextWidget testObjectCenterRight = new TextWidgetBuilder()
         .text(text)
         .orientation(HORIZONTAL)
-        .textPosition(CENTER_RIGHT)
+        .textPosition(RIGHT)
         .container(container)
         .build();
 
@@ -237,7 +231,7 @@ class TextWidgetTest {
 
   @Test
   @DisplayName("orientation == HORIZONTAL"
-      + " && textPosition == [TOP_CENTER | CENTER | BOTTOM_CENTER]"
+      + " && textPosition == [TOP | CENTER | BOTTOM]"
       + " && unfocusedFormat as uf"
       + " && text as t"
       + " && (widgetWidth as w) < t.length"
@@ -254,7 +248,7 @@ class TextWidgetTest {
     TextWidget testObjectTopCenter = new TextWidgetBuilder()
         .text(text)
         .orientation(HORIZONTAL)
-        .textPosition(TOP_CENTER)
+        .textPosition(TOP)
         .container(container)
         .build();
 
@@ -268,7 +262,7 @@ class TextWidgetTest {
     TextWidget testObjectBottomCenter = new TextWidgetBuilder()
         .text(text)
         .orientation(HORIZONTAL)
-        .textPosition(BOTTOM_CENTER)
+        .textPosition(BOTTOM)
         .container(container)
         .build();
 

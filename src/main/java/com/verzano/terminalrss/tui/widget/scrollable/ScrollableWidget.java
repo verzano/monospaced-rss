@@ -5,7 +5,7 @@ import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
 import com.verzano.terminalrss.tui.ansi.Foreground;
-import com.verzano.terminalrss.tui.constants.Direction;
+import com.verzano.terminalrss.tui.constant.Direction;
 import com.verzano.terminalrss.tui.widget.Widget;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

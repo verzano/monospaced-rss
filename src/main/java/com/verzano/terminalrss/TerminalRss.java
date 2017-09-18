@@ -12,11 +12,11 @@ import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.source.Source;
 import com.verzano.terminalrss.source.manager.SourceManager;
-import com.verzano.terminalrss.source.tui.SourceFloater;
+import com.verzano.terminalrss.source.tui.EditSourceFloater;
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.container.shelf.Shelf;
 import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
-import com.verzano.terminalrss.tui.metrics.Size;
+import com.verzano.terminalrss.tui.metric.Size;
 import com.verzano.terminalrss.tui.widget.scrollable.list.ListWidget;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.SortedListModel;
 import com.verzano.terminalrss.tui.widget.scrollable.text.TextAreaWidget;
@@ -31,12 +31,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
-import static com.verzano.terminalrss.content.ContentType.NULL_TYPE;
-import static com.verzano.terminalrss.tui.constants.Key.*;
-import static com.verzano.terminalrss.tui.constants.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.constants.Orientation.VERTICAL;
-import static com.verzano.terminalrss.tui.constants.Position.CENTER_LEFT;
-import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
+import static com.verzano.terminalrss.content.ContentType.NULL_CONTENT_TYPE;
+import static com.verzano.terminalrss.tui.constant.Key.*;
+import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constant.Orientation.VERTICAL;
+import static com.verzano.terminalrss.tui.constant.Position.LEFT;
+import static com.verzano.terminalrss.tui.metric.Size.FILL_CONTAINER;
 
 /*
     addSource("https://techcrunch.com/feed/", CLASS_CONTENT, "article-entry");
@@ -47,14 +47,14 @@ import static com.verzano.terminalrss.tui.metrics.Size.FILL_CONTAINER;
     addSource("http://feeds.gawker.com/kotaku/full", CLASS_CONTENT, "entry-content");
  */
 // TODO add in some sort of monitoring to see progress of adding sources and updating articles
-// TODO use futures for that ^
+// TODO use futures for that ^ ?
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
-// TODO handle Exceptions better...
+// TODO log to a file instead of the console
 @Log
 public class TerminalRss {
   private static final ExecutorService sourceExecutor = Executors.newFixedThreadPool(3);
   private static final ExecutorService articleExecutor = Executors.newFixedThreadPool(6);
-  private static final Source ADD_SOURCE = new Source(-1, "", NULL_TYPE, "", null, "+ Add Source");
+  private static final Source ADD_SOURCE = new Source(-1, "", NULL_CONTENT_TYPE, "", null, "+ Add Source");
   private static final Article REFRESH_SOURCE = new Article(
       -1,
       "",
@@ -69,7 +69,7 @@ public class TerminalRss {
   private static TextWidget sourceTextWidget;
   private static TextWidget articleTextWidget;
   private static TextAreaWidget contentTextAreaWidget;
-  private static SourceFloater sourceFloater;
+  private static EditSourceFloater editSourceFloater;
   private static Source selectedSource = Source.NULL_SOURCE;
 
   public static void main(String[] args) throws IOException, FeedException {
@@ -98,7 +98,7 @@ public class TerminalRss {
   }
 
   private static void buildSourceWidgets() {
-    sourceTextWidget = new TextWidget("Sources:", HORIZONTAL, CENTER_LEFT);
+    sourceTextWidget = new TextWidget("Sources:", HORIZONTAL, LEFT);
 
     sourcesListWidget = new ListWidget<>(
         new SortedListModel<Source>(SourceManager.TITLE_COMPARATOR) {
@@ -117,9 +117,9 @@ public class TerminalRss {
     sourcesListWidget.addKeyAction(ENTER, () -> {
       Source source = sourcesListWidget.getSelectedItem();
       if (source == ADD_SOURCE) {
-        sourceFloater.clearSource();
-        sourceFloater.setMode(false);
-        sourceFloater.showFloater();
+        editSourceFloater.clearSource();
+        editSourceFloater.setMode(false);
+        editSourceFloater.showFloater();
       } else {
         showArticlesList();
 
@@ -136,9 +136,9 @@ public class TerminalRss {
     sourcesListWidget.addKeyAction(E_LOWER, () -> {
       Source source = sourcesListWidget.getSelectedItem();
       if (source != ADD_SOURCE) {
-        sourceFloater.setSource(source);
-        sourceFloater.setMode(true);
-        sourceFloater.showFloater();
+        editSourceFloater.setSource(source);
+        editSourceFloater.setMode(true);
+        editSourceFloater.showFloater();
       }
     });
 
@@ -158,19 +158,19 @@ public class TerminalRss {
       sourceExecutor.shutdownNow();
     });
 
-    sourceFloater = new SourceFloater(
+    editSourceFloater = new EditSourceFloater(
         () -> {
           // TODO these two lines should be part of the TerminalUi so that I don't have to put them everywhere
           TerminalUi.removeFloater();
           sourcesListWidget.setFocused();
           TerminalUi.reprint();
-          addSource(sourceFloater.getUri(), sourceFloater.getContentType(), sourceFloater.getContentTag());
+          addSource(editSourceFloater.getUri(), editSourceFloater.getContentType(), editSourceFloater.getContentTag());
         },
         () -> {
           TerminalUi.removeFloater();
           sourcesListWidget.setFocused();
           TerminalUi.reprint();
-          modifySource(sourceFloater.getSourceId(), sourceFloater.getContentType(), sourceFloater.getContentTag());
+          modifySource(editSourceFloater.getSourceId(), editSourceFloater.getContentType(), editSourceFloater.getContentTag());
         },
         () -> {
           TerminalUi.removeFloater();
@@ -180,7 +180,7 @@ public class TerminalRss {
   }
 
   private static void buildArticleWidgets() {
-    articleTextWidget = new TextWidget("Articles:", HORIZONTAL, CENTER_LEFT);
+    articleTextWidget = new TextWidget("Articles:", HORIZONTAL, LEFT);
 
     articlesListWidget = new ListWidget<>(
         new SortedListModel<Article>(ArticleManager.UPDATED_AT_COMPARATOR) {

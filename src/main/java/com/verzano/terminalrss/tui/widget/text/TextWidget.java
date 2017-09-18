@@ -3,24 +3,26 @@ package com.verzano.terminalrss.tui.widget.text;
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
-import com.verzano.terminalrss.tui.constants.Orientation;
-import com.verzano.terminalrss.tui.constants.Position;
+import com.verzano.terminalrss.tui.constant.Orientation;
+import com.verzano.terminalrss.tui.constant.Position;
 import com.verzano.terminalrss.tui.widget.Widget;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 public class TextWidget extends Widget {
   @Getter
   @Setter
-  private String text;
+  private String text = "";
 
   @Getter
   @Setter
-  private Orientation orientation;
+  private Orientation orientation = Orientation.HORIZONTAL;
 
   @Getter
   @Setter
-  private Position textPosition;
+  private Position textPosition = Position.LEFT;
 
   public TextWidget(String text, Orientation orientation, Position textPosition) {
     this.text = text;
@@ -35,7 +37,7 @@ public class TextWidget extends Widget {
     if (text.length() != getWidth()) {
       switch (textPosition) {
         case TOP_LEFT:
-        case CENTER_LEFT:
+        case LEFT:
         case BOTTOM_LEFT:
           if (text.length() > getWidth()) {
             text = text.substring(0, getWidth());
@@ -43,9 +45,9 @@ public class TextWidget extends Widget {
             text += new String(new char[getWidth() - text.length()]).replace('\0', ' ');
           }
           break;
-        case TOP_CENTER:
+        case TOP:
         case CENTER:
-        case BOTTOM_CENTER:
+        case BOTTOM:
           if (text.length() > getWidth()) {
             double halfExtra = (text.length() - getWidth()) / 2D;
 
@@ -58,7 +60,7 @@ public class TextWidget extends Widget {
           }
           break;
         case TOP_RIGHT:
-        case CENTER_RIGHT:
+        case RIGHT:
         case BOTTOM_RIGHT:
           if (text.length() > getWidth()) {
             text = text.substring(text.length() - getWidth(), text.length());
@@ -78,7 +80,7 @@ public class TextWidget extends Widget {
   private void printHorizontal() {
     switch (textPosition) {
       case TOP_LEFT:
-      case TOP_CENTER:
+      case TOP:
       case TOP_RIGHT:
         TerminalUi.move(getContentX(), getContentY());
         TerminalUi.print(getRowForText(text));
@@ -87,9 +89,9 @@ public class TextWidget extends Widget {
           TerminalUi.print(getEmptyContentRow());
         }
         break;
-      case CENTER_LEFT:
+      case LEFT:
       case CENTER:
-      case CENTER_RIGHT:
+      case RIGHT:
         int middleRow = getHeight() / 2;
         for (int i = 0; i < getHeight(); i++) {
           TerminalUi.move(getContentX(), getContentY() + i);
@@ -101,7 +103,7 @@ public class TextWidget extends Widget {
         }
         break;
       case BOTTOM_LEFT:
-      case BOTTOM_CENTER:
+      case BOTTOM:
       case BOTTOM_RIGHT:
         TerminalUi.move(getContentX(), getContentY());
         for (int i = 1; i < getContentHeight(); i++) {

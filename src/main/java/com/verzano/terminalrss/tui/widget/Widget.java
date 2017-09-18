@@ -1,24 +1,21 @@
 package com.verzano.terminalrss.tui.widget;
 
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.tui.container.Container.NULL_CONTAINER;
-
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
 import com.verzano.terminalrss.tui.ansi.Foreground;
 import com.verzano.terminalrss.tui.container.Container;
-import com.verzano.terminalrss.tui.metrics.Margins;
+import com.verzano.terminalrss.tui.metric.Margins;
 import com.verzano.terminalrss.tui.task.key.KeyTask;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.*;
+
+import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.tui.container.Container.NULL_CONTAINER;
 
 // TODO make this thread safe
 // TODO add borders eventually...

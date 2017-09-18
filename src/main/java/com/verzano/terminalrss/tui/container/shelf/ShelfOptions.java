@@ -1,7 +1,7 @@
 package com.verzano.terminalrss.tui.container.shelf;
 
 import com.verzano.terminalrss.tui.container.ContainerOptions;
-import com.verzano.terminalrss.tui.metrics.Size;
+import com.verzano.terminalrss.tui.metric.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

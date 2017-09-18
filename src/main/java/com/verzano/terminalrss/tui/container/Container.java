@@ -1,7 +1,7 @@
 package com.verzano.terminalrss.tui.container;
 
-import com.verzano.terminalrss.tui.metrics.Point;
-import com.verzano.terminalrss.tui.metrics.Size;
+import com.verzano.terminalrss.tui.metric.Point;
+import com.verzano.terminalrss.tui.metric.Size;
 import com.verzano.terminalrss.tui.widget.Widget;
 import lombok.NoArgsConstructor;
 
