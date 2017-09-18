@@ -16,7 +16,7 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   private ListModel<T> listModel;
 
   @Getter
-  private volatile int selectedIndex = 0;
+  private volatile int selectedIndex;
 
   @Getter
   @Setter
@@ -31,6 +31,8 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
     this.listModel = listModel;
     this.itemsBefore = itemsBefore;
     this.itemsAfter = itemsAfter;
+
+    setSelectedIndex(0);
 
     addKeyAction(UP_ARROW, () -> {
       setSelectedIndex(getPreviousIndex(selectedIndex));

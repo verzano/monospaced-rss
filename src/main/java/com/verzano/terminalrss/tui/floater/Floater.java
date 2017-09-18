@@ -2,11 +2,29 @@ package com.verzano.terminalrss.tui.floater;
 
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.container.enclosure.Enclosure;
+import com.verzano.terminalrss.tui.task.Task;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import static com.verzano.terminalrss.tui.task.Task.NULL_TASK;
 
 @NoArgsConstructor
 public abstract class Floater extends Enclosure {
   public static final Floater NULL_FLOATER = new Floater() {};
+
+  @Setter
+  private Task disposeTask = NULL_TASK;
+
+  public void dispose() {
+    TerminalUi.removeFloater();
+    disposeTask.fire();
+    TerminalUi.reprint();
+  }
+
+  public void display() {
+    TerminalUi.setFloater(this);
+    reprint();
+  }
 
   @Override
   public int getWidth() {

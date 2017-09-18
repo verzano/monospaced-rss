@@ -31,6 +31,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
+import static com.verzano.terminalrss.article.Article.NULL_ARTICLE_ID;
 import static com.verzano.terminalrss.content.ContentType.NULL_CONTENT_TYPE;
 import static com.verzano.terminalrss.tui.constant.Key.*;
 import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
@@ -56,20 +57,20 @@ public class TerminalRss {
   private static final ExecutorService articleExecutor = Executors.newFixedThreadPool(6);
   private static final Source ADD_SOURCE = new Source(-1, "", NULL_CONTENT_TYPE, "", null, "+ Add Source");
   private static final Article REFRESH_SOURCE = new Article(
-      -1,
+      NULL_ARTICLE_ID,
       "",
       -1,
       null,
       "\u21BB Refresh Source",
       "",
       null);
+
   private static Shelf baseContainer;
   private static ListWidget<Source> sourcesListWidget;
   private static ListWidget<Article> articlesListWidget;
   private static TextWidget sourceTextWidget;
   private static TextWidget articleTextWidget;
   private static TextAreaWidget contentTextAreaWidget;
-  private static EditSourceFloater editSourceFloater;
   private static Source selectedSource = Source.NULL_SOURCE;
 
   public static void main(String[] args) throws IOException, FeedException {
@@ -117,9 +118,18 @@ public class TerminalRss {
     sourcesListWidget.addKeyAction(ENTER, () -> {
       Source source = sourcesListWidget.getSelectedItem();
       if (source == ADD_SOURCE) {
-        editSourceFloater.clearSource();
-        editSourceFloater.setMode(false);
-        editSourceFloater.showFloater();
+        final EditSourceFloater editSourceFloater = new EditSourceFloater();
+        editSourceFloater.setDisposeTask(() -> {
+          if (editSourceFloater.isPositiveSelected()) {
+            addSource(
+                editSourceFloater.getUri(),
+                editSourceFloater.getContentType(),
+                editSourceFloater.getContentTag());
+          }
+          // TODO make this part of TerminalUI
+          sourcesListWidget.setFocused();
+        });
+        editSourceFloater.display();
       } else {
         showArticlesList();
 
@@ -136,9 +146,18 @@ public class TerminalRss {
     sourcesListWidget.addKeyAction(E_LOWER, () -> {
       Source source = sourcesListWidget.getSelectedItem();
       if (source != ADD_SOURCE) {
-        editSourceFloater.setSource(source);
-        editSourceFloater.setMode(true);
-        editSourceFloater.showFloater();
+        final EditSourceFloater editSourceFloater = new EditSourceFloater(source);
+        editSourceFloater.setDisposeTask(() -> {
+          if (editSourceFloater.isPositiveSelected()) {
+            modifySource(
+                editSourceFloater.getSourceId(),
+                editSourceFloater.getContentType(),
+                editSourceFloater.getContentTag());
+          }
+          // TODO make this part of TerminalUI
+          sourcesListWidget.setFocused();
+        });
+        editSourceFloater.display();
       }
     });
 
@@ -157,26 +176,6 @@ public class TerminalRss {
       articleExecutor.shutdownNow();
       sourceExecutor.shutdownNow();
     });
-
-    editSourceFloater = new EditSourceFloater(
-        () -> {
-          // TODO these two lines should be part of the TerminalUi so that I don't have to put them everywhere
-          TerminalUi.removeFloater();
-          sourcesListWidget.setFocused();
-          TerminalUi.reprint();
-          addSource(editSourceFloater.getUri(), editSourceFloater.getContentType(), editSourceFloater.getContentTag());
-        },
-        () -> {
-          TerminalUi.removeFloater();
-          sourcesListWidget.setFocused();
-          TerminalUi.reprint();
-          modifySource(editSourceFloater.getSourceId(), editSourceFloater.getContentType(), editSourceFloater.getContentTag());
-        },
-        () -> {
-          TerminalUi.removeFloater();
-          sourcesListWidget.setFocused();
-          TerminalUi.reprint();
-        });
   }
 
   private static void buildArticleWidgets() {

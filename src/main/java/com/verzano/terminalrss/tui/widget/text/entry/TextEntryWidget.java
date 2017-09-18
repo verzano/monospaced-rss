@@ -20,15 +20,12 @@ import static com.verzano.terminalrss.tui.constant.Position.LEFT;
 public class TextEntryWidget extends TextWidget {
   @Getter
   @Setter
-  private AnsiFormat caretFormat = new AnsiFormat(
-      Background.NONE,
-      Foreground.NONE,
-      UNDERLINE_ON,
-      BLINK_ON);
+  private AnsiFormat caretFormat = new AnsiFormat(Background.NONE, Foreground.NONE, UNDERLINE_ON, BLINK_ON);
 
   public TextEntryWidget() {
     super("", HORIZONTAL, LEFT);
     // All printable ASCII chars
+    // TODO put this in a class (no magic numbers)
     IntStream.range(32, 127).forEach(i -> addKeyAction((char) i + "", () -> {
       setText(getText() + (char) i);
       reprint();

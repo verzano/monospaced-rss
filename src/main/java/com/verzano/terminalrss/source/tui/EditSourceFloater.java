@@ -9,7 +9,6 @@ import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.tui.floater.binary.BinaryChoiceFloater;
 import com.verzano.terminalrss.tui.metric.Margins;
 import com.verzano.terminalrss.tui.metric.Size;
-import com.verzano.terminalrss.tui.task.key.KeyTask;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.BasicListModel;
 import com.verzano.terminalrss.tui.widget.text.entry.RolodexWidget;
 import com.verzano.terminalrss.tui.widget.text.entry.TextEntryWidget;
@@ -21,8 +20,10 @@ import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
 import static com.verzano.terminalrss.tui.metric.Size.FILL_NEEDED;
 
 public class EditSourceFloater extends BinaryChoiceFloater {
-  private final KeyTask addSourceTask;
-  private final KeyTask editSourceTask;
+  private static final String ADD_SOURCE_TEXT = "Add Source";
+  private static final String EDIT_SOURCE_TEXT = "Edit Source";
+  private static final String CANCEL_TEXT = "Cancel";
+
   private final TextEntryWidget uriTextEntry = new TextEntryWidget();
   private final RolodexWidget<ContentType> contentTypeRolodex = new RolodexWidget<>(
       new BasicListModel<>(ContentType.nonNullValues()),
@@ -32,11 +33,21 @@ public class EditSourceFloater extends BinaryChoiceFloater {
   @Getter
   private Long sourceId = NULL_SOURCE_ID;
 
-  public EditSourceFloater(KeyTask addSourceTask, KeyTask editSourceTask, KeyTask cancelTask) {
-    super(NULL_WIDGET, addSourceTask, "Add Source", cancelTask, "Cancel");
-    this.addSourceTask = addSourceTask;
-    this.editSourceTask = editSourceTask;
+  public EditSourceFloater() {
+    this(ADD_SOURCE_TEXT, CANCEL_TEXT);
+  }
 
+  public EditSourceFloater(Source source) {
+    this(EDIT_SOURCE_TEXT, CANCEL_TEXT);
+
+    sourceId = source.getId();
+    uriTextEntry.setText(source.getUri());
+    contentTypeRolodex.setSelectedItem(source.getContentType());
+    contentTagEntry.setText(source.getContentTag());
+  }
+
+  private EditSourceFloater(String positiveText, String negativeText) {
+    super(NULL_WIDGET, positiveText, negativeText);
     contentTagEntry.addKeyAction(TAB, () -> {
       getPositiveButton().setFocused();
       TerminalUi.reprint();
@@ -53,10 +64,10 @@ public class EditSourceFloater extends BinaryChoiceFloater {
     });
 
     Shelf displayWidget = new Shelf(HORIZONTAL, 1);
+    displayWidget.setMargins(new Margins(1, 1, 1, 0));
     displayWidget.addWidget(uriTextEntry, new ShelfOptions(new Size(30, FILL_NEEDED)));
     displayWidget.addWidget(contentTypeRolodex, new ShelfOptions(new Size(20, FILL_NEEDED)));
     displayWidget.addWidget(contentTagEntry, new ShelfOptions(new Size(20, FILL_NEEDED)));
-    displayWidget.setMargins(new Margins(1));
     setDisplayWidget(displayWidget);
 
     getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
@@ -73,37 +84,5 @@ public class EditSourceFloater extends BinaryChoiceFloater {
 
   public String getContentTag() {
     return contentTagEntry.getText();
-  }
-
-  public void setMode(boolean edit) {
-    if (edit) {
-      // TODO make group these into a single Object like Action in swing
-      getPositiveButton().setText("Save Source");
-      getPositiveButton().setOnPress(editSourceTask);
-    } else {
-      getPositiveButton().setText("Add Source");
-      getPositiveButton().setOnPress(addSourceTask);
-    }
-
-    arrange();
-  }
-
-  public void setSource(Source source) {
-    sourceId = source.getId();
-    uriTextEntry.setText(source.getUri());
-    contentTypeRolodex.setSelectedItem(source.getContentType());
-    contentTagEntry.setText(source.getContentTag());
-  }
-
-  public void clearSource() {
-    sourceId = NULL_SOURCE_ID;
-    uriTextEntry.setText("");
-    contentTypeRolodex.setSelectedIndex(0);
-    contentTagEntry.setText("");
-  }
-
-  public void showFloater() {
-    TerminalUi.setFloater(this);
-    TerminalUi.getFloater().reprint();
   }
 }

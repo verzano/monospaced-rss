@@ -7,7 +7,7 @@ import com.verzano.terminalrss.tui.ansi.Background;
 import com.verzano.terminalrss.tui.ansi.Foreground;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.metric.Margins;
-import com.verzano.terminalrss.tui.task.key.KeyTask;
+import com.verzano.terminalrss.tui.task.Task;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,7 +37,7 @@ public abstract class Widget {
     public void printContent() {
     }
   };
-  private final Map<String, Set<KeyTask>> keyActionsMap = new HashMap<>();
+  private final Map<String, Set<Task>> keyActionsMap = new HashMap<>();
   @Getter
   private long altitude;
   @Getter
@@ -114,10 +114,10 @@ public abstract class Widget {
     this.altitude = altitude;
   }
 
-  public void addKeyAction(String key, KeyTask action) {
-    Set<KeyTask> keyTasks = keyActionsMap.getOrDefault(key, new HashSet<>());
-    keyTasks.add(action);
-    keyActionsMap.put(key, keyTasks);
+  public void addKeyAction(String key, Task action) {
+    Set<Task> tasks = keyActionsMap.getOrDefault(key, new HashSet<>());
+    tasks.add(action);
+    keyActionsMap.put(key, tasks);
   }
 
   public void clearKeyActions(String key) {
@@ -125,7 +125,7 @@ public abstract class Widget {
   }
 
   public void fireKeyActions(String key) {
-    keyActionsMap.getOrDefault(key, Collections.emptySet()).forEach(KeyTask::fire);
+    keyActionsMap.getOrDefault(key, Collections.emptySet()).forEach(Task::fire);
   }
 
   public boolean isFocused() {

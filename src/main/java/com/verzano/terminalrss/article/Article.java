@@ -11,7 +11,8 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 public class Article implements TuiStringable {
-  public static final Article NULL_ARTICLE = new Article(-1L, "", -1L, new Date(0), "", "", new Date(0));
+  public static final long NULL_ARTICLE_ID = -1L;
+  public static final Article NULL_ARTICLE = new Article(NULL_ARTICLE_ID, "", -1L, new Date(0), "", "", new Date(0));
 
   @SerializedName("id")
   private final long id;

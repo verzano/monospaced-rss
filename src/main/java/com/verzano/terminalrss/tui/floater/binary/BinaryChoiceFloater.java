@@ -8,7 +8,7 @@ import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.tui.floater.Floater;
 import com.verzano.terminalrss.tui.metric.Margins;
 import com.verzano.terminalrss.tui.metric.Size;
-import com.verzano.terminalrss.tui.task.key.KeyTask;
+import com.verzano.terminalrss.tui.task.NamedTask;
 import com.verzano.terminalrss.tui.widget.Widget;
 import com.verzano.terminalrss.tui.widget.button.ButtonWidget;
 import lombok.Getter;
@@ -19,8 +19,6 @@ import static com.verzano.terminalrss.tui.constant.Position.CENTER;
 import static com.verzano.terminalrss.tui.metric.Size.FILL_NEEDED;
 
 public class BinaryChoiceFloater extends Floater {
-  private final Shelf buttonContainer = new Shelf(HORIZONTAL, 1);
-
   @Getter
   private ButtonWidget positiveButton;
 
@@ -30,20 +28,31 @@ public class BinaryChoiceFloater extends Floater {
   @Getter
   private Widget displayWidget;
 
-  public BinaryChoiceFloater(
-      Widget displayWidget,
-      KeyTask positiveTask,
-      String positiveText,
-      KeyTask negativeTask,
-      String negativeText) {
-    this.displayWidget = displayWidget;
+  @Getter
+  private boolean positiveSelected;
 
+  public BinaryChoiceFloater(Widget displayWidget, String positiveText, String negativeText) {
+    setDisplayWidget(displayWidget);
+
+    Shelf buttonContainer = new Shelf(HORIZONTAL, 1);
     buttonContainer.setMargins(new Margins(1));
 
-    positiveButton = new ButtonWidget(positiveTask, positiveText, CENTER);
+    positiveButton = new ButtonWidget(new NamedTask(positiveText) {
+      @Override
+      public void fire() {
+        positiveSelected = true;
+        dispose();
+      }
+    }, CENTER);
     buttonContainer.addWidget(positiveButton, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
 
-    negativeButton = new ButtonWidget(negativeTask, negativeText, CENTER);
+    negativeButton = new ButtonWidget(new NamedTask(negativeText) {
+      @Override
+      public void fire() {
+        positiveSelected = false;
+        dispose();
+      }
+    }, CENTER);
     buttonContainer.addWidget(negativeButton, new ShelfOptions(new Size(FILL_NEEDED, FILL_NEEDED)));
 
     positiveButton.addKeyAction(TAB, () -> {
@@ -55,12 +64,16 @@ public class BinaryChoiceFloater extends Floater {
       TerminalUi.reprint();
     });
 
-    addWidget(this.displayWidget, new EnclosureOptions(CardinalDirection.CENTER));
     addWidget(buttonContainer, new EnclosureOptions(CardinalDirection.SOUTH));
   }
 
   public void setDisplayWidget(Widget displayWidget) {
     this.displayWidget = displayWidget;
     addWidget(displayWidget, new EnclosureOptions(CardinalDirection.CENTER));
+  }
+
+  @Override
+  public void setFocused() {
+    displayWidget.setFocused();
   }
 }
