@@ -1,21 +1,20 @@
 package com.verzano.terminalrss.tui.widget.text.entry;
 
-import com.verzano.terminalrss.tui.ansi.AnsiFormat;
-import com.verzano.terminalrss.tui.ansi.Attribute;
-import com.verzano.terminalrss.tui.ansi.Background;
-import com.verzano.terminalrss.tui.ansi.Foreground;
-import com.verzano.terminalrss.tui.widget.text.TextWidget;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.stream.IntStream;
-
 import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
 import static com.verzano.terminalrss.tui.ansi.Attribute.BLINK_ON;
 import static com.verzano.terminalrss.tui.ansi.Attribute.UNDERLINE_ON;
 import static com.verzano.terminalrss.tui.constant.Key.DELETE;
 import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
 import static com.verzano.terminalrss.tui.constant.Position.LEFT;
+
+import com.verzano.terminalrss.tui.ansi.AnsiFormat;
+import com.verzano.terminalrss.tui.ansi.Attribute;
+import com.verzano.terminalrss.tui.ansi.Background;
+import com.verzano.terminalrss.tui.ansi.Foreground;
+import com.verzano.terminalrss.tui.widget.text.TextWidget;
+import java.util.stream.IntStream;
+import lombok.Getter;
+import lombok.Setter;
 
 public class TextEntryWidget extends TextWidget {
   @Getter
@@ -58,12 +57,12 @@ public class TextEntryWidget extends TextWidget {
   }
 
   @Override
-  public int getNeededWidth() {
+  public int getNeededContentWidth() {
     return 1;
   }
 
   @Override
-  public int getNeededHeight() {
+  public int getNeededContentHeight() {
     return 1;
   }
 }

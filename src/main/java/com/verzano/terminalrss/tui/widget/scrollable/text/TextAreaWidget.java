@@ -1,17 +1,16 @@
 package com.verzano.terminalrss.tui.widget.scrollable.text;
 
-import com.verzano.terminalrss.tui.TerminalUi;
-import com.verzano.terminalrss.tui.constant.Direction;
-import com.verzano.terminalrss.tui.widget.scrollable.ScrollableWidget;
-import lombok.Getter;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import static com.verzano.terminalrss.tui.constant.Direction.DOWN;
 import static com.verzano.terminalrss.tui.constant.Direction.UP;
 import static com.verzano.terminalrss.tui.constant.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.tui.constant.Key.UP_ARROW;
+
+import com.verzano.terminalrss.tui.TerminalUi;
+import com.verzano.terminalrss.tui.constant.Direction;
+import com.verzano.terminalrss.tui.widget.scrollable.ScrollableWidget;
+import java.util.LinkedList;
+import java.util.List;
+import lombok.Getter;
 
 public class TextAreaWidget extends ScrollableWidget {
   @Getter
@@ -80,7 +79,7 @@ public class TextAreaWidget extends ScrollableWidget {
   }
 
   @Override
-  public int getNeededWidth() {
+  public int getNeededContentWidth() {
     return lines.stream()
         .mapToInt(String::length)
         .max()
@@ -88,7 +87,7 @@ public class TextAreaWidget extends ScrollableWidget {
   }
 
   @Override
-  public int getNeededHeight() {
+  public int getNeededContentHeight() {
     int width = getWidth() - 1;
 
     return lines.stream()

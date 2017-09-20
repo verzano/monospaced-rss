@@ -1,5 +1,18 @@
 package com.verzano.terminalrss.tui.widget.text;
 
+import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constant.Orientation.VERTICAL;
+import static com.verzano.terminalrss.tui.constant.Position.BOTTOM;
+import static com.verzano.terminalrss.tui.constant.Position.BOTTOM_RIGHT;
+import static com.verzano.terminalrss.tui.constant.Position.CENTER;
+import static com.verzano.terminalrss.tui.constant.Position.LEFT;
+import static com.verzano.terminalrss.tui.constant.Position.RIGHT;
+import static com.verzano.terminalrss.tui.constant.Position.TOP;
+import static com.verzano.terminalrss.tui.constant.Position.TOP_RIGHT;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
@@ -10,26 +23,19 @@ import com.verzano.terminalrss.tui.widget.container.MockContainerBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.constant.Orientation.VERTICAL;
-import static com.verzano.terminalrss.tui.constant.Position.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 class TextWidgetTest {
   @Test
-  @DisplayName("orientation == HORIZONTAL --> getNeededHeight() == 1")
+  @DisplayName("orientation == HORIZONTAL --> getNeededContentHeight() == 1")
   void getNeededHeight0() {
     TextWidget testObject = new TextWidgetBuilder()
         .orientation(HORIZONTAL)
         .build();
 
-    assertEquals(1, testObject.getNeededHeight());
+    assertEquals(1, testObject.getNeededContentHeight());
   }
 
   @Test
-  @DisplayName("orientation == VERTICAL && text as t --> getNeededHeight() == t.length()")
+  @DisplayName("orientation == VERTICAL && text as t --> getNeededContentHeight() == t.length()")
   void getNeededHeight1() {
     String text = "TEXTOFLENGTH14";
     TextWidget testObject = new TextWidgetBuilder()
@@ -37,11 +43,11 @@ class TextWidgetTest {
         .orientation(VERTICAL)
         .build();
 
-    assertEquals(text.length(), testObject.getNeededHeight());
+    assertEquals(text.length(), testObject.getNeededContentHeight());
   }
 
   @Test
-  @DisplayName("orientation == HORIZONTAL && text as t --> getNeededWidth == t.length()")
+  @DisplayName("orientation == HORIZONTAL && text as t --> getNeededContentWidth == t.length()")
   void getNeededWidth0() {
     String text = "TEXTOFLENGTH14";
     TextWidget testObject = new TextWidgetBuilder()
@@ -49,17 +55,17 @@ class TextWidgetTest {
         .orientation(HORIZONTAL)
         .build();
 
-    assertEquals(text.length(), testObject.getNeededWidth());
+    assertEquals(text.length(), testObject.getNeededContentWidth());
   }
 
   @Test
-  @DisplayName("orientation == VERTICAL --> getNeededWidth() == 1")
+  @DisplayName("orientation == VERTICAL --> getNeededContentWidth() == 1")
   void getNeededWidth1() {
     TextWidget testObject = new TextWidgetBuilder()
         .orientation(VERTICAL)
         .build();
 
-    assertEquals(1, testObject.getNeededWidth());
+    assertEquals(1, testObject.getNeededContentWidth());
   }
 
   @Test

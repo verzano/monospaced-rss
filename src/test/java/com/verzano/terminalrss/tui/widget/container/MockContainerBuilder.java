@@ -3,10 +3,9 @@ package com.verzano.terminalrss.tui.widget.container;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.container.ContainerOptions;
 import com.verzano.terminalrss.tui.widget.Widget;
-import lombok.NoArgsConstructor;
-
 import java.util.Collection;
 import java.util.LinkedList;
+import lombok.NoArgsConstructor;
 
 // TODO for now this should be enough but if tests start needing more complicated containers then...
 // TODO this might be good as just an adapter pattern then could actually do a calculation...
@@ -116,12 +115,12 @@ public class MockContainerBuilder {
       public void removeWidgetsInternal() {}
 
       @Override
-      public int getNeededWidth() {
+      public int getNeededContentWidth() {
         return neededWidth;
       }
 
       @Override
-      public int getNeededHeight() {
+      public int getNeededContentHeight() {
         return neededHeight;
       }
 

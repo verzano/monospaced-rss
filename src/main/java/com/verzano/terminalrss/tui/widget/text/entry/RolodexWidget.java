@@ -1,16 +1,16 @@
 package com.verzano.terminalrss.tui.widget.text.entry;
 
+import static com.verzano.terminalrss.tui.constant.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.tui.constant.Key.UP_ARROW;
+import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constant.Position.LEFT;
+
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.TuiStringable;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.ListModel;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
 import lombok.Getter;
 import lombok.Setter;
-
-import static com.verzano.terminalrss.tui.constant.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.tui.constant.Key.UP_ARROW;
-import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.constant.Position.LEFT;
 
 public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   private ListModel<T> listModel;
@@ -79,7 +79,7 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   }
 
   @Override
-  public int getNeededWidth() {
+  public int getNeededContentWidth() {
     return listModel.getItems().stream()
         .mapToInt(item -> item.toTuiString().length())
         .max()
@@ -87,7 +87,7 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   }
 
   @Override
-  public int getNeededHeight() {
+  public int getNeededContentHeight() {
     return 1;
   }
 

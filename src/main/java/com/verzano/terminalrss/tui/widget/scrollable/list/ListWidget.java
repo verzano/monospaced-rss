@@ -1,5 +1,9 @@
 package com.verzano.terminalrss.tui.widget.scrollable.list;
 
+import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
+import static com.verzano.terminalrss.tui.constant.Key.DOWN_ARROW;
+import static com.verzano.terminalrss.tui.constant.Key.UP_ARROW;
+
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.TuiStringable;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
@@ -9,14 +13,9 @@ import com.verzano.terminalrss.tui.ansi.Foreground;
 import com.verzano.terminalrss.tui.constant.Direction;
 import com.verzano.terminalrss.tui.widget.scrollable.ScrollableWidget;
 import com.verzano.terminalrss.tui.widget.scrollable.list.model.ListModel;
+import java.util.Collection;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Collection;
-
-import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
-import static com.verzano.terminalrss.tui.constant.Key.DOWN_ARROW;
-import static com.verzano.terminalrss.tui.constant.Key.UP_ARROW;
 
 public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
   private ListModel<T> listModel;
@@ -96,7 +95,7 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
   }
 
   @Override
-  public int getNeededWidth() {
+  public int getNeededContentWidth() {
     return listModel.getItems().stream()
         .mapToInt(item -> item.toTuiString().length())
         .max()
@@ -104,7 +103,7 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
   }
 
   @Override
-  public int getNeededHeight() {
+  public int getNeededContentHeight() {
     return listModel.getItemCount();
   }
 

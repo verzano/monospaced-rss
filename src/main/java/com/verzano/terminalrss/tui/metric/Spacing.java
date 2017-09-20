@@ -7,21 +7,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Margins {
+public class Spacing {
   private int left;
   private int top;
   private int right;
   private int bottom;
 
-  public Margins() {
+  public Spacing() {
     this(0);
   }
 
-  public Margins(int margin) {
+  public Spacing(int margin) {
     this(margin, margin);
   }
 
-  public Margins(int leftRight, int topBottom) {
+  public Spacing(int leftRight, int topBottom) {
     this(leftRight, topBottom, leftRight, topBottom);
   }
 }

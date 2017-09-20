@@ -1,16 +1,19 @@
 package com.verzano.terminalrss.tui.container.enclosure;
 
+import static com.verzano.terminalrss.tui.constant.CardinalDirection.CENTER;
+import static com.verzano.terminalrss.tui.constant.CardinalDirection.EAST;
+import static com.verzano.terminalrss.tui.constant.CardinalDirection.NORTH;
+import static com.verzano.terminalrss.tui.constant.CardinalDirection.SOUTH;
+import static com.verzano.terminalrss.tui.constant.CardinalDirection.WEST;
+
 import com.verzano.terminalrss.tui.constant.CardinalDirection;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.widget.Widget;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static com.verzano.terminalrss.tui.constant.CardinalDirection.*;
 
 public class Enclosure extends Container<EnclosureOptions> {
   // TODO a bidi map would be noice
@@ -122,7 +125,7 @@ public class Enclosure extends Container<EnclosureOptions> {
       case EAST:
       case WEST:
         // TODO maybe make this fill if there aren't others...
-        width = widget.getNeededWidth();
+        width = widget.getNeededContentWidth();
         break;
       case CENTER:
         width = getWidth()
@@ -212,7 +215,7 @@ public class Enclosure extends Container<EnclosureOptions> {
   }
 
   @Override
-  public int getNeededWidth() {
+  public int getNeededContentWidth() {
     int northWidth = widgetMap.getOrDefault(NORTH, NULL_WIDGET).getNeededWidth();
     int southWidth = widgetMap.getOrDefault(SOUTH, NULL_WIDGET).getNeededWidth();
     int middleWidth = widgetMap.getOrDefault(WEST, NULL_WIDGET).getNeededWidth()
@@ -222,7 +225,7 @@ public class Enclosure extends Container<EnclosureOptions> {
   }
 
   @Override
-  public int getNeededHeight() {
+  public int getNeededContentHeight() {
     int northHeight = widgetMap.getOrDefault(NORTH, NULL_WIDGET).getNeededHeight();
     int southHeight = widgetMap.getOrDefault(SOUTH, NULL_WIDGET).getNeededHeight();
 

@@ -4,10 +4,13 @@ import com.verzano.terminalrss.tui.constant.Orientation;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.metric.Size;
 import com.verzano.terminalrss.tui.widget.Widget;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.*;
 
 public class Shelf extends Container<ShelfOptions> {
   private List<Widget> widgetStack = new LinkedList<>();
@@ -56,7 +59,7 @@ public class Shelf extends Container<ShelfOptions> {
       case Size.FILL_CONTAINER:
         return getWidth();
       case Size.FILL_NEEDED:
-        return widget.getNeededWidth();
+        return widget.getNeededContentWidth();
       default:
         return width;
     }
@@ -90,7 +93,7 @@ public class Shelf extends Container<ShelfOptions> {
         x += getWidgetWidth(w) + spacing;
       }
     }
-    return x + this.getMargins().getLeft();
+    return x + this.getPadding().getLeft();
   }
 
   // TODO NPE if widget not in map
@@ -106,11 +109,11 @@ public class Shelf extends Container<ShelfOptions> {
         y += getWidgetHeight(w) + spacing;
       }
     }
-    return y + this.getMargins().getTop();
+    return y + this.getPadding().getTop();
   }
 
   @Override
-  public int getNeededWidth() {
+  public int getNeededContentWidth() {
     int width = 0;
     if (!widgetStack.isEmpty()) {
       switch (orientation) {
@@ -128,11 +131,11 @@ public class Shelf extends Container<ShelfOptions> {
           break;
       }
     }
-    return width + this.getMargins().getLeft() + this.getMargins().getRight();
+    return width + this.getPadding().getLeft() + this.getPadding().getRight();
   }
 
   @Override
-  public int getNeededHeight() {
+  public int getNeededContentHeight() {
     int height = 0;
     if (!widgetStack.isEmpty()) {
       switch (orientation) {
@@ -151,6 +154,6 @@ public class Shelf extends Container<ShelfOptions> {
       }
     }
 
-    return height + this.getMargins().getTop() + this.getMargins().getBottom();
+    return height + this.getPadding().getTop() + this.getPadding().getBottom();
   }
 }

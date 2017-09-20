@@ -3,12 +3,11 @@ package com.verzano.terminalrss.tui.container;
 import com.verzano.terminalrss.tui.metric.Point;
 import com.verzano.terminalrss.tui.metric.Size;
 import com.verzano.terminalrss.tui.widget.Widget;
-import lombok.NoArgsConstructor;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public abstract class Container<T extends ContainerOptions> extends Widget {
@@ -48,12 +47,12 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
     public void removeWidgetsInternal() {}
 
     @Override
-    public int getNeededWidth() {
+    public int getNeededContentWidth() {
       return 0;
     }
 
     @Override
-    public int getNeededHeight() {
+    public int getNeededContentHeight() {
       return 0;
     }
   };

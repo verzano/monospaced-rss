@@ -1,22 +1,22 @@
 package com.verzano.terminalrss.tui.floater.binary;
 
+import static com.verzano.terminalrss.tui.constant.Key.TAB;
+import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
+import static com.verzano.terminalrss.tui.constant.Position.CENTER;
+import static com.verzano.terminalrss.tui.metric.Size.FILL_NEEDED;
+
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.constant.CardinalDirection;
 import com.verzano.terminalrss.tui.container.enclosure.EnclosureOptions;
 import com.verzano.terminalrss.tui.container.shelf.Shelf;
 import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.tui.floater.Floater;
-import com.verzano.terminalrss.tui.metric.Margins;
 import com.verzano.terminalrss.tui.metric.Size;
+import com.verzano.terminalrss.tui.metric.Spacing;
 import com.verzano.terminalrss.tui.task.NamedTask;
 import com.verzano.terminalrss.tui.widget.Widget;
 import com.verzano.terminalrss.tui.widget.button.ButtonWidget;
 import lombok.Getter;
-
-import static com.verzano.terminalrss.tui.constant.Key.TAB;
-import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.constant.Position.CENTER;
-import static com.verzano.terminalrss.tui.metric.Size.FILL_NEEDED;
 
 public class BinaryChoiceFloater extends Floater {
   @Getter
@@ -35,7 +35,7 @@ public class BinaryChoiceFloater extends Floater {
     setDisplayWidget(displayWidget);
 
     Shelf buttonContainer = new Shelf(HORIZONTAL, 1);
-    buttonContainer.setMargins(new Margins(1));
+    buttonContainer.setPadding(new Spacing(1));
 
     positiveButton = new ButtonWidget(new NamedTask(positiveText) {
       @Override

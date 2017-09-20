@@ -118,7 +118,7 @@ public class TextWidget extends Widget {
   }
 
   @Override
-  public int getNeededWidth() {
+  public int getNeededContentWidth() {
     int width = 0;
     switch (orientation) {
       case VERTICAL:
@@ -134,7 +134,7 @@ public class TextWidget extends Widget {
   }
 
   @Override
-  public int getNeededHeight() {
+  public int getNeededContentHeight() {
     int height = 0;
     switch (orientation) {
       case VERTICAL:
@@ -159,10 +159,7 @@ public class TextWidget extends Widget {
         for (int row = 0; row < getContentHeight(); row++) {
           TerminalUi.move(getContentX(), getContentY() + row);
           if (row < toPrint.length()) {
-            TerminalUi.print(
-                getAnsiFormatPrefix()
-                    + toPrint.charAt(row)
-                    + AnsiFormat.NORMAL.getFormatString());
+            TerminalUi.print(getAnsiFormatPrefix() + toPrint.charAt(row) + AnsiFormat.NORMAL.getFormatString());
           } else {
             TerminalUi.print(getAnsiFormatPrefix() + " " + AnsiFormat.NORMAL.getFormatString());
           }

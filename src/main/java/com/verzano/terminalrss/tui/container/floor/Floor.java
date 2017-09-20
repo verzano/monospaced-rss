@@ -1,14 +1,13 @@
 package com.verzano.terminalrss.tui.container.floor;
 
+import static com.verzano.terminalrss.tui.metric.Size.FILL_CONTAINER;
+import static com.verzano.terminalrss.tui.metric.Size.FILL_NEEDED;
+
 import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.container.Container;
 import com.verzano.terminalrss.tui.widget.Widget;
-
 import java.util.Collection;
 import java.util.Collections;
-
-import static com.verzano.terminalrss.tui.metric.Size.FILL_CONTAINER;
-import static com.verzano.terminalrss.tui.metric.Size.FILL_NEEDED;
 
 public class Floor extends Container<FloorOptions> {
   private FloorOptions options = null;
@@ -56,7 +55,7 @@ public class Floor extends Container<FloorOptions> {
       case FILL_CONTAINER:
         return TerminalUi.getWidth();
       case FILL_NEEDED:
-        return widget.getNeededWidth();
+        return widget.getNeededContentWidth();
       default:
         return options.getSize().getWidth();
     }
@@ -85,12 +84,12 @@ public class Floor extends Container<FloorOptions> {
   }
 
   @Override
-  public int getNeededWidth() {
+  public int getNeededContentWidth() {
     return TerminalUi.getWidth();
   }
 
   @Override
-  public int getNeededHeight() {
+  public int getNeededContentHeight() {
     return TerminalUi.getHeight();
   }
 }
