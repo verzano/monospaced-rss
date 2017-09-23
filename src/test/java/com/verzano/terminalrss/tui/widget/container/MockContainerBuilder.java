@@ -23,76 +23,19 @@ public class MockContainerBuilder {
   private int widgetX = 0;
   private int widgetY = 0;
 
-  public MockContainerBuilder containedWidgets(Collection<Widget> containedWidgets) {
-    this.containedWidgets = containedWidgets;
-    return this;
-  }
-
-  public MockContainerBuilder calculatedWidgetWidth(int calculatedWidgetWidth) {
-    this.calculatedWidgetWidth = calculatedWidgetWidth;
-    return this;
-  }
-
-  public MockContainerBuilder calculatedWidgetHeight(int calculatedWidgetHeight) {
-    this.calculatedWidgetHeight = calculatedWidgetHeight;
-    return this;
-  }
-
-  public MockContainerBuilder calculatedWidgetX(int calculatedWidgetX) {
-    this.calculatedWidgetX = calculatedWidgetX;
-    return this;
-  }
-
-  public MockContainerBuilder calculatedWidgetY(int calculatedWidgetY) {
-    this.calculatedWidgetY = calculatedWidgetY;
-    return this;
-  }
-
-  public MockContainerBuilder neededWidth(int neededWidth) {
-    this.neededWidth = neededWidth;
-    return this;
-  }
-
-  public MockContainerBuilder neededHeight(int neededHeight) {
-    this.neededHeight = neededHeight;
-    return this;
-  }
-
-  public MockContainerBuilder widgetWidth(int widgetWidth) {
-    this.widgetWidth = widgetWidth;
-    return this;
-  }
-
-  public MockContainerBuilder widgetHeight(int widgetHeight) {
-    this.widgetHeight = widgetHeight;
-    return this;
-  }
-
-  public MockContainerBuilder widgetX(int widgetX) {
-    this.widgetX = widgetX;
-    return this;
-  }
-
-  public MockContainerBuilder widgetY(int widgetY) {
-    this.widgetY = widgetY;
-    return this;
-  }
-
   public Container build() {
     return new Container() {
       @Override
-      public Collection<Widget> getContainedWidgets() {
-        return containedWidgets;
+      public void addWidgetInternal(Widget widget, ContainerOptions options) {}
+
+      @Override
+      public int calculateWidgetHeight(Widget widget) {
+        return calculatedWidgetHeight;
       }
 
       @Override
       public int calculateWidgetWidth(Widget widget) {
         return calculatedWidgetWidth;
-      }
-
-      @Override
-      public int calculateWidgetHeight(Widget widget) {
-        return calculatedWidgetHeight;
       }
 
       @Override
@@ -106,7 +49,9 @@ public class MockContainerBuilder {
       }
 
       @Override
-      public void addWidgetInternal(Widget widget, ContainerOptions options) {}
+      public Collection<Widget> getContainedWidgets() {
+        return containedWidgets;
+      }
 
       @Override
       public void removeWidgetInternal(Widget widget) {}
@@ -115,23 +60,13 @@ public class MockContainerBuilder {
       public void removeWidgetsInternal() {}
 
       @Override
-      public int getNeededContentWidth() {
-        return neededWidth;
-      }
-
-      @Override
-      public int getNeededContentHeight() {
-        return neededHeight;
+      public int getWidgetHeight(Widget widget) {
+        return widgetHeight;
       }
 
       @Override
       public int getWidgetWidth(Widget widget) {
         return widgetWidth;
-      }
-
-      @Override
-      public int getWidgetHeight(Widget widget) {
-        return widgetHeight;
       }
 
       @Override
@@ -143,6 +78,71 @@ public class MockContainerBuilder {
       public int getWidgetY(Widget widget) {
         return widgetY;
       }
+
+      @Override
+      public int getNeededContentHeight() {
+        return neededHeight;
+      }
+
+      @Override
+      public int getNeededContentWidth() {
+        return neededWidth;
+      }
     };
+  }
+
+  public MockContainerBuilder calculatedWidgetHeight(int calculatedWidgetHeight) {
+    this.calculatedWidgetHeight = calculatedWidgetHeight;
+    return this;
+  }
+
+  public MockContainerBuilder calculatedWidgetWidth(int calculatedWidgetWidth) {
+    this.calculatedWidgetWidth = calculatedWidgetWidth;
+    return this;
+  }
+
+  public MockContainerBuilder calculatedWidgetX(int calculatedWidgetX) {
+    this.calculatedWidgetX = calculatedWidgetX;
+    return this;
+  }
+
+  public MockContainerBuilder calculatedWidgetY(int calculatedWidgetY) {
+    this.calculatedWidgetY = calculatedWidgetY;
+    return this;
+  }
+
+  public MockContainerBuilder containedWidgets(Collection<Widget> containedWidgets) {
+    this.containedWidgets = containedWidgets;
+    return this;
+  }
+
+  public MockContainerBuilder neededHeight(int neededHeight) {
+    this.neededHeight = neededHeight;
+    return this;
+  }
+
+  public MockContainerBuilder neededWidth(int neededWidth) {
+    this.neededWidth = neededWidth;
+    return this;
+  }
+
+  public MockContainerBuilder widgetHeight(int widgetHeight) {
+    this.widgetHeight = widgetHeight;
+    return this;
+  }
+
+  public MockContainerBuilder widgetWidth(int widgetWidth) {
+    this.widgetWidth = widgetWidth;
+    return this;
+  }
+
+  public MockContainerBuilder widgetX(int widgetX) {
+    this.widgetX = widgetX;
+    return this;
+  }
+
+  public MockContainerBuilder widgetY(int widgetY) {
+    this.widgetY = widgetY;
+    return this;
   }
 }

@@ -16,6 +16,15 @@ public class Persistence {
   private static final Gson GSON = new Gson();
   private static final String DATA_DIR = System.getProperty(PERSISTENCE_DIR_KEY);
 
+  private static File getOrCreateFile(String pathname) throws IOException {
+    File file = new File(pathname);
+    if(!file.exists()) {
+      file.getParentFile().mkdirs();
+      file.createNewFile();
+    }
+    return file;
+  }
+
   public static <T> T load(String pathname, Type type, T defaultValue) throws IOException {
     File jsonFile = getOrCreateFile(DATA_DIR + pathname);
     String jsonString = new String(Files.readAllBytes(jsonFile.toPath()), Charset.forName("UTF-8"));
@@ -29,14 +38,5 @@ public class Persistence {
   public static <T> void save(T value, String pathname) throws IOException {
     File jsonFile = getOrCreateFile(DATA_DIR + pathname);
     Files.write(jsonFile.toPath(), GSON.toJson(value).getBytes());
-  }
-
-  private static File getOrCreateFile(String pathname) throws IOException {
-    File file = new File(pathname);
-    if(!file.exists()) {
-      file.getParentFile().mkdirs();
-      file.createNewFile();
-    }
-    return file;
   }
 }

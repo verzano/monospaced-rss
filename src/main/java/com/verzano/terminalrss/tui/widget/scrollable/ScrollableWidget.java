@@ -26,11 +26,6 @@ public abstract class ScrollableWidget extends Widget {
 
   public abstract void scroll(Direction direction, int distance);
 
-  public void setInternalHeight(double internalHeight) {
-    this.internalHeight = internalHeight;
-    barLength = (int)Math.ceil(getHeight()*(double)getHeight()/internalHeight);
-  }
-
   @Override
   public void printContent() {
     int barStart = (int)Math.floor(getContentHeight()*(double)viewTop/internalHeight);
@@ -45,5 +40,10 @@ public abstract class ScrollableWidget extends Widget {
         TerminalUi.print(" ");
       }
     }
+  }
+
+  public void setInternalHeight(double internalHeight) {
+    this.internalHeight = internalHeight;
+    barLength = (int)Math.ceil(getHeight()*(double)getHeight()/internalHeight);
   }
 }

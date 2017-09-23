@@ -34,17 +34,6 @@ public class TextAreaWidget extends ScrollableWidget {
     });
   }
 
-  public void setText(String text) {
-    this.text = text;
-    calculateLines();
-    setTopLine(0);
-  }
-
-  private void setTopLine(int topLine) {
-    this.topLine = topLine;
-    setViewTop(topLine);
-  }
-
   private void calculateLines() {
     lines = new LinkedList<>();
 
@@ -76,15 +65,21 @@ public class TextAreaWidget extends ScrollableWidget {
   }
 
   @Override
+  public int getNeededContentHeight() {
+    int width = getWidth() - 1;
+
+    return lines.stream().mapToInt(row -> (int)Math.ceil(row.length()/width)).sum();
+  }
+
+  @Override
   public int getNeededContentWidth() {
     return lines.stream().mapToInt(String::length).max().orElse(0) + 1;
   }
 
   @Override
-  public int getNeededContentHeight() {
-    int width = getWidth() - 1;
-
-    return lines.stream().mapToInt(row -> (int)Math.ceil(row.length()/width)).sum();
+  public void size() {
+    super.size();
+    calculateLines();
   }
 
   @Override
@@ -118,9 +113,14 @@ public class TextAreaWidget extends ScrollableWidget {
     }
   }
 
-  @Override
-  public void size() {
-    super.size();
+  public void setText(String text) {
+    this.text = text;
     calculateLines();
+    setTopLine(0);
+  }
+
+  private void setTopLine(int topLine) {
+    this.topLine = topLine;
+    setViewTop(topLine);
   }
 }

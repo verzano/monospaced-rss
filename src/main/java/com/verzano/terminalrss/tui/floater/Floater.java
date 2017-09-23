@@ -13,25 +13,25 @@ public abstract class Floater extends Enclosure {
   public static final Floater NULL_FLOATER = new Floater() {};
   @Setter private Task disposeTask = NULL_TASK;
 
+  public void display() {
+    TerminalUi.setFloater(this);
+    reprint();
+  }
+
   public void dispose() {
     TerminalUi.removeFloater();
     disposeTask.fire();
     TerminalUi.reprint();
   }
 
-  public void display() {
-    TerminalUi.setFloater(this);
-    reprint();
+  @Override
+  public int getHeight() {
+    return super.getNeededHeight();
   }
 
   @Override
   public int getWidth() {
     return super.getNeededContentWidth();
-  }
-
-  @Override
-  public int getHeight() {
-    return super.getNeededHeight();
   }
 
   @Override

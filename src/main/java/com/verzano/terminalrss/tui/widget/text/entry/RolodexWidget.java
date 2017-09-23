@@ -37,47 +37,14 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
     });
   }
 
-  public void setSelectedIndex(int selectedIndex) {
-    this.selectedIndex = selectedIndex;
-    setText(listModel.getItemAt(this.selectedIndex).toTuiString());
-  }
-
-  public T getSelectedItem() {
-    return listModel.getItemAt(selectedIndex);
-  }
-
-  public void setSelectedItem(T item) {
-    setSelectedIndex(listModel.getItemIndex(item));
-  }
-
-  private int getPreviousIndex(int index) {
-    return index == 0 ? listModel.getItemCount() - 1 : index - 1;
-  }
-
-  private int getNextIndex(int index) {
-    return index == listModel.getItemCount() - 1 ? 0 : index + 1;
-  }
-
-  private void printItem(T item, int y) {
-    int middleRow = getHeight()/2;
-    for(int i = 0; i < getHeight(); i++) {
-      TerminalUi.move(getContentX(), y + i);
-      if(i == middleRow) {
-        TerminalUi.print(getRowForText(item.toTuiString()));
-      } else {
-        TerminalUi.print(getEmptyContentRow());
-      }
-    }
+  @Override
+  public int getNeededContentHeight() {
+    return 1;
   }
 
   @Override
   public int getNeededContentWidth() {
     return listModel.getItems().stream().mapToInt(item -> item.toTuiString().length()).max().orElse(0);
-  }
-
-  @Override
-  public int getNeededContentHeight() {
-    return 1;
   }
 
   @Override
@@ -97,5 +64,38 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
         printItem(listModel.getItemAt(index), getContentY() + i*getContentHeight());
       }
     }
+  }
+
+  private int getNextIndex(int index) {
+    return index == listModel.getItemCount() - 1 ? 0 : index + 1;
+  }
+
+  private int getPreviousIndex(int index) {
+    return index == 0 ? listModel.getItemCount() - 1 : index - 1;
+  }
+
+  public T getSelectedItem() {
+    return listModel.getItemAt(selectedIndex);
+  }
+
+  public void setSelectedItem(T item) {
+    setSelectedIndex(listModel.getItemIndex(item));
+  }
+
+  private void printItem(T item, int y) {
+    int middleRow = getHeight()/2;
+    for(int i = 0; i < getHeight(); i++) {
+      TerminalUi.move(getContentX(), y + i);
+      if(i == middleRow) {
+        TerminalUi.print(getRowForText(item.toTuiString()));
+      } else {
+        TerminalUi.print(getEmptyContentRow());
+      }
+    }
+  }
+
+  public void setSelectedIndex(int selectedIndex) {
+    this.selectedIndex = selectedIndex;
+    setText(listModel.getItemAt(this.selectedIndex).toTuiString());
   }
 }

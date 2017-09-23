@@ -35,13 +35,6 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
     });
   }
 
-  public void setListModel(ListModel<T> listModel) {
-    this.listModel = listModel;
-    selectedItemIndex = 0;
-    setViewTop(0);
-    setInternalHeight(this.listModel.getItemCount());
-  }
-
   public void addItem(T item) {
     if(listModel.addItem(item)) {
       if(listModel.getItemCount() > 1 && listModel.getItemIndex(item) <= selectedItemIndex) {
@@ -51,6 +44,20 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
     }
   }
 
+  @Override
+  public int getNeededContentHeight() {
+    return listModel.getItemCount();
+  }
+
+  @Override
+  public int getNeededContentWidth() {
+    return listModel.getItems().stream().mapToInt(item -> item.toTuiString().length()).max().orElse(0) + 1;
+  }
+
+  public T getSelectedItem() {
+    return listModel.getItemAt(selectedItemIndex);
+  }
+
   public void removeItem(T item) {
     if(listModel.removeItem(item)) {
       if(selectedItemIndex == listModel.getItemCount()) {
@@ -58,17 +65,6 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
       }
       setInternalHeight(listModel.getItemCount());
     }
-  }
-
-  public void setItems(Collection<T> items) {
-    listModel.setItems(items);
-    selectedItemIndex = 0;
-    setViewTop(0);
-    setInternalHeight(listModel.getItemCount());
-  }
-
-  public T getSelectedItem() {
-    return listModel.getItemAt(selectedItemIndex);
   }
 
   @Override
@@ -87,16 +83,6 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
         }
         break;
     }
-  }
-
-  @Override
-  public int getNeededContentWidth() {
-    return listModel.getItems().stream().mapToInt(item -> item.toTuiString().length()).max().orElse(0) + 1;
-  }
-
-  @Override
-  public int getNeededContentHeight() {
-    return listModel.getItemCount();
   }
 
   @Override
@@ -126,5 +112,19 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
         TerminalUi.print(toPrint);
       }
     }
+  }
+
+  public void setItems(Collection<T> items) {
+    listModel.setItems(items);
+    selectedItemIndex = 0;
+    setViewTop(0);
+    setInternalHeight(listModel.getItemCount());
+  }
+
+  public void setListModel(ListModel<T> listModel) {
+    this.listModel = listModel;
+    selectedItemIndex = 0;
+    setViewTop(0);
+    setInternalHeight(this.listModel.getItemCount());
   }
 }

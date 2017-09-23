@@ -42,6 +42,16 @@ public class TextEntryWidget extends TextWidget {
   }
 
   @Override
+  public int getNeededContentHeight() {
+    return 1;
+  }
+
+  @Override
+  public int getNeededContentWidth() {
+    return 1;
+  }
+
+  @Override
   protected String getRowForText(String text) {
     int width = getWidth();
 
@@ -52,15 +62,5 @@ public class TextEntryWidget extends TextWidget {
     }
 
     return text;
-  }
-
-  @Override
-  public int getNeededContentWidth() {
-    return 1;
-  }
-
-  @Override
-  public int getNeededContentHeight() {
-    return 1;
   }
 }

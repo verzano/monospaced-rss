@@ -32,12 +32,12 @@ import lombok.Setter;
 public abstract class Widget {
   public static final Widget NULL_WIDGET = new Widget() {
     @Override
-    public int getNeededContentWidth() {
+    public int getNeededContentHeight() {
       return 0;
     }
 
     @Override
-    public int getNeededContentHeight() {
+    public int getNeededContentWidth() {
       return 0;
     }
 
@@ -58,29 +58,76 @@ public abstract class Widget {
   private String emptyRow;
   private String emptyContentRow;
 
-  public abstract int getNeededContentWidth();
   public abstract int getNeededContentHeight();
+  public abstract int getNeededContentWidth();
   public abstract void printContent();
 
-  public int getWidth() {
-    return container.getWidgetWidth(this);
+  public void addKeyAction(String key, Task action) {
+    Set<Task> tasks = keyActionsMap.getOrDefault(key, new HashSet<>());
+    tasks.add(action);
+    keyActionsMap.put(key, tasks);
   }
 
-  public int getNeededWidth() {
-    int neededWidth = getNeededContentWidth();
-    if(showLabel) {
-      switch(labelPosition) {
-        case TOP:
-        case BOTTOM:
-          neededWidth = Math.max(getLabelWidth(), neededWidth);
-          break;
-        case LEFT:
-        case RIGHT:
-          neededWidth += getLabelWidth();
-          break;
-      }
+  public void clearKeyActions(String key) {
+    keyActionsMap.remove(key);
+  }
+
+  public void fireKeyActions(String key) {
+    keyActionsMap.getOrDefault(key, Collections.emptySet()).forEach(Task::fire);
+  }
+
+  public String getAnsiFormatPrefix() {
+    return isFocused() ? focusedFormat.getFormatString() : unfocusedFormat.getFormatString();
+  }
+
+  public int getContentHeight() {
+    return Math.max(getHeight() - padding.getTop() - padding.getBottom(), 0);
+  }
+
+  public int getContentWidth() {
+    return Math.max(getWidth() - padding.getLeft() - padding.getRight(), 0);
+  }
+
+  public int getContentX() {
+    return getX() + padding.getLeft();
+  }
+
+  public int getContentY() {
+    return getY() + padding.getTop();
+  }
+
+  public String getEmptyContentRow() {
+    return getAnsiFormatPrefix() + emptyContentRow + NORMAL.getFormatString();
+  }
+
+  private String getEmptyRow() {
+    return getAnsiFormatPrefix() + emptyRow + NORMAL.getFormatString();
+  }
+
+  public int getHeight() {
+    return container.getWidgetHeight(this);
+  }
+
+  private int getLabelHeight() {
+    switch(labelOrientation) {
+      case HORIZONTAL:
+        return 1;
+      case VERTICAL:
+        return label.length();
+      default:
+        return 0;
     }
-    return neededWidth;
+  }
+
+  private int getLabelWidth() {
+    switch(labelOrientation) {
+      case HORIZONTAL:
+        return label.length();
+      case VERTICAL:
+        return 1;
+      default:
+        return 0;
+    }
   }
 
   public int getNeededHeight() {
@@ -100,83 +147,76 @@ public abstract class Widget {
     return neededHeight;
   }
 
-  public int getContentWidth() {
-    return Math.max(getWidth() - padding.getLeft() - padding.getRight(), 0);
+  public int getNeededWidth() {
+    int neededWidth = getNeededContentWidth();
+    if(showLabel) {
+      switch(labelPosition) {
+        case TOP:
+        case BOTTOM:
+          neededWidth = Math.max(getLabelWidth(), neededWidth);
+          break;
+        case LEFT:
+        case RIGHT:
+          neededWidth += getLabelWidth();
+          break;
+      }
+    }
+    return neededWidth;
   }
 
-  public int getHeight() {
-    return container.getWidgetHeight(this);
+  // TODO this chunk is basically identical to what is in TextWidget
+  private String getRowForLabel() {
+    String ret = label;
+    if(label.length() != getWidth()) {
+      switch(labelPosition) {
+//        case LEFT:
+//          if (text.length() > getWidth()) {
+//            text = text.substring(0, getWidth());
+//          } else {
+//            text += new String(new char[getWidth() - text.length()]).replace('\0', ' ');
+//          }
+//          break;
+        case TOP:
+//        case BOTTOM:
+          if(label.length() > getWidth()) {
+            double halfExtra = (label.length() - getWidth())/2D;
+
+            ret = label.substring((int)halfExtra, label.length() - (int)Math.ceil(halfExtra));
+          } else {
+            double halfRemaining = (getWidth() - label.length())/2D;
+            ret = new String(new char[(int)Math.ceil(halfRemaining)]).replace('\0', ' ') + label
+                + new String(new char[(int)halfRemaining]).replace('\0', ' ');
+          }
+          break;
+//        case RIGHT:
+//          if (text.length() > getWidth()) {
+//            text = text.substring(text.length() - getWidth(), text.length());
+//          } else {
+//            text = new String(new char[getWidth() - text.length()]).replace('\0', ' ') + text;
+//          }
+//          break;
+//        default:
+//          break;
+      }
+    }
+
+    return labelFormat.getFormatString() + ret + AnsiFormat.NORMAL.getFormatString();
   }
 
-  public int getContentHeight() {
-    return Math.max(getHeight() - padding.getTop() - padding.getBottom(), 0);
+  public int getWidth() {
+    return container.getWidgetWidth(this);
   }
 
   public int getX() {
     return container.getWidgetX(this);
   }
 
-  public int getContentX() {
-    return getX() + padding.getLeft();
-  }
-
   public int getY() {
     return container.getWidgetY(this);
   }
 
-  public int getContentY() {
-    return getY() + padding.getTop();
-  }
-
-  public void setAltitude(long altitude) {
-    if(altitude < 0) {
-      throw new IllegalArgumentException("A widget cannot have a negative altitude." + "  Supplied altitude is " + altitude);
-    } else if(altitude <= container.getAltitude()) {
-      throw new IllegalArgumentException(
-          "A widget's altitude must be greater than it's container's." + "  Supplied altitude is " + altitude + " container's altitude is "
-              + container.getAltitude());
-    }
-
-    this.altitude = altitude;
-  }
-
-  public void addKeyAction(String key, Task action) {
-    Set<Task> tasks = keyActionsMap.getOrDefault(key, new HashSet<>());
-    tasks.add(action);
-    keyActionsMap.put(key, tasks);
-  }
-
-  public void clearKeyActions(String key) {
-    keyActionsMap.remove(key);
-  }
-
-  public void fireKeyActions(String key) {
-    keyActionsMap.getOrDefault(key, Collections.emptySet()).forEach(Task::fire);
-  }
-
   public boolean isFocused() {
     return TerminalUi.getFocusedWidget() == this;
-  }
-
-  public void setFocused() {
-    TerminalUi.setFocusedWidget(this);
-  }
-
-  public void size() {
-    emptyRow = new String(new char[getWidth()]).replace('\0', ' ');
-    emptyContentRow = new String(new char[getContentWidth()]).replace('\0', ' ');
-  }
-
-  public String getAnsiFormatPrefix() {
-    return isFocused() ? focusedFormat.getFormatString() : unfocusedFormat.getFormatString();
-  }
-
-  private String getEmptyRow() {
-    return getAnsiFormatPrefix() + emptyRow + NORMAL.getFormatString();
-  }
-
-  public String getEmptyContentRow() {
-    return getAnsiFormatPrefix() + emptyContentRow + NORMAL.getFormatString();
   }
 
   public final void print() {
@@ -199,10 +239,6 @@ public abstract class Widget {
     }
 
     printContent();
-  }
-
-  public void reprint() {
-    TerminalUi.schedulePrintTask(this::print);
   }
 
   // TODO this chunk is basically identical to what is in TextWidget
@@ -242,65 +278,28 @@ public abstract class Widget {
     }
   }
 
-  // TODO this chunk is basically identical to what is in TextWidget
-  private String getRowForLabel() {
-    String ret = label;
-    if(label.length() != getWidth()) {
-      switch(labelPosition) {
-//        case LEFT:
-//          if (text.length() > getWidth()) {
-//            text = text.substring(0, getWidth());
-//          } else {
-//            text += new String(new char[getWidth() - text.length()]).replace('\0', ' ');
-//          }
-//          break;
-        case TOP:
-//        case BOTTOM:
-          if(label.length() > getWidth()) {
-            double halfExtra = (label.length() - getWidth())/2D;
-
-            ret = label.substring((int)halfExtra, label.length() - (int)Math.ceil(halfExtra));
-          } else {
-            double halfRemaining = (getWidth() - label.length())/2D;
-            ret = new String(new char[(int)Math.ceil(halfRemaining)]).replace('\0', ' ') + label + new String(new char[(int)halfRemaining]).replace(
-                '\0',
-                ' ');
-          }
-          break;
-//        case RIGHT:
-//          if (text.length() > getWidth()) {
-//            text = text.substring(text.length() - getWidth(), text.length());
-//          } else {
-//            text = new String(new char[getWidth() - text.length()]).replace('\0', ' ') + text;
-//          }
-//          break;
-//        default:
-//          break;
-      }
-    }
-
-    return labelFormat.getFormatString() + ret + AnsiFormat.NORMAL.getFormatString();
+  public void reprint() {
+    TerminalUi.schedulePrintTask(this::print);
   }
 
-  private int getLabelWidth() {
-    switch(labelOrientation) {
-      case HORIZONTAL:
-        return label.length();
-      case VERTICAL:
-        return 1;
-      default:
-        return 0;
+  public void setAltitude(long altitude) {
+    if(altitude < 0) {
+      throw new IllegalArgumentException("A widget cannot have a negative altitude." + "  Supplied altitude is " + altitude);
+    } else if(altitude <= container.getAltitude()) {
+      throw new IllegalArgumentException(
+          "A widget's altitude must be greater than it's container's." + "  Supplied altitude is " + altitude
+              + " container's altitude is " + container.getAltitude());
     }
+
+    this.altitude = altitude;
   }
 
-  private int getLabelHeight() {
-    switch(labelOrientation) {
-      case HORIZONTAL:
-        return 1;
-      case VERTICAL:
-        return label.length();
-      default:
-        return 0;
-    }
+  public void setFocused() {
+    TerminalUi.setFocusedWidget(this);
+  }
+
+  public void size() {
+    emptyRow = new String(new char[getWidth()]).replace('\0', ' ');
+    emptyContentRow = new String(new char[getContentWidth()]).replace('\0', ' ');
   }
 }

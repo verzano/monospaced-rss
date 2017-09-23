@@ -61,41 +61,22 @@ public class TerminalUi {
 
   private TerminalUi() {}
 
-  // TODO only permit one at a time... or have a stack...
-  public static void setFloater(Floater floater) {
-    TerminalUi.floater = floater;
-    TerminalUi.floater.setFocused();
-  }
-
-  public static void removeFloater() {
-    TerminalUi.floater = NULL_FLOATER;
-  }
-
-  public static int getWidth() {
-    return size.getWidth();
+  private static void clear() {
+    String emptyLine = new String(new char[size.getWidth()]).replace("\0", " ");
+    for(int row = 1; row <= size.getHeight(); row++) {
+      move(1, row);
+      terminal.writer().print(emptyLine);
+    }
+    move(1, 1);
+    terminal.flush();
   }
 
   public static int getHeight() {
     return size.getHeight();
   }
 
-  public static void setBaseWidget(Widget baseWidget) {
-    floor.addWidget(baseWidget, new FloorOptions(new Size(FILL_CONTAINER, FILL_CONTAINER), new Point(1, 1)));
-  }
-
-  private static void printingLoop() {
-    clear();
-
-    while(run.get()) {
-      try {
-        printTaskQueue.take().print();
-        terminal.writer().flush();
-      } catch(InterruptedException e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    clear();
+  public static int getWidth() {
+    return size.getWidth();
   }
 
   private static void keyActionLoop() {
@@ -123,6 +104,73 @@ public class TerminalUi {
     }
   }
 
+  public static void move(int x, int y) {
+    if(Thread.currentThread() != printingThread) {
+      printTaskQueue.add(() -> move(x, y));
+    } else {
+      terminal.writer().printf(SET_POSITION, y, x);
+    }
+  }
+
+  public static void print(String s) {
+    if(Thread.currentThread() != printingThread) {
+      printTaskQueue.add(() -> print(s));
+    } else {
+      terminal.writer().print(s);
+    }
+  }
+
+  private static void printingLoop() {
+    clear();
+
+    while(run.get()) {
+      try {
+        printTaskQueue.take().print();
+        terminal.writer().flush();
+      } catch(InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    clear();
+  }
+
+  public static void printn(String s, int n) {
+    if(Thread.currentThread() != printingThread) {
+      printTaskQueue.add(() -> printn(s, n));
+    } else {
+      for(int i = 0; i < n; i++) {
+        terminal.writer().print(s);
+      }
+    }
+  }
+
+  public static void removeFloater() {
+    TerminalUi.floater = NULL_FLOATER;
+  }
+
+  public static void reprint() {
+    if(Thread.currentThread() != printingThread) {
+      printTaskQueue.add(TerminalUi::reprint);
+    } else {
+      floor.print();
+      if(floater != NULL_FLOATER) {
+        floater.print();
+      }
+    }
+  }
+
+  public static void resize() {
+    if(Thread.currentThread() != printingThread) {
+      printTaskQueue.addFirst(TerminalUi::resize);
+    } else {
+      floor.arrange();
+      if(floater != NULL_FLOATER) {
+        floater.arrange();
+      }
+    }
+  }
+
   // TODO maybe have a like a little delay so that multiple resizes can be grouped together...
   private static void resizingLoop() {
     while(run.get()) {
@@ -137,6 +185,20 @@ public class TerminalUi {
       } catch(InterruptedException ignored) {
       }
     }
+  }
+
+  public static void schedulePrintTask(PrintTask printTask) {
+    printTaskQueue.add(printTask);
+  }
+
+  public static void setBaseWidget(Widget baseWidget) {
+    floor.addWidget(baseWidget, new FloorOptions(new Size(FILL_CONTAINER, FILL_CONTAINER), new Point(1, 1)));
+  }
+
+  // TODO only permit one at a time... or have a stack...
+  public static void setFloater(Floater floater) {
+    TerminalUi.floater = floater;
+    TerminalUi.floater.setFocused();
   }
 
   public static void shutdown() {
@@ -157,67 +219,5 @@ public class TerminalUi {
         throw new RuntimeException(e);
       }
     }).start();
-  }
-
-  private static void clear() {
-    String emptyLine = new String(new char[size.getWidth()]).replace("\0", " ");
-    for(int row = 1; row <= size.getHeight(); row++) {
-      move(1, row);
-      terminal.writer().print(emptyLine);
-    }
-    move(1, 1);
-    terminal.flush();
-  }
-
-  public static void resize() {
-    if(Thread.currentThread() != printingThread) {
-      printTaskQueue.addFirst(TerminalUi::resize);
-    } else {
-      floor.arrange();
-      if(floater != NULL_FLOATER) {
-        floater.arrange();
-      }
-    }
-  }
-
-  public static void reprint() {
-    if(Thread.currentThread() != printingThread) {
-      printTaskQueue.add(TerminalUi::reprint);
-    } else {
-      floor.print();
-      if(floater != NULL_FLOATER) {
-        floater.print();
-      }
-    }
-  }
-
-  public static void move(int x, int y) {
-    if(Thread.currentThread() != printingThread) {
-      printTaskQueue.add(() -> move(x, y));
-    } else {
-      terminal.writer().printf(SET_POSITION, y, x);
-    }
-  }
-
-  public static void print(String s) {
-    if(Thread.currentThread() != printingThread) {
-      printTaskQueue.add(() -> print(s));
-    } else {
-      terminal.writer().print(s);
-    }
-  }
-
-  public static void printn(String s, int n) {
-    if(Thread.currentThread() != printingThread) {
-      printTaskQueue.add(() -> printn(s, n));
-    } else {
-      for(int i = 0; i < n; i++) {
-        terminal.writer().print(s);
-      }
-    }
-  }
-
-  public static void schedulePrintTask(PrintTask printTask) {
-    printTaskQueue.add(printTask);
   }
 }

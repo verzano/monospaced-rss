@@ -69,12 +69,31 @@ public class SourceManager {
     return source;
   }
 
-  public static Collection<Source> readSources() {
-    return SOURCES.values();
+  public static boolean deleteSource(Long id) {
+    Source source = SOURCES.remove(id);
+    boolean removed = source != null;
+    if(removed) {
+      try {
+        saveSources();
+      } catch(IOException e) {
+        SOURCES.put(id, source);
+        removed = false;
+      }
+    }
+
+    return removed;
   }
 
   public static Source readSource(Long id) {
     return SOURCES.getOrDefault(id, NULL_SOURCE);
+  }
+
+  public static Collection<Source> readSources() {
+    return SOURCES.values();
+  }
+
+  private static synchronized void saveSources() throws IOException {
+    Persistence.save(SOURCES.values(), SOURCES_FILE);
   }
 
   // TODO allow editing of title?
@@ -98,24 +117,5 @@ public class SourceManager {
     }
 
     return updated;
-  }
-
-  public static boolean deleteSource(Long id) {
-    Source source = SOURCES.remove(id);
-    boolean removed = source != null;
-    if(removed) {
-      try {
-        saveSources();
-      } catch(IOException e) {
-        SOURCES.put(id, source);
-        removed = false;
-      }
-    }
-
-    return removed;
-  }
-
-  private static synchronized void saveSources() throws IOException {
-    Persistence.save(SOURCES.values(), SOURCES_FILE);
   }
 }

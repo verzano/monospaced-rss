@@ -24,7 +24,9 @@ public class EditSourceFloater extends BinaryChoiceFloater {
   private static final String EDIT_SOURCE_TEXT = "Edit Source";
   private static final String CANCEL_TEXT = "Cancel";
   private final TextEntryWidget uriTextEntry = new TextEntryWidget();
-  private final RolodexWidget<ContentType> contentTypeRolodex = new RolodexWidget<>(new BasicListModel<>(ContentType.nonNullValues()), 0, 1);
+  private final RolodexWidget<ContentType> contentTypeRolodex = new RolodexWidget<>(new BasicListModel<>(ContentType.nonNullValues()),
+      0,
+      1);
   private final TextEntryWidget contentTagEntry = new TextEntryWidget();
   @Getter private Long sourceId = NULL_SOURCE_ID;
 
@@ -69,15 +71,15 @@ public class EditSourceFloater extends BinaryChoiceFloater {
     getUnfocusedFormat().setAttributes(Attribute.INVERSE_ON);
   }
 
-  public String getUri() {
-    return uriTextEntry.getText();
+  public String getContentTag() {
+    return contentTagEntry.getText();
   }
 
   public ContentType getContentType() {
     return contentTypeRolodex.getSelectedItem();
   }
 
-  public String getContentTag() {
-    return contentTagEntry.getText();
+  public String getUri() {
+    return uriTextEntry.getText();
   }
 }

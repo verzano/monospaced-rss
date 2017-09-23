@@ -21,10 +21,19 @@ public class ContentRetriever {
     StringBuilder builder = new StringBuilder();
     switch(contentType) {
       case CLASS_CONTENT:
-        doc.getElementsByClass(contentTag).get(0).getElementsByTag("p").stream().map(Element::text).forEach(t -> builder.append(t).append("\n"));
+        doc.getElementsByClass(contentTag)
+            .get(0)
+            .getElementsByTag("p")
+            .stream()
+            .map(Element::text)
+            .forEach(t -> builder.append(t).append("\n"));
         break;
       case ID_CONTENT:
-        doc.getElementById(contentTag).getElementsByTag("p").stream().map(Element::text).forEach(t -> builder.append(t).append("\n"));
+        doc.getElementById(contentTag)
+            .getElementsByTag("p")
+            .stream()
+            .map(Element::text)
+            .forEach(t -> builder.append(t).append("\n"));
         break;
     }
 

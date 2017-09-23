@@ -13,17 +13,15 @@ import lombok.NoArgsConstructor;
 public abstract class Container<T extends ContainerOptions> extends Widget {
   public static final Container<ContainerOptions> NULL_CONTAINER = new Container<ContainerOptions>() {
     @Override
-    public Collection<Widget> getContainedWidgets() {
-      return Collections.emptyList();
-    }
+    public void addWidgetInternal(Widget widget, ContainerOptions options) {}
 
     @Override
-    public int calculateWidgetWidth(Widget widget) {
+    public int calculateWidgetHeight(Widget widget) {
       return 0;
     }
 
     @Override
-    public int calculateWidgetHeight(Widget widget) {
+    public int calculateWidgetWidth(Widget widget) {
       return 0;
     }
 
@@ -38,7 +36,9 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
     }
 
     @Override
-    public void addWidgetInternal(Widget widget, ContainerOptions options) {}
+    public Collection<Widget> getContainedWidgets() {
+      return Collections.emptyList();
+    }
 
     @Override
     public void removeWidgetInternal(Widget widget) {}
@@ -47,12 +47,12 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
     public void removeWidgetsInternal() {}
 
     @Override
-    public int getNeededContentWidth() {
+    public int getNeededContentHeight() {
       return 0;
     }
 
     @Override
-    public int getNeededContentHeight() {
+    public int getNeededContentWidth() {
       return 0;
     }
   };
@@ -61,46 +61,14 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
   private final Map<Widget, Size> widgetSizes = new HashMap<>();
   private final Map<Widget, Point> widgetLocations = new HashMap<>();
 
-  public abstract Collection<Widget> getContainedWidgets();
-  public abstract int calculateWidgetWidth(Widget widget);
+  public abstract void addWidgetInternal(Widget widget, T options);
   public abstract int calculateWidgetHeight(Widget widget);
+  public abstract int calculateWidgetWidth(Widget widget);
   public abstract int calculateWidgetX(Widget widget);
   public abstract int calculateWidgetY(Widget widget);
-  public abstract void addWidgetInternal(Widget widget, T options);
+  public abstract Collection<Widget> getContainedWidgets();
   public abstract void removeWidgetInternal(Widget widget);
   public abstract void removeWidgetsInternal();
-
-  public int getWidgetWidth(Widget widget) {
-    return widgetSizes.getOrDefault(widget, NO_SIZE).getWidth();
-  }
-
-  public void setWidgetWidth(Widget widget) {
-    widgetSizes.get(widget).setWidth(calculateWidgetWidth(widget));
-  }
-
-  public int getWidgetHeight(Widget widget) {
-    return widgetSizes.getOrDefault(widget, NO_SIZE).getHeight();
-  }
-
-  public void setWidgetHeight(Widget widget) {
-    widgetSizes.get(widget).setHeight(calculateWidgetHeight(widget));
-  }
-
-  public int getWidgetX(Widget widget) {
-    return widgetLocations.getOrDefault(widget, NO_LOCATION).getX();
-  }
-
-  public void setWidgetX(Widget widget) {
-    widgetLocations.get(widget).setX(calculateWidgetX(widget));
-  }
-
-  public int getWidgetY(Widget widget) {
-    return widgetLocations.getOrDefault(widget, NO_LOCATION).getY();
-  }
-
-  public void setWidgetY(Widget widget) {
-    widgetLocations.get(widget).setY(calculateWidgetY(widget));
-  }
 
   public void addWidget(Widget widget, T options) {
     widgetSizes.put(widget, new Size(0, 0));
@@ -109,6 +77,37 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
 
     addWidgetInternal(widget, options);
     arrange();
+  }
+
+  public void arrange() {
+    getContainedWidgets().forEach(widget -> {
+      setWidgetWidth(widget);
+      setWidgetHeight(widget);
+      setWidgetX(widget);
+      setWidgetY(widget);
+
+      if(widget instanceof Container) {
+        ((Container)widget).arrange();
+      }
+    });
+
+    size();
+  }
+
+  public int getWidgetHeight(Widget widget) {
+    return widgetSizes.getOrDefault(widget, NO_SIZE).getHeight();
+  }
+
+  public int getWidgetWidth(Widget widget) {
+    return widgetSizes.getOrDefault(widget, NO_SIZE).getWidth();
+  }
+
+  public int getWidgetX(Widget widget) {
+    return widgetLocations.getOrDefault(widget, NO_LOCATION).getX();
+  }
+
+  public int getWidgetY(Widget widget) {
+    return widgetLocations.getOrDefault(widget, NO_LOCATION).getY();
   }
 
   public void removeWidget(Widget widget) {
@@ -129,19 +128,20 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
     arrange();
   }
 
-  public void arrange() {
-    getContainedWidgets().forEach(widget -> {
-      setWidgetWidth(widget);
-      setWidgetHeight(widget);
-      setWidgetX(widget);
-      setWidgetY(widget);
+  public void setWidgetHeight(Widget widget) {
+    widgetSizes.get(widget).setHeight(calculateWidgetHeight(widget));
+  }
 
-      if(widget instanceof Container) {
-        ((Container)widget).arrange();
-      }
-    });
+  public void setWidgetWidth(Widget widget) {
+    widgetSizes.get(widget).setWidth(calculateWidgetWidth(widget));
+  }
 
-    size();
+  public void setWidgetX(Widget widget) {
+    widgetLocations.get(widget).setX(calculateWidgetX(widget));
+  }
+
+  public void setWidgetY(Widget widget) {
+    widgetLocations.get(widget).setY(calculateWidgetY(widget));
   }
 
   @Override

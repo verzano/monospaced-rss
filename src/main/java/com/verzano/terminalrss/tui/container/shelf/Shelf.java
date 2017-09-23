@@ -29,21 +29,19 @@ public class Shelf extends Container<ShelfOptions> {
     widgetStack.add(widget);
   }
 
+  // TODO NPE if widget not in map
   @Override
-  public void removeWidgetInternal(Widget widget) {
-    optionsMap.remove(widget);
-    widgetStack.remove(widget);
-  }
+  public int calculateWidgetHeight(Widget widget) {
+    int height = optionsMap.get(widget).getSize().getHeight();
 
-  @Override
-  public void removeWidgetsInternal() {
-    optionsMap.clear();
-    widgetStack.clear();
-  }
-
-  @Override
-  public Collection<Widget> getContainedWidgets() {
-    return widgetStack;
+    switch(height) {
+      case Size.FILL_CONTAINER:
+        return getHeight();
+      case Size.FILL_NEEDED:
+        return widget.getNeededHeight();
+      default:
+        return height;
+    }
   }
 
   // TODO NPE if widget not in map
@@ -58,21 +56,6 @@ public class Shelf extends Container<ShelfOptions> {
         return widget.getNeededContentWidth();
       default:
         return width;
-    }
-  }
-
-  // TODO NPE if widget not in map
-  @Override
-  public int calculateWidgetHeight(Widget widget) {
-    int height = optionsMap.get(widget).getSize().getHeight();
-
-    switch(height) {
-      case Size.FILL_CONTAINER:
-        return getHeight();
-      case Size.FILL_NEEDED:
-        return widget.getNeededHeight();
-      default:
-        return height;
     }
   }
 
@@ -109,19 +92,20 @@ public class Shelf extends Container<ShelfOptions> {
   }
 
   @Override
-  public int getNeededContentWidth() {
-    int width = 0;
-    if(!widgetStack.isEmpty()) {
-      switch(orientation) {
-        case HORIZONTAL:
-          width = (widgetStack.size() - 1)*spacing + widgetStack.stream().mapToInt(Widget::getWidth).sum();
-          break;
-        case VERTICAL:
-          width = widgetStack.stream().mapToInt(Widget::getWidth).max().orElse(0);
-          break;
-      }
-    }
-    return width + this.getPadding().getLeft() + this.getPadding().getRight();
+  public Collection<Widget> getContainedWidgets() {
+    return widgetStack;
+  }
+
+  @Override
+  public void removeWidgetInternal(Widget widget) {
+    optionsMap.remove(widget);
+    widgetStack.remove(widget);
+  }
+
+  @Override
+  public void removeWidgetsInternal() {
+    optionsMap.clear();
+    widgetStack.clear();
   }
 
   @Override
@@ -139,5 +123,21 @@ public class Shelf extends Container<ShelfOptions> {
     }
 
     return height + this.getPadding().getTop() + this.getPadding().getBottom();
+  }
+
+  @Override
+  public int getNeededContentWidth() {
+    int width = 0;
+    if(!widgetStack.isEmpty()) {
+      switch(orientation) {
+        case HORIZONTAL:
+          width = (widgetStack.size() - 1)*spacing + widgetStack.stream().mapToInt(Widget::getWidth).sum();
+          break;
+        case VERTICAL:
+          width = widgetStack.stream().mapToInt(Widget::getWidth).max().orElse(0);
+          break;
+      }
+    }
+    return width + this.getPadding().getLeft() + this.getPadding().getRight();
   }
 }

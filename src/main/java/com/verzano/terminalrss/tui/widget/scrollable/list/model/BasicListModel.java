@@ -18,13 +18,13 @@ public class BasicListModel<T extends TuiStringable> implements ListModel<T> {
   }
 
   @Override
-  public boolean removeItem(T item) {
-    return items.remove(item);
+  public T getItemAt(int index) {
+    return items.get(index);
   }
 
   @Override
-  public T getItemAt(int index) {
-    return items.get(index);
+  public int getItemCount() {
+    return items.size();
   }
 
   @Override
@@ -43,7 +43,7 @@ public class BasicListModel<T extends TuiStringable> implements ListModel<T> {
   }
 
   @Override
-  public int getItemCount() {
-    return items.size();
+  public boolean removeItem(T item) {
+    return items.remove(item);
   }
 }

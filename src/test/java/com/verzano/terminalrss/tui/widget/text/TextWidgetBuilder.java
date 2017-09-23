@@ -24,8 +24,13 @@ class TextWidgetBuilder {
     return textWidget;
   }
 
-  TextWidgetBuilder text(String text) {
-    this.text = text;
+  TextWidgetBuilder container(Container container) {
+    this.container = container;
+    return this;
+  }
+
+  TextWidgetBuilder focusedFormat(AnsiFormat focusedFormat) {
+    this.focusedFormat = focusedFormat;
     return this;
   }
 
@@ -34,18 +39,13 @@ class TextWidgetBuilder {
     return this;
   }
 
+  TextWidgetBuilder text(String text) {
+    this.text = text;
+    return this;
+  }
+
   TextWidgetBuilder textPosition(Position textPosition) {
     this.textPosition = textPosition;
-    return this;
-  }
-
-  TextWidgetBuilder container(Container container) {
-    this.container = container;
-    return this;
-  }
-
-  TextWidgetBuilder focusedFormat(AnsiFormat focusedFormat) {
-    this.focusedFormat = focusedFormat;
     return this;
   }
 

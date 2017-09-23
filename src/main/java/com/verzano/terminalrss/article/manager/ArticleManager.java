@@ -34,7 +34,8 @@ public class ArticleManager {
   static {
     try {
       List<Article> articles = Persistence.load(ARTICLES_FILE, ARTICLES_FILE_TYPE, new LinkedList<>());
-      ARTICLES.putAll(articles.stream().collect(Collectors.groupingBy(Article::getSourceId, Collectors.toMap(Article::getId, article -> article))));
+      ARTICLES.putAll(articles.stream()
+          .collect(Collectors.groupingBy(Article::getSourceId, Collectors.toMap(Article::getId, article -> article))));
 
       ARTICLE_ID.set(Persistence.load(ARTICLES_ID_FILE, Long.class, 0L));
     } catch(IOException e) {
@@ -42,8 +43,8 @@ public class ArticleManager {
     }
   }
 
-  public static Article createArticle(
-      Source source, String uri, Date publishedDate, String title, Date updatedDate) throws IOException, ArticleExistsException {
+  public static Article createArticle(Source source, String uri, Date publishedDate, String title, Date updatedDate)
+      throws IOException, ArticleExistsException {
     if(getArticles(source).stream().anyMatch(a -> a.getUri().equals(uri))) {
       throw new ArticleExistsException("Article already exists for uri: " + uri);
     }
@@ -92,10 +93,6 @@ public class ArticleManager {
     return removed;
   }
 
-  public static Collection<Article> getArticles(Source source) {
-    return ARTICLES.getOrDefault(source.getId(), new HashMap<>()).values();
-  }
-
   public static Article getArticle(Long id) {
     Map<Long, Article> articles = ARTICLES.values().stream()
         .flatMap(map -> map.entrySet().stream())
@@ -105,6 +102,10 @@ public class ArticleManager {
 
   public static Article getArticle(Long sourceId, Long articleId) {
     return ARTICLES.getOrDefault(sourceId, new HashMap<>()).getOrDefault(articleId, Article.NULL_ARTICLE);
+  }
+
+  public static Collection<Article> getArticles(Source source) {
+    return ARTICLES.getOrDefault(source.getId(), new HashMap<>()).values();
   }
 
   private static void saveArticles() throws IOException {

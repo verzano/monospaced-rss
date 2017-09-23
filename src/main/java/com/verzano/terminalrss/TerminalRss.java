@@ -68,29 +68,78 @@ public class TerminalRss {
   private static TextAreaWidget contentTextAreaWidget;
   private static Source selectedSource = Source.NULL_SOURCE;
 
-  public static void main(String[] args) throws IOException, FeedException {
-    setProgramSettings(args);
+  private static void addSource(String uri, ContentType contentType, String contentTag) {
+    sourceExecutor.execute(() -> {
+      try {
+        SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(uri)));
+        Source source = SourceManager.createSource(uri, contentType, contentTag, feed.getPublishedDate(), feed.getTitle());
 
-    buildSourceWidgets();
-    buildArticleWidgets();
-    buildContentTextAreaWidget();
-
-    baseContainer = new Shelf(VERTICAL, 0);
-    showToSourcesList();
-
-    TerminalUi.setBaseWidget(baseContainer);
-    sourcesListWidget.setFocused();
-    TerminalUi.reprint();
+        if(source == Source.NULL_SOURCE) {
+          log.warning(
+              "Failed to create source for uri: " + uri + ", contentType: " + contentType + ", contentTag: " + contentTag);
+        } else {
+          sourcesListWidget.addItem(source);
+        }
+        sourcesListWidget.reprint();
+      } catch(SourceExistsException e) {
+        log.warning(e.getMessage());
+      } catch(FeedException | IOException e) {
+        log.log(Level.SEVERE, e.getMessage(), e);
+      }
+    });
   }
 
-  private static void setProgramSettings(String[] args) {
-    String persistenceDir = System.getProperty("java.io.tmpdir") + File.separator + "data" + File.separator;
+  private static void buildArticleWidgets() {
+    articleTextWidget = new TextWidget("Articles:", HORIZONTAL, LEFT);
 
-    if(args.length > 0) {
-      persistenceDir = args[0];
-    }
+    articlesListWidget = new ListWidget<>(new SortedListModel<Article>(ArticleManager.UPDATED_AT_COMPARATOR) {
+      @Override
+      public Article getItemAt(int index) {
+        return index == super.getItemCount() ? REFRESH_SOURCE : super.getItemAt(index);
+      }
 
-    System.setProperty("com.verzano.terminalrss.persistencedir", persistenceDir + File.separator);
+      @Override
+      public int getItemCount() {
+        return super.getItemCount() + 1;
+      }
+    });
+
+    articlesListWidget.addKeyAction(ENTER, () -> {
+      Article article = articlesListWidget.getSelectedItem();
+
+      if(article == REFRESH_SOURCE) {
+        refreshSource(selectedSource.getId());
+      } else {
+        showArticle();
+        articleTextWidget.setText("Article: " + article.getTitle());
+
+        contentTextAreaWidget.setText(article.getContent());
+        contentTextAreaWidget.setFocused();
+        TerminalUi.reprint();
+      }
+    });
+
+    articlesListWidget.addKeyAction(DELETE, () -> {
+      showToSourcesList();
+      selectedSource = Source.NULL_SOURCE;
+
+      sourceTextWidget.setText("Sources:");
+
+      sourcesListWidget.setFocused();
+      TerminalUi.reprint();
+    });
+  }
+
+  private static void buildContentTextAreaWidget() {
+    contentTextAreaWidget = new TextAreaWidget();
+
+    contentTextAreaWidget.addKeyAction(DELETE, () -> {
+      showArticlesList();
+      articleTextWidget.setText("Articles:");
+
+      articlesListWidget.setFocused();
+      TerminalUi.reprint();
+    });
   }
 
   private static void buildSourceWidgets() {
@@ -166,97 +215,19 @@ public class TerminalRss {
     });
   }
 
-  private static void buildArticleWidgets() {
-    articleTextWidget = new TextWidget("Articles:", HORIZONTAL, LEFT);
+  public static void main(String[] args) throws IOException, FeedException {
+    setProgramSettings(args);
 
-    articlesListWidget = new ListWidget<>(new SortedListModel<Article>(ArticleManager.UPDATED_AT_COMPARATOR) {
-      @Override
-      public Article getItemAt(int index) {
-        return index == super.getItemCount() ? REFRESH_SOURCE : super.getItemAt(index);
-      }
+    buildSourceWidgets();
+    buildArticleWidgets();
+    buildContentTextAreaWidget();
 
-      @Override
-      public int getItemCount() {
-        return super.getItemCount() + 1;
-      }
-    });
+    baseContainer = new Shelf(VERTICAL, 0);
+    showToSourcesList();
 
-    articlesListWidget.addKeyAction(ENTER, () -> {
-      Article article = articlesListWidget.getSelectedItem();
-
-      if(article == REFRESH_SOURCE) {
-        refreshSource(selectedSource.getId());
-      } else {
-        showArticle();
-        articleTextWidget.setText("Article: " + article.getTitle());
-
-        contentTextAreaWidget.setText(article.getContent());
-        contentTextAreaWidget.setFocused();
-        TerminalUi.reprint();
-      }
-    });
-
-    articlesListWidget.addKeyAction(DELETE, () -> {
-      showToSourcesList();
-      selectedSource = Source.NULL_SOURCE;
-
-      sourceTextWidget.setText("Sources:");
-
-      sourcesListWidget.setFocused();
-      TerminalUi.reprint();
-    });
-  }
-
-  private static void buildContentTextAreaWidget() {
-    contentTextAreaWidget = new TextAreaWidget();
-
-    contentTextAreaWidget.addKeyAction(DELETE, () -> {
-      showArticlesList();
-      articleTextWidget.setText("Articles:");
-
-      articlesListWidget.setFocused();
-      TerminalUi.reprint();
-    });
-  }
-
-  private static void showToSourcesList() {
-    baseContainer.removeWidgets();
-    baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
-    baseContainer.addWidget(sourcesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUi.getHeight() - 1)));
-  }
-
-  private static void showArticlesList() {
-    baseContainer.removeWidgets();
-    baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
-    baseContainer.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
-    baseContainer.addWidget(articlesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUi.getHeight() - 2)));
-  }
-
-  private static void showArticle() {
-    baseContainer.removeWidgets();
-    baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
-    baseContainer.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
-    baseContainer.addWidget(contentTextAreaWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUi.getHeight() - 3)));
-  }
-
-  private static void addSource(String uri, ContentType contentType, String contentTag) {
-    sourceExecutor.execute(() -> {
-      try {
-        SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(uri)));
-        Source source = SourceManager.createSource(uri, contentType, contentTag, feed.getPublishedDate(), feed.getTitle());
-
-        if(source == Source.NULL_SOURCE) {
-          log.warning("Failed to create source for uri: " + uri + ", contentType: " + contentType + ", contentTag: " + contentTag);
-        } else {
-          sourcesListWidget.addItem(source);
-        }
-        sourcesListWidget.reprint();
-      } catch(SourceExistsException e) {
-        log.warning(e.getMessage());
-      } catch(FeedException | IOException e) {
-        log.log(Level.SEVERE, e.getMessage(), e);
-      }
-    });
+    TerminalUi.setBaseWidget(baseContainer);
+    sourcesListWidget.setFocused();
+    TerminalUi.reprint();
   }
 
   private static void modifySource(Long sourceId, ContentType contentType, String contentTag) {
@@ -295,5 +266,35 @@ public class TerminalRss {
         }
       });
     }
+  }
+
+  private static void setProgramSettings(String[] args) {
+    String persistenceDir = System.getProperty("java.io.tmpdir") + File.separator + "data" + File.separator;
+
+    if(args.length > 0) {
+      persistenceDir = args[0];
+    }
+
+    System.setProperty("com.verzano.terminalrss.persistencedir", persistenceDir + File.separator);
+  }
+
+  private static void showArticle() {
+    baseContainer.removeWidgets();
+    baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    baseContainer.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    baseContainer.addWidget(contentTextAreaWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUi.getHeight() - 3)));
+  }
+
+  private static void showArticlesList() {
+    baseContainer.removeWidgets();
+    baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    baseContainer.addWidget(articleTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    baseContainer.addWidget(articlesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUi.getHeight() - 2)));
+  }
+
+  private static void showToSourcesList() {
+    baseContainer.removeWidgets();
+    baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
+    baseContainer.addWidget(sourcesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUi.getHeight() - 1)));
   }
 }
