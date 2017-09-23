@@ -14,17 +14,9 @@ import lombok.Setter;
 
 public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   private ListModel<T> listModel;
-
-  @Getter
-  private volatile int selectedIndex;
-
-  @Getter
-  @Setter
-  private int itemsBefore;
-
-  @Getter
-  @Setter
-  private int itemsAfter;
+  @Getter private volatile int selectedIndex;
+  @Getter @Setter private int itemsBefore;
+  @Getter @Setter private int itemsAfter;
 
   public RolodexWidget(ListModel<T> listModel, int itemsBefore, int itemsAfter) {
     super("", HORIZONTAL, LEFT);
@@ -67,10 +59,10 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   }
 
   private void printItem(T item, int y) {
-    int middleRow = getHeight() / 2;
-    for (int i = 0; i < getHeight(); i++) {
+    int middleRow = getHeight()/2;
+    for(int i = 0; i < getHeight(); i++) {
       TerminalUi.move(getContentX(), y + i);
-      if (i == middleRow) {
+      if(i == middleRow) {
         TerminalUi.print(getRowForText(item.toTuiString()));
       } else {
         TerminalUi.print(getEmptyContentRow());
@@ -80,10 +72,7 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
 
   @Override
   public int getNeededContentWidth() {
-    return listModel.getItems().stream()
-        .mapToInt(item -> item.toTuiString().length())
-        .max()
-        .orElse(0);
+    return listModel.getItems().stream().mapToInt(item -> item.toTuiString().length()).max().orElse(0);
   }
 
   @Override
@@ -95,17 +84,17 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   public void printContent() {
     super.printContent();
 
-    if (isFocused()) {
+    if(isFocused()) {
       int index = selectedIndex;
-      for (int i = 1; i <= itemsBefore; i++) {
+      for(int i = 1; i <= itemsBefore; i++) {
         index = getPreviousIndex(index);
-        printItem(listModel.getItemAt(index), getContentY() - i * getContentHeight());
+        printItem(listModel.getItemAt(index), getContentY() - i*getContentHeight());
       }
 
       index = selectedIndex;
-      for (int i = 1; i <= itemsAfter; i++) {
+      for(int i = 1; i <= itemsAfter; i++) {
         index = getNextIndex(index);
-        printItem(listModel.getItemAt(index), getContentY() + i * getContentHeight());
+        printItem(listModel.getItemAt(index), getContentY() + i*getContentHeight());
       }
     }
   }

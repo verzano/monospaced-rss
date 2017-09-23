@@ -23,15 +23,10 @@ public class EditSourceFloater extends BinaryChoiceFloater {
   private static final String ADD_SOURCE_TEXT = "Add Source";
   private static final String EDIT_SOURCE_TEXT = "Edit Source";
   private static final String CANCEL_TEXT = "Cancel";
-
   private final TextEntryWidget uriTextEntry = new TextEntryWidget();
-  private final RolodexWidget<ContentType> contentTypeRolodex = new RolodexWidget<>(
-      new BasicListModel<>(ContentType.nonNullValues()),
-      0,
-      1);
+  private final RolodexWidget<ContentType> contentTypeRolodex = new RolodexWidget<>(new BasicListModel<>(ContentType.nonNullValues()), 0, 1);
   private final TextEntryWidget contentTagEntry = new TextEntryWidget();
-  @Getter
-  private Long sourceId = NULL_SOURCE_ID;
+  @Getter private Long sourceId = NULL_SOURCE_ID;
 
   public EditSourceFloater() {
     this(ADD_SOURCE_TEXT, CANCEL_TEXT);

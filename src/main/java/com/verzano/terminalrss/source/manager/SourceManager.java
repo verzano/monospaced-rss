@@ -1,21 +1,25 @@
 package com.verzano.terminalrss.source.manager;
 
+import static com.verzano.terminalrss.source.Source.NULL_SOURCE;
+
 import com.google.gson.reflect.TypeToken;
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.persistence.Persistence;
 import com.verzano.terminalrss.source.Source;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-
-import static com.verzano.terminalrss.source.Source.NULL_SOURCE;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SourceManager {
@@ -28,35 +32,27 @@ public class SourceManager {
 
   static {
     try {
-      List<Source> sources = Persistence.load(
-          SOURCES_FILE,
-          SOURCES_FILE_TYPE,
-          new LinkedList<Source>());
+      List<Source> sources = Persistence.load(SOURCES_FILE, SOURCES_FILE_TYPE, new LinkedList<Source>());
       SOURCES.putAll(sources.stream().collect(Collectors.toMap(Source::getId, source -> source)));
 
       SOURCE_ID.set(Persistence.load(SOURCES_ID_FILE, Long.class, 0L));
-    } catch (IOException e) {
+    } catch(IOException e) {
       throw new RuntimeException(e);
     }
   }
 
   public static Source createSource(
-      String uri,
-      ContentType contentType,
-      String contentTag,
-      Date publishedDate,
-      String title)
-      throws SourceExistsException {
-    if (SOURCES.values().stream().anyMatch(s -> s.getUri().equals(uri))) {
+      String uri, ContentType contentType, String contentTag, Date publishedDate, String title) throws SourceExistsException {
+    if(SOURCES.values().stream().anyMatch(s -> s.getUri().equals(uri))) {
       throw new SourceExistsException("Source already exists for uri: " + uri);
     }
 
     Long id;
-    synchronized (SOURCE_ID) {
+    synchronized(SOURCE_ID) {
       id = SOURCE_ID.incrementAndGet();
       try {
         Persistence.save(id, SOURCES_ID_FILE);
-      } catch (IOException e) {
+      } catch(IOException e) {
         return NULL_SOURCE;
       }
     }
@@ -65,7 +61,7 @@ public class SourceManager {
     SOURCES.put(id, source);
     try {
       saveSources();
-    } catch (IOException e) {
+    } catch(IOException e) {
       SOURCES.remove(id);
       source = NULL_SOURCE;
     }
@@ -85,7 +81,7 @@ public class SourceManager {
   public static boolean updateSource(Long id, ContentType contentType, String contentTag) {
     Source source = SOURCES.get(id);
     boolean updated = source != null;
-    if (updated) {
+    if(updated) {
       String oldContentTag = source.getContentTag();
       source.setContentTag(contentTag);
 
@@ -94,7 +90,7 @@ public class SourceManager {
 
       try {
         saveSources();
-      } catch (IOException e) {
+      } catch(IOException e) {
         updated = false;
         source.setContentTag(oldContentTag);
         source.setContentType(oldContentType);
@@ -107,10 +103,10 @@ public class SourceManager {
   public static boolean deleteSource(Long id) {
     Source source = SOURCES.remove(id);
     boolean removed = source != null;
-    if (removed) {
+    if(removed) {
       try {
         saveSources();
-      } catch (IOException e) {
+      } catch(IOException e) {
         SOURCES.put(id, source);
         removed = false;
       }

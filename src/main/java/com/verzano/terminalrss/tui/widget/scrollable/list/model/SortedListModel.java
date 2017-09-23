@@ -17,7 +17,7 @@ public class SortedListModel<T extends TuiStringable> implements ListModel<T> {
   @Override
   public boolean addItem(T item) {
     boolean added = items.add(item);
-    if (added) {
+    if(added) {
       items.sort(sortOrder);
     }
 

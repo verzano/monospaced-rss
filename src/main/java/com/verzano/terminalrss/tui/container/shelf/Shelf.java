@@ -15,12 +15,8 @@ import lombok.Setter;
 public class Shelf extends Container<ShelfOptions> {
   private List<Widget> widgetStack = new LinkedList<>();
   private Map<Widget, ShelfOptions> optionsMap = new HashMap<>();
-
   private Orientation orientation;
-
-  @Getter
-  @Setter
-  private int spacing;
+  @Getter @Setter private int spacing;
 
   public Shelf(Orientation orientation, int spacing) {
     this.orientation = orientation;
@@ -55,7 +51,7 @@ public class Shelf extends Container<ShelfOptions> {
   public int calculateWidgetWidth(Widget widget) {
     int width = optionsMap.get(widget).getSize().getWidth();
 
-    switch (width) {
+    switch(width) {
       case Size.FILL_CONTAINER:
         return getWidth();
       case Size.FILL_NEEDED:
@@ -70,7 +66,7 @@ public class Shelf extends Container<ShelfOptions> {
   public int calculateWidgetHeight(Widget widget) {
     int height = optionsMap.get(widget).getSize().getHeight();
 
-    switch (height) {
+    switch(height) {
       case Size.FILL_CONTAINER:
         return getHeight();
       case Size.FILL_NEEDED:
@@ -84,9 +80,9 @@ public class Shelf extends Container<ShelfOptions> {
   @Override
   public int calculateWidgetX(Widget widget) {
     int x = getX();
-    if (orientation == Orientation.HORIZONTAL) {
-      for (Widget w : widgetStack) {
-        if (widget == w) {
+    if(orientation == Orientation.HORIZONTAL) {
+      for(Widget w : widgetStack) {
+        if(widget == w) {
           break;
         }
 
@@ -100,9 +96,9 @@ public class Shelf extends Container<ShelfOptions> {
   @Override
   public int calculateWidgetY(Widget widget) {
     int y = getY();
-    if (orientation == Orientation.VERTICAL) {
-      for (Widget w : widgetStack) {
-        if (widget == w) {
+    if(orientation == Orientation.VERTICAL) {
+      for(Widget w : widgetStack) {
+        if(widget == w) {
           break;
         }
 
@@ -115,19 +111,13 @@ public class Shelf extends Container<ShelfOptions> {
   @Override
   public int getNeededContentWidth() {
     int width = 0;
-    if (!widgetStack.isEmpty()) {
-      switch (orientation) {
+    if(!widgetStack.isEmpty()) {
+      switch(orientation) {
         case HORIZONTAL:
-          width = (widgetStack.size() - 1) * spacing
-              + widgetStack.stream()
-              .mapToInt(Widget::getWidth)
-              .sum();
+          width = (widgetStack.size() - 1)*spacing + widgetStack.stream().mapToInt(Widget::getWidth).sum();
           break;
         case VERTICAL:
-          width = widgetStack.stream()
-              .mapToInt(Widget::getWidth)
-              .max()
-              .orElse(0);
+          width = widgetStack.stream().mapToInt(Widget::getWidth).max().orElse(0);
           break;
       }
     }
@@ -137,19 +127,13 @@ public class Shelf extends Container<ShelfOptions> {
   @Override
   public int getNeededContentHeight() {
     int height = 0;
-    if (!widgetStack.isEmpty()) {
-      switch (orientation) {
+    if(!widgetStack.isEmpty()) {
+      switch(orientation) {
         case HORIZONTAL:
-          height = widgetStack.stream()
-              .mapToInt(Widget::getHeight)
-              .max()
-              .orElse(0);
+          height = widgetStack.stream().mapToInt(Widget::getHeight).max().orElse(0);
           break;
         case VERTICAL:
-          height = (widgetStack.size() - 1) * spacing
-              + widgetStack.stream()
-              .mapToInt(Widget::getHeight)
-              .sum();
+          height = (widgetStack.size() - 1)*spacing + widgetStack.stream().mapToInt(Widget::getHeight).sum();
           break;
       }
     }

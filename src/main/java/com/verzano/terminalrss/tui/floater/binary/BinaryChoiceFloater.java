@@ -19,17 +19,10 @@ import com.verzano.terminalrss.tui.widget.button.ButtonWidget;
 import lombok.Getter;
 
 public class BinaryChoiceFloater extends Floater {
-  @Getter
-  private ButtonWidget positiveButton;
-
-  @Getter
-  private ButtonWidget negativeButton;
-
-  @Getter
-  private Widget displayWidget;
-
-  @Getter
-  private boolean positiveSelected;
+  @Getter private ButtonWidget positiveButton;
+  @Getter private ButtonWidget negativeButton;
+  @Getter private Widget displayWidget;
+  @Getter private boolean positiveSelected;
 
   public BinaryChoiceFloater(Widget displayWidget, String positiveText, String negativeText) {
     setDisplayWidget(displayWidget);

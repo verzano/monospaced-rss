@@ -1,7 +1,6 @@
 package com.verzano.terminalrss.content;
 
 import com.verzano.terminalrss.tui.TuiStringable;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,8 +24,6 @@ public enum ContentType implements TuiStringable {
   };
 
   public static List<ContentType> nonNullValues() {
-    return Arrays.stream(ContentType.values())
-        .filter(ct -> ct != NULL_CONTENT_TYPE)
-        .collect(Collectors.toList());
+    return Arrays.stream(ContentType.values()).filter(ct -> ct != NULL_CONTENT_TYPE).collect(Collectors.toList());
   }
 }

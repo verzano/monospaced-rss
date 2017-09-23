@@ -1,12 +1,12 @@
 package com.verzano.terminalrss.tui.widget.button;
 
+import static com.verzano.terminalrss.tui.constant.Key.ENTER;
+
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.constant.Orientation;
 import com.verzano.terminalrss.tui.constant.Position;
 import com.verzano.terminalrss.tui.task.NamedTask;
 import com.verzano.terminalrss.tui.widget.text.TextWidget;
-
-import static com.verzano.terminalrss.tui.constant.Key.ENTER;
 
 public class ButtonWidget extends TextWidget {
   private NamedTask onPressTask;

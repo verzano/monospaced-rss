@@ -13,11 +13,8 @@ import java.util.List;
 import lombok.Getter;
 
 public class TextAreaWidget extends ScrollableWidget {
-  @Getter
-  private String text;
-
+  @Getter private String text;
   private List<String> lines;
-
   private volatile int topLine;
 
   public TextAreaWidget() {
@@ -53,15 +50,15 @@ public class TextAreaWidget extends ScrollableWidget {
 
     int width = getWidth() - 1;
 
-    for (String chunk : text.split("\n")) {
-      if (chunk.isEmpty()) {
+    for(String chunk : text.split("\n")) {
+      if(chunk.isEmpty()) {
         continue;
       }
 
       int begin = 0;
       int end = width;
 
-      while (end < chunk.length()) {
+      while(end < chunk.length()) {
         int lastSpace = chunk.substring(begin, end).lastIndexOf(' ') + begin + 1;
         String line = chunk.substring(begin, lastSpace);
         lines.add(line + new String(new char[width - line.length()]).replace('\0', ' '));
@@ -80,29 +77,24 @@ public class TextAreaWidget extends ScrollableWidget {
 
   @Override
   public int getNeededContentWidth() {
-    return lines.stream()
-        .mapToInt(String::length)
-        .max()
-        .orElse(0) + 1;
+    return lines.stream().mapToInt(String::length).max().orElse(0) + 1;
   }
 
   @Override
   public int getNeededContentHeight() {
     int width = getWidth() - 1;
 
-    return lines.stream()
-        .mapToInt(row -> (int) Math.ceil(row.length() / width))
-        .sum();
+    return lines.stream().mapToInt(row -> (int)Math.ceil(row.length()/width)).sum();
   }
 
   @Override
   public void scroll(Direction direction, int distance) {
-    switch (direction) {
+    switch(direction) {
       case UP:
         setTopLine(Math.max(0, topLine - distance));
         break;
       case DOWN:
-        if (topLine + getHeight() < lines.size()) {
+        if(topLine + getHeight() < lines.size()) {
           setTopLine(topLine + distance);
         }
         break;
@@ -115,10 +107,10 @@ public class TextAreaWidget extends ScrollableWidget {
 
     int width = getContentWidth() - 1;
 
-    for (int row = 0; row <= getContentHeight(); row++) {
+    for(int row = 0; row <= getContentHeight(); row++) {
       TerminalUi.move(getContentX(), getContentY() + row);
       int line = row + topLine;
-      if (line < lines.size()) {
+      if(line < lines.size()) {
         TerminalUi.print(lines.get(line));
       } else {
         TerminalUi.printn(" ", width);

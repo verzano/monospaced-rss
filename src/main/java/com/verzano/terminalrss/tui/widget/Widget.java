@@ -44,44 +44,22 @@ public abstract class Widget {
     @Override
     public void printContent() {}
   };
-
   private final Map<String, Set<Task>> keyActionsMap = new HashMap<>();
-
-  @Getter
-  @Setter
-  private String label = "";
-  @Getter
-  @Setter
-  private boolean showLabel = false;
-  @Getter
-  @Setter
-  private Position labelPosition = Position.LEFT;
-  @Getter
-  @Setter
-  private Orientation labelOrientation = Orientation.HORIZONTAL;
+  @Getter @Setter private String label = "";
+  @Getter @Setter private boolean showLabel = false;
+  @Getter @Setter private Position labelPosition = Position.LEFT;
+  @Getter @Setter private Orientation labelOrientation = Orientation.HORIZONTAL;
   private AnsiFormat labelFormat = new AnsiFormat(Background.DEFAULT, Foreground.DEFAULT);
-
-  @Getter
-  private long altitude;
-  @Getter
-  @Setter
-  private Spacing padding = new Spacing();
-  @Getter
-  @Setter
-  private Container container = NULL_CONTAINER;
-  @Getter
-  @Setter
-  private AnsiFormat focusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
-  @Getter
-  @Setter
-  private AnsiFormat unfocusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
+  @Getter private long altitude;
+  @Getter @Setter private Spacing padding = new Spacing();
+  @Getter @Setter private Container container = NULL_CONTAINER;
+  @Getter @Setter private AnsiFormat focusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
+  @Getter @Setter private AnsiFormat unfocusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
   private String emptyRow;
   private String emptyContentRow;
 
   public abstract int getNeededContentWidth();
-
   public abstract int getNeededContentHeight();
-
   public abstract void printContent();
 
   public int getWidth() {
@@ -90,8 +68,8 @@ public abstract class Widget {
 
   public int getNeededWidth() {
     int neededWidth = getNeededContentWidth();
-    if (showLabel) {
-      switch (labelPosition) {
+    if(showLabel) {
+      switch(labelPosition) {
         case TOP:
         case BOTTOM:
           neededWidth = Math.max(getLabelWidth(), neededWidth);
@@ -107,8 +85,8 @@ public abstract class Widget {
 
   public int getNeededHeight() {
     int neededHeight = getNeededContentHeight();
-    if (showLabel) {
-      switch (labelPosition) {
+    if(showLabel) {
+      switch(labelPosition) {
         case TOP:
         case BOTTOM:
           neededHeight += getLabelHeight();
@@ -151,15 +129,12 @@ public abstract class Widget {
   }
 
   public void setAltitude(long altitude) {
-    if (altitude < 0) {
+    if(altitude < 0) {
+      throw new IllegalArgumentException("A widget cannot have a negative altitude." + "  Supplied altitude is " + altitude);
+    } else if(altitude <= container.getAltitude()) {
       throw new IllegalArgumentException(
-          "A widget cannot have a negative altitude."
-              + "  Supplied altitude is " + altitude);
-    } else if (altitude <= container.getAltitude()) {
-      throw new IllegalArgumentException(
-          "A widget's altitude must be greater than it's container's."
-              + "  Supplied altitude is " + altitude
-              + " container's altitude is " + container.getAltitude());
+          "A widget's altitude must be greater than it's container's." + "  Supplied altitude is " + altitude + " container's altitude is "
+              + container.getAltitude());
     }
 
     this.altitude = altitude;
@@ -205,14 +180,14 @@ public abstract class Widget {
   }
 
   public final void print() {
-    for (int row = 0; row < getHeight(); row++) {
+    for(int row = 0; row < getHeight(); row++) {
       TerminalUi.move(getX(), getY() + row);
       TerminalUi.print(getEmptyRow());
     }
 
     // TODO this chunk is basically identical to what is in TextWidget
-    if (showLabel) {
-      switch (labelOrientation) {
+    if(showLabel) {
+      switch(labelOrientation) {
         case VERTICAL:
           break;
         case HORIZONTAL:
@@ -232,11 +207,11 @@ public abstract class Widget {
 
   // TODO this chunk is basically identical to what is in TextWidget
   private void printLabelHorizontal() {
-    switch (labelPosition) {
+    switch(labelPosition) {
       case TOP:
         TerminalUi.move(getX(), getY());
         TerminalUi.print(getRowForLabel());
-        for (int i = 1; i < getContentHeight(); i++) {
+        for(int i = 1; i < getContentHeight(); i++) {
           TerminalUi.move(getX(), getY() + i);
           TerminalUi.print(getEmptyContentRow());
         }
@@ -270,8 +245,8 @@ public abstract class Widget {
   // TODO this chunk is basically identical to what is in TextWidget
   private String getRowForLabel() {
     String ret = label;
-    if (label.length() != getWidth()) {
-      switch (labelPosition) {
+    if(label.length() != getWidth()) {
+      switch(labelPosition) {
 //        case LEFT:
 //          if (text.length() > getWidth()) {
 //            text = text.substring(0, getWidth());
@@ -281,15 +256,15 @@ public abstract class Widget {
 //          break;
         case TOP:
 //        case BOTTOM:
-          if (label.length() > getWidth()) {
-            double halfExtra = (label.length() - getWidth()) / 2D;
+          if(label.length() > getWidth()) {
+            double halfExtra = (label.length() - getWidth())/2D;
 
-            ret = label.substring((int) halfExtra, label.length() - (int) Math.ceil(halfExtra));
+            ret = label.substring((int)halfExtra, label.length() - (int)Math.ceil(halfExtra));
           } else {
-            double halfRemaining = (getWidth() - label.length()) / 2D;
-            ret = new String(new char[(int) Math.ceil(halfRemaining)]).replace('\0', ' ')
-                + label
-                + new String(new char[(int) halfRemaining]).replace('\0', ' ');
+            double halfRemaining = (getWidth() - label.length())/2D;
+            ret = new String(new char[(int)Math.ceil(halfRemaining)]).replace('\0', ' ') + label + new String(new char[(int)halfRemaining]).replace(
+                '\0',
+                ' ');
           }
           break;
 //        case RIGHT:
@@ -308,7 +283,7 @@ public abstract class Widget {
   }
 
   private int getLabelWidth() {
-    switch (labelOrientation) {
+    switch(labelOrientation) {
       case HORIZONTAL:
         return label.length();
       case VERTICAL:
@@ -319,7 +294,7 @@ public abstract class Widget {
   }
 
   private int getLabelHeight() {
-    switch (labelOrientation) {
+    switch(labelOrientation) {
       case HORIZONTAL:
         return 1;
       case VERTICAL:

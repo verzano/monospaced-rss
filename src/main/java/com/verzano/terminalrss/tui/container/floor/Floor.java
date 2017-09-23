@@ -25,7 +25,7 @@ public class Floor extends Container<FloorOptions> {
 
   @Override
   public void addWidgetInternal(Widget widget, FloorOptions options) {
-    if (this.widget != NULL_WIDGET) {
+    if(this.widget != NULL_WIDGET) {
       removeWidget(this.widget);
     }
     this.widget = widget;
@@ -51,7 +51,7 @@ public class Floor extends Container<FloorOptions> {
 
   @Override
   public int calculateWidgetWidth(Widget widget) {
-    switch (options.getSize().getWidth()) {
+    switch(options.getSize().getWidth()) {
       case FILL_CONTAINER:
         return TerminalUi.getWidth();
       case FILL_NEEDED:
@@ -63,7 +63,7 @@ public class Floor extends Container<FloorOptions> {
 
   @Override
   public int calculateWidgetHeight(Widget widget) {
-    switch (options.getSize().getHeight()) {
+    switch(options.getSize().getHeight()) {
       case FILL_CONTAINER:
         return TerminalUi.getHeight();
       case FILL_NEEDED:

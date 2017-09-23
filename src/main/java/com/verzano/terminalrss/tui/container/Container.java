@@ -62,19 +62,12 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
   private final Map<Widget, Point> widgetLocations = new HashMap<>();
 
   public abstract Collection<Widget> getContainedWidgets();
-
   public abstract int calculateWidgetWidth(Widget widget);
-
   public abstract int calculateWidgetHeight(Widget widget);
-
   public abstract int calculateWidgetX(Widget widget);
-
   public abstract int calculateWidgetY(Widget widget);
-
   public abstract void addWidgetInternal(Widget widget, T options);
-
   public abstract void removeWidgetInternal(Widget widget);
-
   public abstract void removeWidgetsInternal();
 
   public int getWidgetWidth(Widget widget) {
@@ -143,8 +136,8 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
       setWidgetX(widget);
       setWidgetY(widget);
 
-      if (widget instanceof Container) {
-        ((Container) widget).arrange();
+      if(widget instanceof Container) {
+        ((Container)widget).arrange();
       }
     });
 
@@ -159,7 +152,7 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
   @Override
   public void setFocused() {
     Collection<Widget> widgets = getContainedWidgets();
-    if (widgets.size() > 0) {
+    if(widgets.size() > 0) {
       widgets.iterator().next().setFocused();
     } else {
       super.setFocused();

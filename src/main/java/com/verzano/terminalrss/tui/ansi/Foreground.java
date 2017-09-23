@@ -7,9 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Foreground {
   NONE(""),
-
   DEFAULT("39"),
-
   // 8/16 Colors
   BLACK("30"),
   RED("31"),
@@ -27,7 +25,6 @@ public enum Foreground {
   LIGHT_MAGENTA("95"),
   LIGHT_CYAN("96"),
   WHITE("97"),
-
   // 88/256 colors
   _0("38;5;0"),
   _1("38;5;1"),
@@ -286,6 +283,5 @@ public enum Foreground {
   _254("38;5;254"),
   _255("38;5;255"),
   _256("38;5;256");
-
   private final String code;
 }

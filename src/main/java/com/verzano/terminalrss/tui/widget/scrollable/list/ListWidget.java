@@ -19,13 +19,8 @@ import lombok.Setter;
 
 public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
   private ListModel<T> listModel;
-
   private int selectedItemIndex;
-
-  @Getter
-  @Setter
-  private AnsiFormat selectedItemFormat = new AnsiFormat(Background.NONE, Foreground.NONE,
-      Attribute.INVERSE_ON);
+  @Getter @Setter private AnsiFormat selectedItemFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.INVERSE_ON);
 
   public ListWidget(ListModel<T> listModel) {
     setListModel(listModel);
@@ -48,8 +43,8 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
   }
 
   public void addItem(T item) {
-    if (listModel.addItem(item)) {
-      if (listModel.getItemCount() > 1 && listModel.getItemIndex(item) <= selectedItemIndex) {
+    if(listModel.addItem(item)) {
+      if(listModel.getItemCount() > 1 && listModel.getItemIndex(item) <= selectedItemIndex) {
         selectedItemIndex++;
       }
       setInternalHeight(listModel.getItemCount());
@@ -57,8 +52,8 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
   }
 
   public void removeItem(T item) {
-    if (listModel.removeItem(item)) {
-      if (selectedItemIndex == listModel.getItemCount()) {
+    if(listModel.removeItem(item)) {
+      if(selectedItemIndex == listModel.getItemCount()) {
         selectedItemIndex = Math.max(0, selectedItemIndex - 1);
       }
       setInternalHeight(listModel.getItemCount());
@@ -78,16 +73,16 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
 
   @Override
   public void scroll(Direction dir, int distance) {
-    switch (dir) {
+    switch(dir) {
       case UP:
-        if (getViewTop() == selectedItemIndex) {
+        if(getViewTop() == selectedItemIndex) {
           setViewTop(Math.max(0, getViewTop() - 1));
         }
         selectedItemIndex = Math.max(0, selectedItemIndex - distance);
         break;
       case DOWN:
         selectedItemIndex = Math.min(listModel.getItemCount() - 1, selectedItemIndex + distance);
-        if (selectedItemIndex == getViewTop() + getHeight()) {
+        if(selectedItemIndex == getViewTop() + getHeight()) {
           setViewTop(Math.min(getViewTop() + 1, listModel.getItemCount() - getHeight()));
         }
         break;
@@ -96,10 +91,7 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
 
   @Override
   public int getNeededContentWidth() {
-    return listModel.getItems().stream()
-        .mapToInt(item -> item.toTuiString().length())
-        .max()
-        .orElse(0) + 1;
+    return listModel.getItems().stream().mapToInt(item -> item.toTuiString().length()).max().orElse(0) + 1;
   }
 
   @Override
@@ -113,21 +105,21 @@ public class ListWidget<T extends TuiStringable> extends ScrollableWidget {
 
     int width = getContentWidth() - 1;
 
-    for (int row = 0; row < getContentHeight(); row++) {
+    for(int row = 0; row < getContentHeight(); row++) {
       TerminalUi.move(getContentX(), getContentY() + row);
       int index = row + getViewTop();
 
-      if (index >= listModel.getItemCount()) {
+      if(index >= listModel.getItemCount()) {
         TerminalUi.printn(" ", width);
       } else {
         String toPrint = listModel.getItemAt(index).toTuiString();
-        if (toPrint.length() > width) {
+        if(toPrint.length() > width) {
           toPrint = toPrint.substring(0, width);
-        } else if (toPrint.length() < width) {
+        } else if(toPrint.length() < width) {
           toPrint = toPrint + new String(new char[width - toPrint.length()]).replace('\0', ' ');
         }
 
-        if (index == selectedItemIndex) {
+        if(index == selectedItemIndex) {
           toPrint = selectedItemFormat.getFormatString() + toPrint + NORMAL.getFormatString();
         }
 

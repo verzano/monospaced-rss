@@ -7,9 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Background {
   NONE(""),
-
   DEFAULT("49"),
-
   // 8/16 colors
   BLACK("40"),
   RED("41"),
@@ -27,7 +25,6 @@ public enum Background {
   LIGHT_MAGENTA("105"),
   LIGHT_CYAN("106"),
   WHITE("107"),
-
   // 88/256 colors
   _0("48;5;0"),
   _1("48;5;1"),
@@ -286,6 +283,5 @@ public enum Background {
   _254("48;5;254"),
   _255("48;5;255"),
   _256("48;5;256");
-
   private final String code;
 }

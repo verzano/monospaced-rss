@@ -11,11 +11,10 @@ public class Key {
   public static final String DOWN_ARROW = ESCAPED_PREFIX + "B";
   public static final String RIGHT_ARROW = ESCAPED_PREFIX + "C";
   public static final String LEFT_ARROW = ESCAPED_PREFIX + "D";
-  public static final String BACKSPACE = (char) 8 + "";
-  public static final String TAB = (char) 9 + "";
-  public static final String ENTER = (char) 13 + "";
-  public static final String DELETE = (char) 127 + "";
-
+  public static final String BACKSPACE = (char)8 + "";
+  public static final String TAB = (char)9 + "";
+  public static final String ENTER = (char)13 + "";
+  public static final String DELETE = (char)127 + "";
   // Letter Keys
   public static final String A_LOWER = "a";
   public static final String B_LOWER = "b";
@@ -43,7 +42,6 @@ public class Key {
   public static final String X_LOWER = "x";
   public static final String Y_LOWER = "y";
   public static final String Z_LOWER = "z";
-
   public static final String A_UPPER = "A";
   public static final String B_UPPER = "B";
   public static final String C_UPPER = "C";

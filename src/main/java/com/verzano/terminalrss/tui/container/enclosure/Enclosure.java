@@ -33,75 +33,75 @@ public class Enclosure extends Container<EnclosureOptions> {
     Widget center = widgetMap.get(CENTER);
 
     // Size
-    if (north != NULL_WIDGET) {
+    if(north != NULL_WIDGET) {
       setWidgetHeight(north);
       setWidgetWidth(north);
     }
 
-    if (south != NULL_WIDGET) {
+    if(south != NULL_WIDGET) {
       setWidgetHeight(south);
       setWidgetWidth(south);
     }
 
-    if (east != NULL_WIDGET) {
+    if(east != NULL_WIDGET) {
       setWidgetHeight(east);
       setWidgetWidth(east);
     }
 
-    if (west != NULL_WIDGET) {
+    if(west != NULL_WIDGET) {
       setWidgetHeight(west);
       setWidgetWidth(west);
     }
 
-    if (center != NULL_WIDGET) {
+    if(center != NULL_WIDGET) {
       setWidgetHeight(center);
       setWidgetWidth(center);
     }
 
     // Location
-    if (north != NULL_WIDGET) {
+    if(north != NULL_WIDGET) {
       setWidgetX(north);
       setWidgetY(north);
     }
 
-    if (south != NULL_WIDGET) {
+    if(south != NULL_WIDGET) {
       setWidgetX(south);
       setWidgetY(south);
     }
 
-    if (east != NULL_WIDGET) {
+    if(east != NULL_WIDGET) {
       setWidgetX(east);
       setWidgetY(east);
     }
 
-    if (west != NULL_WIDGET) {
+    if(west != NULL_WIDGET) {
       setWidgetX(west);
       setWidgetY(west);
     }
 
-    if (center != NULL_WIDGET) {
+    if(center != NULL_WIDGET) {
       setWidgetX(center);
       setWidgetY(center);
     }
 
-    if (north instanceof Container) {
-      ((Container) north).arrange();
+    if(north instanceof Container) {
+      ((Container)north).arrange();
     }
 
-    if (south instanceof Container) {
-      ((Container) south).arrange();
+    if(south instanceof Container) {
+      ((Container)south).arrange();
     }
 
-    if (east instanceof Container) {
-      ((Container) east).arrange();
+    if(east instanceof Container) {
+      ((Container)east).arrange();
     }
 
-    if (west instanceof Container) {
-      ((Container) west).arrange();
+    if(west instanceof Container) {
+      ((Container)west).arrange();
     }
 
-    if (center instanceof Container) {
-      ((Container) center).arrange();
+    if(center instanceof Container) {
+      ((Container)center).arrange();
     }
 
     size();
@@ -109,15 +109,13 @@ public class Enclosure extends Container<EnclosureOptions> {
 
   @Override
   public Collection<Widget> getContainedWidgets() {
-    return widgetMap.values().stream()
-        .filter(w -> w != NULL_WIDGET)
-        .collect(Collectors.toList());
+    return widgetMap.values().stream().filter(w -> w != NULL_WIDGET).collect(Collectors.toList());
   }
 
   @Override
   public int calculateWidgetWidth(Widget widget) {
     int width = 0;
-    switch (optionsMap.get(widget).getPosition()) {
+    switch(optionsMap.get(widget).getPosition()) {
       case NORTH:
       case SOUTH:
         width = getWidth();
@@ -128,9 +126,7 @@ public class Enclosure extends Container<EnclosureOptions> {
         width = widget.getNeededContentWidth();
         break;
       case CENTER:
-        width = getWidth()
-            - getWidgetWidth(widgetMap.get(EAST))
-            - getWidgetWidth(widgetMap.get(WEST));
+        width = getWidth() - getWidgetWidth(widgetMap.get(EAST)) - getWidgetWidth(widgetMap.get(WEST));
         break;
     }
     return width;
@@ -139,7 +135,7 @@ public class Enclosure extends Container<EnclosureOptions> {
   @Override
   public int calculateWidgetHeight(Widget widget) {
     int height = 0;
-    switch (optionsMap.get(widget).getPosition()) {
+    switch(optionsMap.get(widget).getPosition()) {
       case NORTH:
       case SOUTH:
         // TODO maybe make this fill if there aren't others...
@@ -148,9 +144,7 @@ public class Enclosure extends Container<EnclosureOptions> {
       case EAST:
       case WEST:
       case CENTER:
-        height = getHeight()
-            - getWidgetHeight(widgetMap.get(NORTH))
-            - getWidgetHeight(widgetMap.get(SOUTH));
+        height = getHeight() - getWidgetHeight(widgetMap.get(NORTH)) - getWidgetHeight(widgetMap.get(SOUTH));
         break;
     }
     return height;
@@ -159,7 +153,7 @@ public class Enclosure extends Container<EnclosureOptions> {
   @Override
   public int calculateWidgetX(Widget widget) {
     int x = getX();
-    switch (optionsMap.get(widget).getPosition()) {
+    switch(optionsMap.get(widget).getPosition()) {
       case NORTH:
       case SOUTH:
       case WEST:
@@ -177,7 +171,7 @@ public class Enclosure extends Container<EnclosureOptions> {
   @Override
   public int calculateWidgetY(Widget widget) {
     int y = getY();
-    switch (optionsMap.get(widget).getPosition()) {
+    switch(optionsMap.get(widget).getPosition()) {
       case NORTH:
         break;
       case EAST:
@@ -195,7 +189,7 @@ public class Enclosure extends Container<EnclosureOptions> {
   @Override
   public void addWidgetInternal(Widget widget, EnclosureOptions options) {
     Widget oldWidget = widgetMap.get(options.getPosition());
-    if (oldWidget != NULL_WIDGET) {
+    if(oldWidget != NULL_WIDGET) {
       removeWidget(oldWidget);
     }
     optionsMap.put(widget, options);
@@ -218,8 +212,7 @@ public class Enclosure extends Container<EnclosureOptions> {
   public int getNeededContentWidth() {
     int northWidth = widgetMap.getOrDefault(NORTH, NULL_WIDGET).getNeededWidth();
     int southWidth = widgetMap.getOrDefault(SOUTH, NULL_WIDGET).getNeededWidth();
-    int middleWidth = widgetMap.getOrDefault(WEST, NULL_WIDGET).getNeededWidth()
-        + widgetMap.getOrDefault(CENTER, NULL_WIDGET).getNeededWidth()
+    int middleWidth = widgetMap.getOrDefault(WEST, NULL_WIDGET).getNeededWidth() + widgetMap.getOrDefault(CENTER, NULL_WIDGET).getNeededWidth()
         + widgetMap.getOrDefault(EAST, NULL_WIDGET).getNeededWidth();
     return Math.max(northWidth, Math.max(southWidth, middleWidth));
   }
@@ -229,15 +222,9 @@ public class Enclosure extends Container<EnclosureOptions> {
     int northHeight = widgetMap.getOrDefault(NORTH, NULL_WIDGET).getNeededHeight();
     int southHeight = widgetMap.getOrDefault(SOUTH, NULL_WIDGET).getNeededHeight();
 
-    int leftHeight = northHeight
-        + widgetMap.getOrDefault(WEST, NULL_WIDGET).getNeededHeight()
-        + southHeight;
-    int middleHeight = northHeight
-        + widgetMap.getOrDefault(CENTER, NULL_WIDGET).getNeededHeight()
-        + southHeight;
-    int rightHeight = northHeight
-        + widgetMap.getOrDefault(EAST, NULL_WIDGET).getNeededHeight()
-        + southHeight;
+    int leftHeight = northHeight + widgetMap.getOrDefault(WEST, NULL_WIDGET).getNeededHeight() + southHeight;
+    int middleHeight = northHeight + widgetMap.getOrDefault(CENTER, NULL_WIDGET).getNeededHeight() + southHeight;
+    int rightHeight = northHeight + widgetMap.getOrDefault(EAST, NULL_WIDGET).getNeededHeight() + southHeight;
     return Math.max(leftHeight, Math.max(middleHeight, rightHeight));
   }
 }

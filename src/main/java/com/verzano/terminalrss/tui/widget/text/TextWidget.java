@@ -12,17 +12,9 @@ import lombok.Setter;
 
 @NoArgsConstructor
 public class TextWidget extends Widget {
-  @Getter
-  @Setter
-  private String text = "";
-
-  @Getter
-  @Setter
-  private Orientation orientation = Orientation.HORIZONTAL;
-
-  @Getter
-  @Setter
-  private Position textPosition = Position.LEFT;
+  @Getter @Setter private String text = "";
+  @Getter @Setter private Orientation orientation = Orientation.HORIZONTAL;
+  @Getter @Setter private Position textPosition = Position.LEFT;
 
   public TextWidget(String text, Orientation orientation, Position textPosition) {
     this.text = text;
@@ -34,12 +26,12 @@ public class TextWidget extends Widget {
   }
 
   protected String getRowForText(String text) {
-    if (text.length() != getWidth()) {
-      switch (textPosition) {
+    if(text.length() != getWidth()) {
+      switch(textPosition) {
         case TOP_LEFT:
         case LEFT:
         case BOTTOM_LEFT:
-          if (text.length() > getWidth()) {
+          if(text.length() > getWidth()) {
             text = text.substring(0, getWidth());
           } else {
             text += new String(new char[getWidth() - text.length()]).replace('\0', ' ');
@@ -48,21 +40,21 @@ public class TextWidget extends Widget {
         case TOP:
         case CENTER:
         case BOTTOM:
-          if (text.length() > getWidth()) {
-            double halfExtra = (text.length() - getWidth()) / 2D;
+          if(text.length() > getWidth()) {
+            double halfExtra = (text.length() - getWidth())/2D;
 
-            text = text.substring((int) halfExtra, text.length() - (int) Math.ceil(halfExtra));
+            text = text.substring((int)halfExtra, text.length() - (int)Math.ceil(halfExtra));
           } else {
-            double halfRemaining = (getWidth() - text.length()) / 2D;
-            text = new String(new char[(int) Math.ceil(halfRemaining)]).replace('\0', ' ')
-                + text
-                + new String(new char[(int) halfRemaining]).replace('\0', ' ');
+            double halfRemaining = (getWidth() - text.length())/2D;
+            text = new String(new char[(int)Math.ceil(halfRemaining)]).replace('\0', ' ') + text + new String(new char[(int)halfRemaining]).replace(
+                '\0',
+                ' ');
           }
           break;
         case TOP_RIGHT:
         case RIGHT:
         case BOTTOM_RIGHT:
-          if (text.length() > getWidth()) {
+          if(text.length() > getWidth()) {
             text = text.substring(text.length() - getWidth(), text.length());
           } else {
             text = new String(new char[getWidth() - text.length()]).replace('\0', ' ') + text;
@@ -70,7 +62,6 @@ public class TextWidget extends Widget {
           break;
         default:
           break;
-
       }
     }
 
@@ -78,13 +69,13 @@ public class TextWidget extends Widget {
   }
 
   private void printHorizontal() {
-    switch (textPosition) {
+    switch(textPosition) {
       case TOP_LEFT:
       case TOP:
       case TOP_RIGHT:
         TerminalUi.move(getContentX(), getContentY());
         TerminalUi.print(getRowForText(text));
-        for (int i = 1; i < getContentHeight(); i++) {
+        for(int i = 1; i < getContentHeight(); i++) {
           TerminalUi.move(getContentX(), getContentY() + i);
           TerminalUi.print(getEmptyContentRow());
         }
@@ -92,10 +83,10 @@ public class TextWidget extends Widget {
       case LEFT:
       case CENTER:
       case RIGHT:
-        int middleRow = getHeight() / 2;
-        for (int i = 0; i < getHeight(); i++) {
+        int middleRow = getHeight()/2;
+        for(int i = 0; i < getHeight(); i++) {
           TerminalUi.move(getContentX(), getContentY() + i);
-          if (i == middleRow) {
+          if(i == middleRow) {
             TerminalUi.print(getRowForText(text));
           } else {
             TerminalUi.print(getEmptyContentRow());
@@ -106,7 +97,7 @@ public class TextWidget extends Widget {
       case BOTTOM:
       case BOTTOM_RIGHT:
         TerminalUi.move(getContentX(), getContentY());
-        for (int i = 1; i < getContentHeight(); i++) {
+        for(int i = 1; i < getContentHeight(); i++) {
           TerminalUi.print(getEmptyContentRow());
           TerminalUi.move(getContentX(), getContentY() + i);
         }
@@ -120,7 +111,7 @@ public class TextWidget extends Widget {
   @Override
   public int getNeededContentWidth() {
     int width = 0;
-    switch (orientation) {
+    switch(orientation) {
       case VERTICAL:
         width = 1;
         break;
@@ -136,7 +127,7 @@ public class TextWidget extends Widget {
   @Override
   public int getNeededContentHeight() {
     int height = 0;
-    switch (orientation) {
+    switch(orientation) {
       case VERTICAL:
         height = text.length();
         break;
@@ -151,14 +142,14 @@ public class TextWidget extends Widget {
 
   @Override
   public void printContent() {
-    switch (orientation) {
+    switch(orientation) {
       // TODO make vertical printContent correctly
       case VERTICAL:
         TerminalUi.move(getContentX(), getContentY());
         String toPrint = text;
-        for (int row = 0; row < getContentHeight(); row++) {
+        for(int row = 0; row < getContentHeight(); row++) {
           TerminalUi.move(getContentX(), getContentY() + row);
-          if (row < toPrint.length()) {
+          if(row < toPrint.length()) {
             TerminalUi.print(getAnsiFormatPrefix() + toPrint.charAt(row) + AnsiFormat.NORMAL.getFormatString());
           } else {
             TerminalUi.print(getAnsiFormatPrefix() + " " + AnsiFormat.NORMAL.getFormatString());

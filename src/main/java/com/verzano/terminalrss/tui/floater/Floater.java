@@ -11,9 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public abstract class Floater extends Enclosure {
   public static final Floater NULL_FLOATER = new Floater() {};
-
-  @Setter
-  private Task disposeTask = NULL_TASK;
+  @Setter private Task disposeTask = NULL_TASK;
 
   public void dispose() {
     TerminalUi.removeFloater();
@@ -38,11 +36,11 @@ public abstract class Floater extends Enclosure {
 
   @Override
   public final int getX() {
-    return TerminalUi.getWidth() / 2 - getWidth() / 2;
+    return TerminalUi.getWidth()/2 - getWidth()/2;
   }
 
   @Override
   public final int getY() {
-    return TerminalUi.getHeight() / 2 - getHeight() / 2;
+    return TerminalUi.getHeight()/2 - getHeight()/2;
   }
 }
