@@ -1,7 +1,7 @@
 package com.verzano.terminalrss.article;
 
 import com.google.gson.annotations.SerializedName;
-import com.verzano.terminalrss.tui.TuiStringable;
+import com.verzano.terminalui.widget.scrollable.list.model.Stringable;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
-public class Article implements TuiStringable {
+public class Article implements Stringable {
   public static final long NULL_ARTICLE_ID = -1L;
   public static final Article NULL_ARTICLE = new Article(NULL_ARTICLE_ID, "", -1L, new Date(0), "", "", new Date(0));
   @SerializedName("id") private final long id;

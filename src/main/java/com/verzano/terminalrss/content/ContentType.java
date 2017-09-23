@@ -1,11 +1,11 @@
 package com.verzano.terminalrss.content;
 
-import com.verzano.terminalrss.tui.TuiStringable;
+import com.verzano.terminalui.widget.scrollable.list.model.Stringable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public enum ContentType implements TuiStringable {
+public enum ContentType implements Stringable {
   NULL_CONTENT_TYPE {
     @Override
     public String toTuiString() {

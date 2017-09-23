@@ -1,26 +1,26 @@
 package com.verzano.terminalrss.source.tui;
 
 import static com.verzano.terminalrss.source.Source.NULL_SOURCE_ID;
-import static com.verzano.terminalrss.tui.constant.Key.TAB;
-import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
-import static com.verzano.terminalrss.tui.metric.Size.FILL_NEEDED;
+import static com.verzano.terminalui.constant.Key.TAB;
+import static com.verzano.terminalui.constant.Orientation.HORIZONTAL;
+import static com.verzano.terminalui.metric.Size.FILL_NEEDED;
 
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.source.Source;
-import com.verzano.terminalrss.tui.TerminalUi;
-import com.verzano.terminalrss.tui.ansi.AnsiFormat;
-import com.verzano.terminalrss.tui.ansi.Attribute;
-import com.verzano.terminalrss.tui.ansi.Background;
-import com.verzano.terminalrss.tui.ansi.Foreground;
-import com.verzano.terminalrss.tui.constant.Position;
-import com.verzano.terminalrss.tui.container.shelf.Shelf;
-import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
-import com.verzano.terminalrss.tui.floater.binary.BinaryChoiceFloater;
-import com.verzano.terminalrss.tui.metric.Size;
-import com.verzano.terminalrss.tui.metric.Spacing;
-import com.verzano.terminalrss.tui.widget.scrollable.list.model.BasicListModel;
-import com.verzano.terminalrss.tui.widget.text.entry.RolodexWidget;
-import com.verzano.terminalrss.tui.widget.text.entry.TextEntryWidget;
+import com.verzano.terminalui.TerminalUi;
+import com.verzano.terminalui.ansi.AnsiFormat;
+import com.verzano.terminalui.ansi.Attribute;
+import com.verzano.terminalui.ansi.Background;
+import com.verzano.terminalui.ansi.Foreground;
+import com.verzano.terminalui.constant.Position;
+import com.verzano.terminalui.container.shelf.Shelf;
+import com.verzano.terminalui.container.shelf.ShelfOptions;
+import com.verzano.terminalui.floater.binary.BinaryChoiceFloater;
+import com.verzano.terminalui.metric.Size;
+import com.verzano.terminalui.metric.Spacing;
+import com.verzano.terminalui.widget.scrollable.list.model.BasicListModel;
+import com.verzano.terminalui.widget.text.entry.RolodexWidget;
+import com.verzano.terminalui.widget.text.entry.TextEntryWidget;
 import lombok.Getter;
 
 public class EditSourceFloater extends BinaryChoiceFloater {
