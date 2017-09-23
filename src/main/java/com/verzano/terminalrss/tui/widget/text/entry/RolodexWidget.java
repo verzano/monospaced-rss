@@ -84,11 +84,11 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
   }
 
   private void printItem(T item, int y) {
-    int middleRow = getHeight()/2;
-    for(int i = 0; i < getHeight(); i++) {
+    int middleRow = getContentHeight()/2;
+    for(int i = 0; i < getContentHeight(); i++) {
       TerminalUi.move(getContentX(), y + i);
       if(i == middleRow) {
-        TerminalUi.print(getRowForText(item.toTuiString(), getTextPosition(), getAnsiFormatPrefix(), getWidth()));
+        TerminalUi.print(getRowForText(item.toTuiString(), getTextPosition(), getAnsiFormatPrefix(), getContentWidth()));
       } else {
         TerminalUi.print(getEmptyContentRow());
       }
