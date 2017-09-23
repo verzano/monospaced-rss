@@ -7,6 +7,7 @@ import static com.verzano.terminalrss.tui.constant.Key.DELETE;
 import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
 import static com.verzano.terminalrss.tui.constant.Position.LEFT;
 
+import com.verzano.terminalrss.tui.TerminalUi;
 import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
 import com.verzano.terminalrss.tui.ansi.Background;
@@ -52,8 +53,9 @@ public class TextEntryWidget extends TextWidget {
   }
 
   @Override
-  protected String getRowForText(String text) {
-    int width = getWidth();
+  public void printContent() {
+    String text = getText();
+    int width = getContentWidth();
 
     if(text.length() < width - 1) {
       text += getCaret() + new String(new char[width - text.length() - 1]).replace('\0', ' ');
@@ -61,6 +63,14 @@ public class TextEntryWidget extends TextWidget {
       text = text.substring(text.length() - width + 1) + getCaret();
     }
 
-    return text;
+    int middleRow = getContentHeight()/2;
+    for(int i = 0; i < getContentHeight(); i++) {
+      TerminalUi.move(getContentX(), getContentY() + i);
+      if(i == middleRow) {
+        TerminalUi.print(text);
+      } else {
+        TerminalUi.print(getEmptyContentRow());
+      }
+    }
   }
 }

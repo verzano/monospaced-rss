@@ -29,7 +29,6 @@ public class Shelf extends Container<ShelfOptions> {
     widgetStack.add(widget);
   }
 
-  // TODO NPE if widget not in map
   @Override
   public int calculateWidgetHeight(Widget widget) {
     int height = optionsMap.get(widget).getSize().getHeight();
@@ -44,7 +43,6 @@ public class Shelf extends Container<ShelfOptions> {
     }
   }
 
-  // TODO NPE if widget not in map
   @Override
   public int calculateWidgetWidth(Widget widget) {
     int width = optionsMap.get(widget).getSize().getWidth();
@@ -53,13 +51,12 @@ public class Shelf extends Container<ShelfOptions> {
       case Size.FILL_CONTAINER:
         return getWidth();
       case Size.FILL_NEEDED:
-        return widget.getNeededContentWidth();
+        return widget.getNeededWidth();
       default:
         return width;
     }
   }
 
-  // TODO NPE if widget not in map
   @Override
   public int calculateWidgetX(Widget widget) {
     int x = getX();
@@ -72,10 +69,9 @@ public class Shelf extends Container<ShelfOptions> {
         x += getWidgetWidth(w) + spacing;
       }
     }
-    return x + this.getPadding().getLeft();
+    return x + getPadding().getLeft();
   }
 
-  // TODO NPE if widget not in map
   @Override
   public int calculateWidgetY(Widget widget) {
     int y = getY();
@@ -88,7 +84,7 @@ public class Shelf extends Container<ShelfOptions> {
         y += getWidgetHeight(w) + spacing;
       }
     }
-    return y + this.getPadding().getTop();
+    return y + getPadding().getTop();
   }
 
   @Override
@@ -122,7 +118,7 @@ public class Shelf extends Container<ShelfOptions> {
       }
     }
 
-    return height + this.getPadding().getTop() + this.getPadding().getBottom();
+    return height + getPadding().getTop() + getPadding().getBottom();
   }
 
   @Override
@@ -138,6 +134,6 @@ public class Shelf extends Container<ShelfOptions> {
           break;
       }
     }
-    return width + this.getPadding().getLeft() + this.getPadding().getRight();
+    return width + getPadding().getLeft() + getPadding().getRight();
   }
 }

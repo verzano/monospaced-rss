@@ -8,7 +8,11 @@ import static com.verzano.terminalrss.tui.metric.Size.FILL_NEEDED;
 import com.verzano.terminalrss.content.ContentType;
 import com.verzano.terminalrss.source.Source;
 import com.verzano.terminalrss.tui.TerminalUi;
+import com.verzano.terminalrss.tui.ansi.AnsiFormat;
 import com.verzano.terminalrss.tui.ansi.Attribute;
+import com.verzano.terminalrss.tui.ansi.Background;
+import com.verzano.terminalrss.tui.ansi.Foreground;
+import com.verzano.terminalrss.tui.constant.Position;
 import com.verzano.terminalrss.tui.container.shelf.Shelf;
 import com.verzano.terminalrss.tui.container.shelf.ShelfOptions;
 import com.verzano.terminalrss.tui.floater.binary.BinaryChoiceFloater;
@@ -45,16 +49,25 @@ public class EditSourceFloater extends BinaryChoiceFloater {
 
   private EditSourceFloater(String positiveText, String negativeText) {
     super(NULL_WIDGET, positiveText, negativeText);
+    contentTagEntry.setLabel("Content Tag");
+    contentTagEntry.setLabelPosition(Position.TOP_LEFT);
+    contentTagEntry.setShowLabel(true);
     contentTagEntry.addKeyAction(TAB, () -> {
       getPositiveButton().setFocused();
       TerminalUi.reprint();
     });
 
+    contentTypeRolodex.setLabel("Content Type");
+    contentTypeRolodex.setLabelPosition(Position.TOP_LEFT);
+    contentTypeRolodex.setShowLabel(true);
     contentTypeRolodex.addKeyAction(TAB, () -> {
       contentTagEntry.setFocused();
       TerminalUi.reprint();
     });
 
+    uriTextEntry.setLabel("RSS Feed URL");
+    uriTextEntry.setLabelPosition(Position.TOP_LEFT);
+    uriTextEntry.setShowLabel(true);
     uriTextEntry.addKeyAction(TAB, () -> {
       contentTypeRolodex.setFocused();
       TerminalUi.reprint();
@@ -67,8 +80,8 @@ public class EditSourceFloater extends BinaryChoiceFloater {
     displayWidget.addWidget(contentTagEntry, new ShelfOptions(new Size(20, FILL_NEEDED)));
     setDisplayWidget(displayWidget);
 
-    getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
-    getUnfocusedFormat().setAttributes(Attribute.INVERSE_ON);
+    setFocusedFormat(new AnsiFormat(Background.DEFAULT, Foreground.DEFAULT, Attribute.INVERSE_ON));
+    setUnfocusedFormat(new AnsiFormat(Background.DEFAULT, Foreground.DEFAULT, Attribute.INVERSE_ON));
   }
 
   public String getContentTag() {

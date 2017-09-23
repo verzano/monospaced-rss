@@ -27,14 +27,18 @@ import org.jline.terminal.TerminalBuilder;
 
 // TODO use an executor to schedule events
 // TODO add defaults for attributes as well as some css style waterfall thing for getting them
-// maybe...
+// TODO order all of the fields in all of the classes correctly
+// TODO only permit one floater at a time, or have a stack of floaters
+// TODO 'focused' is if any of its children are focused
+// TODO come up with a better way to determine the time between pulling for draw events
+// TODO allow resize events to be grouped together
+// TODO foreground/background can be inherited from parent
 public class TerminalUi {
   private static final AtomicBoolean run = new AtomicBoolean(true);
   private static final BlockingDeque<PrintTask> printTaskQueue = new LinkedBlockingDeque<>();
   private static final Terminal terminal;
   private static Floor floor = new Floor();
   @Getter private static Floater floater = NULL_FLOATER;
-  // TODO needs to be a stack of focus
   @Getter @Setter private static Widget focusedWidget = NULL_WIDGET;
   private static final Thread keyActionThread = new Thread(TerminalUi::keyActionLoop, "Key Action");
   @Getter private static Size size;
@@ -82,7 +86,6 @@ public class TerminalUi {
   private static void keyActionLoop() {
     try {
       while(run.get()) {
-        // TODO this is kind of a lame way to do this
         int key = terminal.reader().read(100);
         switch(key) {
           case ESC:
@@ -171,7 +174,6 @@ public class TerminalUi {
     }
   }
 
-  // TODO maybe have a like a little delay so that multiple resizes can be grouped together...
   private static void resizingLoop() {
     while(run.get()) {
       if(size.getWidth() != terminal.getWidth() || size.getHeight() != terminal.getHeight()) {
@@ -195,7 +197,6 @@ public class TerminalUi {
     floor.addWidget(baseWidget, new FloorOptions(new Size(FILL_CONTAINER, FILL_CONTAINER), new Point(1, 1)));
   }
 
-  // TODO only permit one at a time... or have a stack...
   public static void setFloater(Floater floater) {
     TerminalUi.floater = floater;
     TerminalUi.floater.setFocused();

@@ -146,7 +146,7 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
 
   @Override
   public void printContent() {
-    getContainedWidgets().forEach(Widget::printContent);
+    getContainedWidgets().forEach(Widget::printGuts);
   }
 
   @Override

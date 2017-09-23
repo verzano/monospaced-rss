@@ -1,5 +1,6 @@
 package com.verzano.terminalrss.tui.widget;
 
+import static com.verzano.terminalrss.tui.PrintUtils.getRowForText;
 import static com.verzano.terminalrss.tui.ansi.AnsiFormat.NORMAL;
 import static com.verzano.terminalrss.tui.container.Container.NULL_CONTAINER;
 
@@ -49,8 +50,9 @@ public abstract class Widget {
   @Getter @Setter private boolean showLabel = false;
   @Getter @Setter private Position labelPosition = Position.LEFT;
   @Getter @Setter private Orientation labelOrientation = Orientation.HORIZONTAL;
-  private AnsiFormat labelFormat = new AnsiFormat(Background.DEFAULT, Foreground.DEFAULT);
-  @Getter private long altitude;
+  @Getter
+  @Setter
+  private AnsiFormat labelFormat = new AnsiFormat(Background.NONE, Foreground.NONE);
   @Getter @Setter private Spacing padding = new Spacing();
   @Getter @Setter private Container container = NULL_CONTAINER;
   @Getter @Setter private AnsiFormat focusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
@@ -81,19 +83,55 @@ public abstract class Widget {
   }
 
   public int getContentHeight() {
-    return Math.max(getHeight() - padding.getTop() - padding.getBottom(), 0);
+    int contentHeight = getHeight() - padding.getTop() - padding.getBottom();
+    if(showLabel) {
+      switch(labelPosition) {
+        case TOP:
+        case TOP_LEFT:
+        case TOP_RIGHT:
+        case BOTTOM:
+        case BOTTOM_LEFT:
+        case BOTTOM_RIGHT:
+          contentHeight -= getLabelHeight();
+      }
+    }
+    return Math.max(contentHeight, 0);
   }
 
   public int getContentWidth() {
-    return Math.max(getWidth() - padding.getLeft() - padding.getRight(), 0);
+    int contentWidth = getWidth() - padding.getLeft() - padding.getRight();
+    if(showLabel) {
+      switch(labelPosition) {
+        case LEFT:
+        case RIGHT:
+          contentWidth -= getLabelWidth();
+      }
+    }
+    return Math.max(contentWidth, 0);
   }
 
   public int getContentX() {
-    return getX() + padding.getLeft();
+    int contentX = getX() + padding.getLeft();
+    if(showLabel) {
+      switch(labelPosition) {
+        case LEFT:
+          contentX += getLabelWidth();
+      }
+    }
+    return contentX;
   }
 
   public int getContentY() {
-    return getY() + padding.getTop();
+    int contentY = getY() + padding.getTop();
+    if(showLabel) {
+      switch(labelPosition) {
+        case TOP:
+        case TOP_LEFT:
+        case TOP_RIGHT:
+          contentY += getLabelHeight();
+      }
+    }
+    return contentY;
   }
 
   public String getEmptyContentRow() {
@@ -135,12 +173,16 @@ public abstract class Widget {
     if(showLabel) {
       switch(labelPosition) {
         case TOP:
+        case TOP_LEFT:
+        case TOP_RIGHT:
         case BOTTOM:
+        case BOTTOM_LEFT:
+        case BOTTOM_RIGHT:
           neededHeight += getLabelHeight();
           break;
         case LEFT:
         case RIGHT:
-          neededHeight = Math.max(getNeededHeight(), neededHeight);
+          neededHeight = Math.max(getLabelHeight(), neededHeight);
           break;
       }
     }
@@ -156,51 +198,16 @@ public abstract class Widget {
           neededWidth = Math.max(getLabelWidth(), neededWidth);
           break;
         case LEFT:
+        case TOP_LEFT:
+        case BOTTOM_LEFT:
         case RIGHT:
+        case TOP_RIGHT:
+        case BOTTOM_RIGHT:
           neededWidth += getLabelWidth();
           break;
       }
     }
     return neededWidth;
-  }
-
-  // TODO this chunk is basically identical to what is in TextWidget
-  private String getRowForLabel() {
-    String ret = label;
-    if(label.length() != getWidth()) {
-      switch(labelPosition) {
-//        case LEFT:
-//          if (text.length() > getWidth()) {
-//            text = text.substring(0, getWidth());
-//          } else {
-//            text += new String(new char[getWidth() - text.length()]).replace('\0', ' ');
-//          }
-//          break;
-        case TOP:
-//        case BOTTOM:
-          if(label.length() > getWidth()) {
-            double halfExtra = (label.length() - getWidth())/2D;
-
-            ret = label.substring((int)halfExtra, label.length() - (int)Math.ceil(halfExtra));
-          } else {
-            double halfRemaining = (getWidth() - label.length())/2D;
-            ret = new String(new char[(int)Math.ceil(halfRemaining)]).replace('\0', ' ') + label
-                + new String(new char[(int)halfRemaining]).replace('\0', ' ');
-          }
-          break;
-//        case RIGHT:
-//          if (text.length() > getWidth()) {
-//            text = text.substring(text.length() - getWidth(), text.length());
-//          } else {
-//            text = new String(new char[getWidth() - text.length()]).replace('\0', ' ') + text;
-//          }
-//          break;
-//        default:
-//          break;
-      }
-    }
-
-    return labelFormat.getFormatString() + ret + AnsiFormat.NORMAL.getFormatString();
   }
 
   public int getWidth() {
@@ -225,10 +232,15 @@ public abstract class Widget {
       TerminalUi.print(getEmptyRow());
     }
 
-    // TODO this chunk is basically identical to what is in TextWidget
+    printGuts();
+  }
+
+  // TODO this method is a hack for the flaoter, need to figure out why it won't print the correct background color
+  public final void printGuts() {
     if(showLabel) {
       switch(labelOrientation) {
         case VERTICAL:
+//          printLabelVertical();
           break;
         case HORIZONTAL:
           printLabelHorizontal();
@@ -241,57 +253,29 @@ public abstract class Widget {
     printContent();
   }
 
-  // TODO this chunk is basically identical to what is in TextWidget
   private void printLabelHorizontal() {
     switch(labelPosition) {
       case TOP:
+      case TOP_LEFT:
+      case TOP_RIGHT:
         TerminalUi.move(getX(), getY());
-        TerminalUi.print(getRowForLabel());
-        for(int i = 1; i < getContentHeight(); i++) {
-          TerminalUi.move(getX(), getY() + i);
-          TerminalUi.print(getEmptyContentRow());
-        }
         break;
-//      case LEFT:
-//        break;
-//      case RIGHT:
-//        int middleRow = getHeight() / 2;
-//        for (int i = 0; i < getHeight(); i++) {
-//          TerminalUi.move(getContentX(), getContentY() + i);
-//          if (i == middleRow) {
-//            TerminalUi.print(getRowForLabel());
-//          } else {
-//            TerminalUi.print(getEmptyContentRow());
-//          }
-//        }
-//        break;
-//      case BOTTOM:
-//        TerminalUi.move(getContentX(), getContentY());
-//        for (int i = 1; i < getContentHeight(); i++) {
-//          TerminalUi.print(getEmptyContentRow());
-//          TerminalUi.move(getContentX(), getContentY() + i);
-//        }
-//        TerminalUi.print(getRowForLabel());
-//        break;
-//      default:
-//        break;
+      case BOTTOM:
+      case BOTTOM_LEFT:
+      case BOTTOM_RIGHT:
+        TerminalUi.move(getX(), getY() + getHeight());
+        break;
+      case LEFT:
+      case RIGHT:
+        TerminalUi.move(getX(), getY()/2);
+        break;
     }
+
+    TerminalUi.print(getRowForText(label, labelPosition, labelFormat.getFormatString(), getWidth()));
   }
 
   public void reprint() {
     TerminalUi.schedulePrintTask(this::print);
-  }
-
-  public void setAltitude(long altitude) {
-    if(altitude < 0) {
-      throw new IllegalArgumentException("A widget cannot have a negative altitude." + "  Supplied altitude is " + altitude);
-    } else if(altitude <= container.getAltitude()) {
-      throw new IllegalArgumentException(
-          "A widget's altitude must be greater than it's container's." + "  Supplied altitude is " + altitude
-              + " container's altitude is " + container.getAltitude());
-    }
-
-    this.altitude = altitude;
   }
 
   public void setFocused() {

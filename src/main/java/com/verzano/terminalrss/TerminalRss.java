@@ -51,8 +51,7 @@ import lombok.extern.java.Log;
  */
 // TODO add in some sort of monitoring to see progress of adding sources and updating articles
 // TODO use futures for that ^ ?
-// TODO generify source a bit and make article part of some abstract class so that podcasts can
-// be handled eventually
+// TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
 // TODO log to a file instead of the console
 @Log
 public class TerminalRss {
@@ -215,21 +214,6 @@ public class TerminalRss {
     });
   }
 
-  public static void main(String[] args) throws IOException, FeedException {
-    setProgramSettings(args);
-
-    buildSourceWidgets();
-    buildArticleWidgets();
-    buildContentTextAreaWidget();
-
-    baseContainer = new Shelf(VERTICAL, 0);
-    showToSourcesList();
-
-    TerminalUi.setBaseWidget(baseContainer);
-    sourcesListWidget.setFocused();
-    TerminalUi.reprint();
-  }
-
   private static void modifySource(Long sourceId, ContentType contentType, String contentTag) {
     if(!SourceManager.updateSource(sourceId, contentType, contentTag)) {
       log.warning("Failed to update source for sourceId: " + sourceId);
@@ -296,5 +280,20 @@ public class TerminalRss {
     baseContainer.removeWidgets();
     baseContainer.addWidget(sourceTextWidget, new ShelfOptions(new Size(FILL_CONTAINER, 1)));
     baseContainer.addWidget(sourcesListWidget, new ShelfOptions(new Size(FILL_CONTAINER, TerminalUi.getHeight() - 1)));
+  }
+
+  public static void main(String[] args) throws IOException, FeedException {
+    setProgramSettings(args);
+
+    buildSourceWidgets();
+    buildArticleWidgets();
+    buildContentTextAreaWidget();
+
+    baseContainer = new Shelf(VERTICAL, 0);
+    showToSourcesList();
+
+    TerminalUi.setBaseWidget(baseContainer);
+    sourcesListWidget.setFocused();
+    TerminalUi.reprint();
   }
 }

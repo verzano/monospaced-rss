@@ -1,5 +1,6 @@
 package com.verzano.terminalrss.tui.widget.text.entry;
 
+import static com.verzano.terminalrss.tui.PrintUtils.getRowForText;
 import static com.verzano.terminalrss.tui.constant.Key.DOWN_ARROW;
 import static com.verzano.terminalrss.tui.constant.Key.UP_ARROW;
 import static com.verzano.terminalrss.tui.constant.Orientation.HORIZONTAL;
@@ -87,7 +88,7 @@ public class RolodexWidget<T extends TuiStringable> extends TextWidget {
     for(int i = 0; i < getHeight(); i++) {
       TerminalUi.move(getContentX(), y + i);
       if(i == middleRow) {
-        TerminalUi.print(getRowForText(item.toTuiString()));
+        TerminalUi.print(getRowForText(item.toTuiString(), getTextPosition(), getAnsiFormatPrefix(), getWidth()));
       } else {
         TerminalUi.print(getEmptyContentRow());
       }
