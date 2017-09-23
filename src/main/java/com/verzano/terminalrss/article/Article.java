@@ -21,7 +21,7 @@ public class Article implements Stringable {
   @Setter @SerializedName("updated_at") private Date updatedAt;
 
   @Override
-  public String toTuiString() {
+  public String stringify() {
     return title;
   }
 }

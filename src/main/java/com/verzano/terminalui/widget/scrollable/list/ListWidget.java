@@ -52,7 +52,7 @@ public class ListWidget<T extends Stringable> extends ScrollableWidget {
 
   @Override
   public int getNeededContentWidth() {
-    return listModel.getItems().stream().mapToInt(item -> item.toTuiString().length()).max().orElse(0) + 1;
+    return listModel.getItems().stream().mapToInt(item -> item.stringify().length()).max().orElse(0) + 1;
   }
 
   public T getSelectedItem() {
@@ -99,7 +99,7 @@ public class ListWidget<T extends Stringable> extends ScrollableWidget {
       if(index >= listModel.getItemCount()) {
         TerminalUi.printn(" ", width);
       } else {
-        String toPrint = listModel.getItemAt(index).toTuiString();
+        String toPrint = listModel.getItemAt(index).stringify();
         if(toPrint.length() > width) {
           toPrint = toPrint.substring(0, width);
         } else if(toPrint.length() < width) {

@@ -8,17 +8,17 @@ import java.util.stream.Collectors;
 public enum ContentType implements Stringable {
   NULL_CONTENT_TYPE {
     @Override
-    public String toTuiString() {
+    public String stringify() {
       return "Null";
     }
   }, CLASS_CONTENT {
     @Override
-    public String toTuiString() {
+    public String stringify() {
       return "Class";
     }
   }, ID_CONTENT {
     @Override
-    public String toTuiString() {
+    public String stringify() {
       return "ID";
     }
   };

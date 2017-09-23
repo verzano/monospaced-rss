@@ -23,7 +23,7 @@ public class Source implements Stringable {
   @Setter @SerializedName("title") private String title;
 
   @Override
-  public String toTuiString() {
+  public String stringify() {
     return title;
   }
 }

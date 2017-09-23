@@ -23,7 +23,7 @@ import com.verzano.terminalrss.exception.ArticleExistsException;
 import com.verzano.terminalrss.exception.SourceExistsException;
 import com.verzano.terminalrss.source.Source;
 import com.verzano.terminalrss.source.manager.SourceManager;
-import com.verzano.terminalrss.source.tui.EditSourceFloater;
+import com.verzano.terminalrss.source.terminalui.EditSourceFloater;
 import com.verzano.terminalui.TerminalUi;
 import com.verzano.terminalui.container.shelf.Shelf;
 import com.verzano.terminalui.container.shelf.ShelfOptions;

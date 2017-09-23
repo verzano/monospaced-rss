@@ -1,4 +1,4 @@
-package com.verzano.terminalrss.source.tui;
+package com.verzano.terminalrss.source.terminalui;
 
 import static com.verzano.terminalrss.source.Source.NULL_SOURCE_ID;
 import static com.verzano.terminalui.constant.Key.TAB;

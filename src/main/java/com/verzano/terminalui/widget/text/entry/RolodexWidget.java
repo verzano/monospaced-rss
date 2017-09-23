@@ -50,7 +50,7 @@ public class RolodexWidget<T extends Stringable> extends TextWidget {
 
   @Override
   public int getNeededContentWidth() {
-    return listModel.getItems().stream().mapToInt(item -> item.toTuiString().length()).max().orElse(0);
+    return listModel.getItems().stream().mapToInt(item -> item.stringify().length()).max().orElse(0);
   }
 
   @Override
@@ -93,7 +93,7 @@ public class RolodexWidget<T extends Stringable> extends TextWidget {
     for(int i = 0; i < getContentHeight(); i++) {
       TerminalUi.move(getContentX(), y + i);
       if(i == middleRow) {
-        TerminalUi.print(getRowForText(item.toTuiString(), getTextPosition(), getAnsiFormatPrefix(), getContentWidth()));
+        TerminalUi.print(getRowForText(item.stringify(), getTextPosition(), getAnsiFormatPrefix(), getContentWidth()));
       } else {
         TerminalUi.print(getEmptyContentRow());
       }
@@ -102,6 +102,6 @@ public class RolodexWidget<T extends Stringable> extends TextWidget {
 
   public void setSelectedIndex(int selectedIndex) {
     this.selectedIndex = selectedIndex;
-    setText(listModel.getItemAt(this.selectedIndex).toTuiString());
+    setText(listModel.getItemAt(this.selectedIndex).stringify());
   }
 }
