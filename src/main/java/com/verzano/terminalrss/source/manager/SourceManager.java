@@ -18,12 +18,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SourceManager {
   public static final Comparator<Source> TITLE_COMPARATOR = Comparator.comparing(Source::getTitle).reversed();
+
   private static final Map<Long, Source> SOURCES = new ConcurrentHashMap<>();
   private static final AtomicLong SOURCE_ID = new AtomicLong(0);
   private static final String SOURCES_FILE = "sources.json";
@@ -40,6 +38,8 @@ public class SourceManager {
       throw new RuntimeException(e);
     }
   }
+
+  private SourceManager() {}
 
   public static Source createSource(
       String uri, ContentType contentType, String contentTag, Date publishedDate, String title) throws SourceExistsException {

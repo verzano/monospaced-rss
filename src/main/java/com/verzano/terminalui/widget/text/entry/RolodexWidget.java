@@ -10,18 +10,11 @@ import com.verzano.terminalui.TerminalUi;
 import com.verzano.terminalui.widget.scrollable.list.model.ListModel;
 import com.verzano.terminalui.widget.scrollable.list.model.Stringable;
 import com.verzano.terminalui.widget.text.TextWidget;
-import lombok.Getter;
-import lombok.Setter;
 
 public class RolodexWidget<T extends Stringable> extends TextWidget {
   private ListModel<T> listModel;
-  @Getter
   private volatile int selectedIndex;
-  @Getter
-  @Setter
   private int itemsBefore;
-  @Getter
-  @Setter
   private int itemsAfter;
 
   public RolodexWidget(ListModel<T> listModel, int itemsBefore, int itemsAfter) {
@@ -41,6 +34,67 @@ public class RolodexWidget<T extends Stringable> extends TextWidget {
       setSelectedIndex(getNextIndex(selectedIndex));
       reprint();
     });
+  }
+
+  public int getItemsAfter() {
+    return itemsAfter;
+  }
+
+  public void setItemsAfter(int itemsAfter) {
+    this.itemsAfter = itemsAfter;
+  }
+
+  public int getItemsBefore() {
+    return itemsBefore;
+  }
+
+  public void setItemsBefore(int itemsBefore) {
+    this.itemsBefore = itemsBefore;
+  }
+
+  public ListModel<T> getListModel() {
+    return listModel;
+  }
+
+  public void setListModel(ListModel<T> listModel) {
+    this.listModel = listModel;
+  }
+
+  private int getNextIndex(int index) {
+    return index == listModel.getItemCount() - 1 ? 0 : index + 1;
+  }
+
+  private int getPreviousIndex(int index) {
+    return index == 0 ? listModel.getItemCount() - 1 : index - 1;
+  }
+
+  public int getSelectedIndex() {
+    return selectedIndex;
+  }
+
+  public void setSelectedIndex(int selectedIndex) {
+    this.selectedIndex = selectedIndex;
+    setText(listModel.getItemAt(this.selectedIndex).stringify());
+  }
+
+  public T getSelectedItem() {
+    return listModel.getItemAt(selectedIndex);
+  }
+
+  public void setSelectedItem(T item) {
+    setSelectedIndex(listModel.getItemIndex(item));
+  }
+
+  private void printItem(T item, int y) {
+    int middleRow = getContentHeight()/2;
+    for(int i = 0; i < getContentHeight(); i++) {
+      TerminalUi.move(getContentX(), y + i);
+      if(i == middleRow) {
+        TerminalUi.print(getRowForText(item.stringify(), getTextPosition(), getAnsiFormatPrefix(), getContentWidth()));
+      } else {
+        TerminalUi.print(getEmptyContentRow());
+      }
+    }
   }
 
   @Override
@@ -70,38 +124,5 @@ public class RolodexWidget<T extends Stringable> extends TextWidget {
         printItem(listModel.getItemAt(index), getContentY() + i*getContentHeight());
       }
     }
-  }
-
-  private int getNextIndex(int index) {
-    return index == listModel.getItemCount() - 1 ? 0 : index + 1;
-  }
-
-  private int getPreviousIndex(int index) {
-    return index == 0 ? listModel.getItemCount() - 1 : index - 1;
-  }
-
-  public T getSelectedItem() {
-    return listModel.getItemAt(selectedIndex);
-  }
-
-  public void setSelectedItem(T item) {
-    setSelectedIndex(listModel.getItemIndex(item));
-  }
-
-  private void printItem(T item, int y) {
-    int middleRow = getContentHeight()/2;
-    for(int i = 0; i < getContentHeight(); i++) {
-      TerminalUi.move(getContentX(), y + i);
-      if(i == middleRow) {
-        TerminalUi.print(getRowForText(item.stringify(), getTextPosition(), getAnsiFormatPrefix(), getContentWidth()));
-      } else {
-        TerminalUi.print(getEmptyContentRow());
-      }
-    }
-  }
-
-  public void setSelectedIndex(int selectedIndex) {
-    this.selectedIndex = selectedIndex;
-    setText(listModel.getItemAt(this.selectedIndex).stringify());
   }
 }

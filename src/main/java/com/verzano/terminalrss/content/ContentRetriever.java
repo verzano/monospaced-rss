@@ -2,14 +2,13 @@ package com.verzano.terminalrss.content;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ContentRetriever {
+  private ContentRetriever() {}
+
   public static String getContent(String uri, ContentType contentType, String contentTag) throws IOException {
     Document doc;
     try {

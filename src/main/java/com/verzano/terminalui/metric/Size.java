@@ -1,12 +1,5 @@
 package com.verzano.terminalui.metric;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-@AllArgsConstructor
 public class Size {
   public static final int FILL_CONTAINER = -1;
   public static final int FILL_NEEDED = -2;
@@ -15,5 +8,26 @@ public class Size {
 
   public Size() {
     this(0, 0);
+  }
+
+  public Size(int width, int height) {
+    this.width = width;
+    this.height = height;
+  }
+
+  public int getHeight() {
+    return height;
+  }
+
+  public void setHeight(int height) {
+    this.height = height;
+  }
+
+  public int getWidth() {
+    return width;
+  }
+
+  public void setWidth(int width) {
+    this.width = width;
   }
 }

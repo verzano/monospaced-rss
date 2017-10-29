@@ -1,9 +1,5 @@
 package com.verzano.terminalui.constant;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Key {
   public static final String ESCAPED_PREFIX = "\u001b[";
   // Escaped Keys
@@ -68,4 +64,6 @@ public class Key {
   public static final String X_UPPER = "X";
   public static final String Y_UPPER = "Y";
   public static final String Z_UPPER = "Z";
+
+  private Key() {}
 }

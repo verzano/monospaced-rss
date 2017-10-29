@@ -14,16 +14,11 @@ import com.verzano.terminalui.metric.Spacing;
 import com.verzano.terminalui.task.NamedTask;
 import com.verzano.terminalui.widget.Widget;
 import com.verzano.terminalui.widget.button.ButtonWidget;
-import lombok.Getter;
 
 public class BinaryChoiceFloater extends Floater {
-  @Getter
   private ButtonWidget positiveButton;
-  @Getter
   private ButtonWidget negativeButton;
-  @Getter
   private Widget displayWidget;
-  @Getter
   private boolean positiveSelected;
 
   public BinaryChoiceFloater(Widget displayWidget, String positiveText, String negativeText) {
@@ -62,9 +57,25 @@ public class BinaryChoiceFloater extends Floater {
     addWidget(buttonContainer, new EnclosureOptions(CardinalDirection.SOUTH));
   }
 
+  public Widget getDisplayWidget() {
+    return displayWidget;
+  }
+
+  public ButtonWidget getNegativeButton() {
+    return negativeButton;
+  }
+
+  public ButtonWidget getPositiveButton() {
+    return positiveButton;
+  }
+
   public void setDisplayWidget(Widget displayWidget) {
     this.displayWidget = displayWidget;
     addWidget(displayWidget, new EnclosureOptions(CardinalDirection.CENTER));
+  }
+
+  public boolean isPositiveSelected() {
+    return positiveSelected;
   }
 
   @Override

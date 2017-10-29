@@ -9,19 +9,23 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import lombok.Getter;
-import lombok.Setter;
 
 public class Shelf extends Container<ShelfOptions> {
   private List<Widget> widgetStack = new LinkedList<>();
   private Map<Widget, ShelfOptions> optionsMap = new HashMap<>();
   private Orientation orientation;
-  @Getter
-  @Setter
   private int spacing;
 
   public Shelf(Orientation orientation, int spacing) {
     this.orientation = orientation;
+    this.spacing = spacing;
+  }
+
+  public int getSpacing() {
+    return spacing;
+  }
+
+  public void setSpacing(int spacing) {
     this.spacing = spacing;
   }
 

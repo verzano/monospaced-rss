@@ -1,10 +1,5 @@
 package com.verzano.terminalui.ansi;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
 public enum Background {
   NONE(""),
   DEFAULT("49"),
@@ -283,5 +278,14 @@ public enum Background {
   _254("48;5;254"),
   _255("48;5;255"),
   _256("48;5;256");
+
   private final String code;
+
+  Background(String code) {
+    this.code = code;
+  }
+
+  public String getCode() {
+    return code;
+  }
 }

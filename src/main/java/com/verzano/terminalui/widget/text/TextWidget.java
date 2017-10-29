@@ -7,21 +7,13 @@ import com.verzano.terminalui.constant.Orientation;
 import com.verzano.terminalui.constant.Position;
 import com.verzano.terminalui.util.PrintUtils;
 import com.verzano.terminalui.widget.Widget;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
 public class TextWidget extends Widget {
-  @Getter
-  @Setter
   private String text = "";
-  @Getter
-  @Setter
   private Orientation orientation = Orientation.HORIZONTAL;
-  @Getter
-  @Setter
   private Position textPosition = Position.LEFT;
+
+  public TextWidget() {}
 
   public TextWidget(String text, Orientation orientation, Position textPosition) {
     this.text = text;
@@ -30,6 +22,70 @@ public class TextWidget extends Widget {
 
     getFocusedFormat().setAttributes(Attribute.INVERSE_ON);
     getUnfocusedFormat().setAttributes(Attribute.INVERSE_ON);
+  }
+
+  public Orientation getOrientation() {
+    return orientation;
+  }
+
+  public void setOrientation(Orientation orientation) {
+    this.orientation = orientation;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public Position getTextPosition() {
+    return textPosition;
+  }
+
+  public void setTextPosition(Position textPosition) {
+    this.textPosition = textPosition;
+  }
+
+  private void printHorizontal() {
+    switch(textPosition) {
+      case TOP_LEFT:
+      case TOP:
+      case TOP_RIGHT:
+        TerminalUi.move(getContentX(), getContentY());
+        TerminalUi.print(PrintUtils.getRowForText(text, textPosition, getAnsiFormatPrefix(), getWidth()));
+        for(int i = 1; i < getContentHeight(); i++) {
+          TerminalUi.move(getContentX(), getContentY() + i);
+          TerminalUi.print(getEmptyContentRow());
+        }
+        break;
+      case LEFT:
+      case CENTER:
+      case RIGHT:
+        int middleRow = getContentHeight()/2;
+        for(int i = 0; i < getContentHeight(); i++) {
+          TerminalUi.move(getContentX(), getContentY() + i);
+          if(i == middleRow) {
+            TerminalUi.print(PrintUtils.getRowForText(text, textPosition, getAnsiFormatPrefix(), getWidth()));
+          } else {
+            TerminalUi.print(getEmptyContentRow());
+          }
+        }
+        break;
+      case BOTTOM_LEFT:
+      case BOTTOM:
+      case BOTTOM_RIGHT:
+        TerminalUi.move(getContentX(), getContentY());
+        for(int i = 1; i < getContentHeight(); i++) {
+          TerminalUi.print(getEmptyContentRow());
+          TerminalUi.move(getContentX(), getContentY() + i);
+        }
+        TerminalUi.print(PrintUtils.getRowForText(text, textPosition, getAnsiFormatPrefix(), getWidth()));
+        break;
+      default:
+        break;
+    }
   }
 
   @Override
@@ -82,46 +138,6 @@ public class TextWidget extends Widget {
         break;
       case HORIZONTAL:
         printHorizontal();
-        break;
-      default:
-        break;
-    }
-  }
-
-  private void printHorizontal() {
-    switch(textPosition) {
-      case TOP_LEFT:
-      case TOP:
-      case TOP_RIGHT:
-        TerminalUi.move(getContentX(), getContentY());
-        TerminalUi.print(PrintUtils.getRowForText(text, textPosition, getAnsiFormatPrefix(), getWidth()));
-        for(int i = 1; i < getContentHeight(); i++) {
-          TerminalUi.move(getContentX(), getContentY() + i);
-          TerminalUi.print(getEmptyContentRow());
-        }
-        break;
-      case LEFT:
-      case CENTER:
-      case RIGHT:
-        int middleRow = getContentHeight()/2;
-        for(int i = 0; i < getContentHeight(); i++) {
-          TerminalUi.move(getContentX(), getContentY() + i);
-          if(i == middleRow) {
-            TerminalUi.print(PrintUtils.getRowForText(text, textPosition, getAnsiFormatPrefix(), getWidth()));
-          } else {
-            TerminalUi.print(getEmptyContentRow());
-          }
-        }
-        break;
-      case BOTTOM_LEFT:
-      case BOTTOM:
-      case BOTTOM_RIGHT:
-        TerminalUi.move(getContentX(), getContentY());
-        for(int i = 1; i < getContentHeight(); i++) {
-          TerminalUi.print(getEmptyContentRow());
-          TerminalUi.move(getContentX(), getContentY() + i);
-        }
-        TerminalUi.print(PrintUtils.getRowForText(text, textPosition, getAnsiFormatPrefix(), getWidth()));
         break;
       default:
         break;

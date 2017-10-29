@@ -14,12 +14,8 @@ import com.verzano.terminalui.ansi.Background;
 import com.verzano.terminalui.ansi.Foreground;
 import com.verzano.terminalui.widget.text.TextWidget;
 import java.util.stream.IntStream;
-import lombok.Getter;
-import lombok.Setter;
 
 public class TextEntryWidget extends TextWidget {
-  @Getter
-  @Setter
   private AnsiFormat caretFormat = new AnsiFormat(Background.NONE, Foreground.NONE, UNDERLINE_ON, BLINK_ON);
 
   public TextEntryWidget() {
@@ -38,6 +34,14 @@ public class TextEntryWidget extends TextWidget {
 
     getFocusedFormat().setAttributes(Attribute.NORMAL);
     getUnfocusedFormat().setAttributes(Attribute.NORMAL);
+  }
+
+  public AnsiFormat getCaretFormat() {
+    return caretFormat;
+  }
+
+  public void setCaretFormat(AnsiFormat caretFormat) {
+    this.caretFormat = caretFormat;
   }
 
   private String getCaret() {

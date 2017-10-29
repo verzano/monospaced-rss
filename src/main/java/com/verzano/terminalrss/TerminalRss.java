@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
-import lombok.extern.java.Log;
+import java.util.logging.Logger;
 
 /*
     addSource("https://techcrunch.com/feed/", CLASS_CONTENT, "article-entry");
@@ -53,12 +53,14 @@ import lombok.extern.java.Log;
 // TODO use futures for that ^ ?
 // TODO generify source a bit and make article part of some abstract class so that podcasts can be handled eventually
 // TODO log to a file instead of the console
-@Log
 public class TerminalRss {
   private static final ExecutorService sourceExecutor = Executors.newFixedThreadPool(3);
   private static final ExecutorService articleExecutor = Executors.newFixedThreadPool(6);
   private static final Source ADD_SOURCE = new Source(-1, "", NULL_CONTENT_TYPE, "", null, "+ Add Source");
   private static final Article REFRESH_SOURCE = new Article(NULL_ARTICLE_ID, "", -1, null, "\u21BB Refresh Source", "", null);
+  // TODO decide if static is the way to go
+  private static final Logger log = Logger.getLogger(TerminalRss.class.getSimpleName());
+
   private static Shelf baseContainer;
   private static ListWidget<Source> sourcesListWidget;
   private static ListWidget<Article> articlesListWidget;

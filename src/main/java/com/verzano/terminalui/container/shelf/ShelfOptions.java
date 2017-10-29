@@ -2,13 +2,19 @@ package com.verzano.terminalui.container.shelf;
 
 import com.verzano.terminalui.container.ContainerOptions;
 import com.verzano.terminalui.metric.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
 public class ShelfOptions extends ContainerOptions {
   private Size size;
+
+  public ShelfOptions(Size size) {
+    this.size = size;
+  }
+
+  public Size getSize() {
+    return size;
+  }
+
+  public void setSize(Size size) {
+    this.size = size;
+  }
 }

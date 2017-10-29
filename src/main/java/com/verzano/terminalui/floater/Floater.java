@@ -5,14 +5,16 @@ import static com.verzano.terminalui.task.Task.NULL_TASK;
 import com.verzano.terminalui.TerminalUi;
 import com.verzano.terminalui.container.enclosure.Enclosure;
 import com.verzano.terminalui.task.Task;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
 public abstract class Floater extends Enclosure {
   public static final Floater NULL_FLOATER = new Floater() {};
-  @Setter
   private Task disposeTask = NULL_TASK;
+
+  public Floater() {}
+
+  public void setDisposeTask(Task disposeTask) {
+    this.disposeTask = disposeTask;
+  }
 
   public void display() {
     TerminalUi.setFloater(this);

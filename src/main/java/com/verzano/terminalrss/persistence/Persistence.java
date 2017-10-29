@@ -6,15 +6,15 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 // TODO log errors, duh
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Persistence {
   public static final String PERSISTENCE_DIR_KEY = "com.verzano.terminalrss.persistencedir";
+
   private static final Gson GSON = new Gson();
   private static final String DATA_DIR = System.getProperty(PERSISTENCE_DIR_KEY);
+
+  private Persistence() {}
 
   private static File getOrCreateFile(String pathname) throws IOException {
     File file = new File(pathname);

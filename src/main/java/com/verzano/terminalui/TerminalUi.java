@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
-import lombok.Getter;
-import lombok.Setter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -31,13 +29,9 @@ public class TerminalUi {
   private static final BlockingDeque<PrintTask> printTaskQueue = new LinkedBlockingDeque<>();
   private static final Terminal terminal;
   private static Floor floor = new Floor();
-  @Getter
   private static Floater floater = Floater.NULL_FLOATER;
-  @Getter
-  @Setter
   private static Widget focusedWidget = Widget.NULL_WIDGET;
   private static final Thread keyActionThread = new Thread(TerminalUi::keyActionLoop, "Key Action");
-  @Getter
   private static Size size;
   private static final Thread printingThread = new Thread(TerminalUi::printingLoop, "Printing");
   private static final Thread resizingThread = new Thread(TerminalUi::resizingLoop, "Resizing");
@@ -61,6 +55,22 @@ public class TerminalUi {
   }
 
   private TerminalUi() {}
+
+  public static Floater getFloater() {
+    return floater;
+  }
+
+  public static Widget getFocusedWidget() {
+    return focusedWidget;
+  }
+
+  public static void setFocusedWidget(Widget focusedWidget) {
+    TerminalUi.focusedWidget = focusedWidget;
+  }
+
+  public static Size getSize() {
+    return size;
+  }
 
   private static void clear() {
     String emptyLine = new String(new char[size.getWidth()]).replace("\0", " ");

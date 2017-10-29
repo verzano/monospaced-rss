@@ -7,9 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 public abstract class Container<T extends ContainerOptions> extends Widget {
   public static final Container<ContainerOptions> NULL_CONTAINER = new Container<ContainerOptions>() {
     @Override
@@ -69,6 +67,8 @@ public abstract class Container<T extends ContainerOptions> extends Widget {
   public abstract Collection<Widget> getContainedWidgets();
   public abstract void removeWidgetInternal(Widget widget);
   public abstract void removeWidgetsInternal();
+
+  public Container() {}
 
   public void addWidget(Widget widget, T options) {
     widgetSizes.put(widget, new Size(0, 0));

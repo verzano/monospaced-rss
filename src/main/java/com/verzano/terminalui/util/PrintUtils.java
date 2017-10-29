@@ -2,11 +2,10 @@ package com.verzano.terminalui.util;
 
 import com.verzano.terminalui.ansi.AnsiFormat;
 import com.verzano.terminalui.constant.Position;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PrintUtils {
+  private PrintUtils() {}
+
   public static String getRowForText(String text, Position textPosition, String formatString, int width) {
     if(text.length() != width) {
       switch(textPosition) {

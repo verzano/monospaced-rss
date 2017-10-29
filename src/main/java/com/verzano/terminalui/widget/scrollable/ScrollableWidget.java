@@ -9,26 +9,41 @@ import com.verzano.terminalui.ansi.Background;
 import com.verzano.terminalui.ansi.Foreground;
 import com.verzano.terminalui.constant.Direction;
 import com.verzano.terminalui.widget.Widget;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 // TODO allow this to have vertical and horizontal bars
 // TODO make this a container
 // TODO make the scrollbar its own widget
 // TODO currently scrollbar prints too much when its long
-@NoArgsConstructor
 public abstract class ScrollableWidget extends Widget {
   private double internalHeight = 1;
-  @Getter
-  @Setter
   private AnsiFormat scrollbarFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.INVERSE_ON);
-  @Getter
-  @Setter
   private int viewTop = 0;
   private int barLength;
 
   public abstract void scroll(Direction direction, int distance);
+
+  public ScrollableWidget() {}
+
+  public AnsiFormat getScrollbarFormat() {
+    return scrollbarFormat;
+  }
+
+  public void setScrollbarFormat(AnsiFormat scrollbarFormat) {
+    this.scrollbarFormat = scrollbarFormat;
+  }
+
+  public int getViewTop() {
+    return viewTop;
+  }
+
+  public void setViewTop(int viewTop) {
+    this.viewTop = viewTop;
+  }
+
+  public void setInternalHeight(double internalHeight) {
+    this.internalHeight = internalHeight;
+    barLength = (int)Math.ceil(getHeight()*(double)getHeight()/internalHeight);
+  }
 
   @Override
   public void printContent() {
@@ -44,10 +59,5 @@ public abstract class ScrollableWidget extends Widget {
         TerminalUi.print(" ");
       }
     }
-  }
-
-  public void setInternalHeight(double internalHeight) {
-    this.internalHeight = internalHeight;
-    barLength = (int)Math.ceil(getHeight()*(double)getHeight()/internalHeight);
   }
 }

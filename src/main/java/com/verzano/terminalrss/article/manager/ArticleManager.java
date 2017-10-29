@@ -18,10 +18,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ArticleManager {
   public static final Comparator<Article> UPDATED_AT_COMPARATOR = Comparator.comparing(Article::getPublishedAt).reversed();
   private static final int MAX_STORED_ARTICLES = 25;
@@ -42,6 +39,8 @@ public class ArticleManager {
       throw new RuntimeException(e);
     }
   }
+
+  private ArticleManager() {}
 
   public static Article createArticle(Source source, String uri, Date publishedDate, String title, Date updatedDate)
       throws IOException, ArticleExistsException {

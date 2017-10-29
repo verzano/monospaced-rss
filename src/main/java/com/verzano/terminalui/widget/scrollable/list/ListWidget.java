@@ -13,14 +13,10 @@ import com.verzano.terminalui.widget.scrollable.ScrollableWidget;
 import com.verzano.terminalui.widget.scrollable.list.model.ListModel;
 import com.verzano.terminalui.widget.scrollable.list.model.Stringable;
 import java.util.Collection;
-import lombok.Getter;
-import lombok.Setter;
 
 public class ListWidget<T extends Stringable> extends ScrollableWidget {
   private ListModel<T> listModel;
   private int selectedItemIndex;
-  @Getter
-  @Setter
   private AnsiFormat selectedItemFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.INVERSE_ON);
 
   public ListWidget(ListModel<T> listModel) {
@@ -36,6 +32,38 @@ public class ListWidget<T extends Stringable> extends ScrollableWidget {
     });
   }
 
+  public ListModel<T> getListModel() {
+    return listModel;
+  }
+
+  public void setListModel(ListModel<T> listModel) {
+    this.listModel = listModel;
+    selectedItemIndex = 0;
+    setViewTop(0);
+    setInternalHeight(this.listModel.getItemCount());
+  }
+
+  public T getSelectedItem() {
+    return listModel.getItemAt(selectedItemIndex);
+  }
+
+  public AnsiFormat getSelectedItemFormat() {
+    return selectedItemFormat;
+  }
+
+  public void setSelectedItemFormat(AnsiFormat selectedItemFormat) {
+    this.selectedItemFormat = selectedItemFormat;
+  }
+
+  public void removeItem(T item) {
+    if(listModel.removeItem(item)) {
+      if(selectedItemIndex == listModel.getItemCount()) {
+        selectedItemIndex = Math.max(0, selectedItemIndex - 1);
+      }
+      setInternalHeight(listModel.getItemCount());
+    }
+  }
+
   public void addItem(T item) {
     if(listModel.addItem(item)) {
       if(listModel.getItemCount() > 1 && listModel.getItemIndex(item) <= selectedItemIndex) {
@@ -43,6 +71,13 @@ public class ListWidget<T extends Stringable> extends ScrollableWidget {
       }
       setInternalHeight(listModel.getItemCount());
     }
+  }
+
+  public void setItems(Collection<T> items) {
+    listModel.setItems(items);
+    selectedItemIndex = 0;
+    setViewTop(0);
+    setInternalHeight(listModel.getItemCount());
   }
 
   @Override
@@ -53,19 +88,6 @@ public class ListWidget<T extends Stringable> extends ScrollableWidget {
   @Override
   public int getNeededContentWidth() {
     return listModel.getItems().stream().mapToInt(item -> item.stringify().length()).max().orElse(0) + 1;
-  }
-
-  public T getSelectedItem() {
-    return listModel.getItemAt(selectedItemIndex);
-  }
-
-  public void removeItem(T item) {
-    if(listModel.removeItem(item)) {
-      if(selectedItemIndex == listModel.getItemCount()) {
-        selectedItemIndex = Math.max(0, selectedItemIndex - 1);
-      }
-      setInternalHeight(listModel.getItemCount());
-    }
   }
 
   @Override
@@ -113,19 +135,5 @@ public class ListWidget<T extends Stringable> extends ScrollableWidget {
         TerminalUi.print(toPrint);
       }
     }
-  }
-
-  public void setItems(Collection<T> items) {
-    listModel.setItems(items);
-    selectedItemIndex = 0;
-    setViewTop(0);
-    setInternalHeight(listModel.getItemCount());
-  }
-
-  public void setListModel(ListModel<T> listModel) {
-    this.listModel = listModel;
-    selectedItemIndex = 0;
-    setViewTop(0);
-    setInternalHeight(this.listModel.getItemCount());
   }
 }

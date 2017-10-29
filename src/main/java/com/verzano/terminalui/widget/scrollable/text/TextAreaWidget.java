@@ -8,10 +8,8 @@ import com.verzano.terminalui.constant.Direction;
 import com.verzano.terminalui.widget.scrollable.ScrollableWidget;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.Getter;
 
 public class TextAreaWidget extends ScrollableWidget {
-  @Getter
   private String text;
   private List<String> lines;
   private volatile int topLine;
@@ -31,6 +29,21 @@ public class TextAreaWidget extends ScrollableWidget {
       scroll(Direction.DOWN, 1);
       reprint();
     });
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+    calculateLines();
+    setTopLine(0);
+  }
+
+  private void setTopLine(int topLine) {
+    this.topLine = topLine;
+    setViewTop(topLine);
   }
 
   private void calculateLines() {
@@ -110,16 +123,5 @@ public class TextAreaWidget extends ScrollableWidget {
         TerminalUi.printn(" ", width);
       }
     }
-  }
-
-  public void setText(String text) {
-    this.text = text;
-    calculateLines();
-    setTopLine(0);
-  }
-
-  private void setTopLine(int topLine) {
-    this.topLine = topLine;
-    setViewTop(topLine);
   }
 }

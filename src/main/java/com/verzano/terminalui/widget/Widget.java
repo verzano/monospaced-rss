@@ -16,9 +16,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 // TODO make this thread safe
 // padding is the space between the content and the border/label
@@ -26,7 +23,6 @@ import lombok.Setter;
 // TODO add border
 // TODO add margin (space between border/label and edge of widget)
 // TODO a child widget should also mark its container as focused...
-@NoArgsConstructor
 public abstract class Widget {
   public static final Widget NULL_WIDGET = new Widget() {
     @Override
@@ -43,32 +39,14 @@ public abstract class Widget {
     public void printContent() {}
   };
   private final Map<String, Set<Task>> keyActionsMap = new HashMap<>();
-  @Getter
-  @Setter
   private String label = "";
-  @Getter
-  @Setter
   private boolean showLabel = false;
-  @Getter
-  @Setter
   private Position labelPosition = Position.LEFT;
-  @Getter
-  @Setter
   private Orientation labelOrientation = Orientation.HORIZONTAL;
-  @Getter
-  @Setter
   private AnsiFormat labelFormat = new AnsiFormat(Background.NONE, Foreground.NONE);
-  @Getter
-  @Setter
   private Spacing padding = new Spacing();
-  @Getter
-  @Setter
   private Container container = Container.NULL_CONTAINER;
-  @Getter
-  @Setter
   private AnsiFormat focusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
-  @Getter
-  @Setter
   private AnsiFormat unfocusedFormat = new AnsiFormat(Background.NONE, Foreground.NONE, Attribute.NONE);
   private String emptyRow;
   private String emptyContentRow;
@@ -76,6 +54,80 @@ public abstract class Widget {
   public abstract int getNeededContentHeight();
   public abstract int getNeededContentWidth();
   public abstract void printContent();
+
+  public Widget() {}
+
+  public Container getContainer() {
+    return container;
+  }
+
+  public void setContainer(Container container) {
+    this.container = container;
+  }
+
+  public AnsiFormat getFocusedFormat() {
+    return focusedFormat;
+  }
+
+  public void setFocusedFormat(AnsiFormat focusedFormat) {
+    this.focusedFormat = focusedFormat;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public void setLabel(String label) {
+    this.label = label;
+  }
+
+  public AnsiFormat getLabelFormat() {
+    return labelFormat;
+  }
+
+  public void setLabelFormat(AnsiFormat labelFormat) {
+    this.labelFormat = labelFormat;
+  }
+
+  public Orientation getLabelOrientation() {
+    return labelOrientation;
+  }
+
+  public void setLabelOrientation(Orientation labelOrientation) {
+    this.labelOrientation = labelOrientation;
+  }
+
+  public Position getLabelPosition() {
+    return labelPosition;
+  }
+
+  public void setLabelPosition(Position labelPosition) {
+    this.labelPosition = labelPosition;
+  }
+
+  public Spacing getPadding() {
+    return padding;
+  }
+
+  public void setPadding(Spacing padding) {
+    this.padding = padding;
+  }
+
+  public AnsiFormat getUnfocusedFormat() {
+    return unfocusedFormat;
+  }
+
+  public void setUnfocusedFormat(AnsiFormat unfocusedFormat) {
+    this.unfocusedFormat = unfocusedFormat;
+  }
+
+  public boolean isShowLabel() {
+    return showLabel;
+  }
+
+  public void setShowLabel(boolean showLabel) {
+    this.showLabel = showLabel;
+  }
 
   public void addKeyAction(String key, Task action) {
     Set<Task> tasks = keyActionsMap.getOrDefault(key, new HashSet<>());

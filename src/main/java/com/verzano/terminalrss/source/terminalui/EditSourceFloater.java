@@ -21,7 +21,6 @@ import com.verzano.terminalui.metric.Spacing;
 import com.verzano.terminalui.widget.scrollable.list.model.BasicListModel;
 import com.verzano.terminalui.widget.text.entry.RolodexWidget;
 import com.verzano.terminalui.widget.text.entry.TextEntryWidget;
-import lombok.Getter;
 
 public class EditSourceFloater extends BinaryChoiceFloater {
   private static final String ADD_SOURCE_TEXT = "Add Source";
@@ -32,7 +31,7 @@ public class EditSourceFloater extends BinaryChoiceFloater {
       0,
       1);
   private final TextEntryWidget contentTagEntry = new TextEntryWidget();
-  @Getter private Long sourceId = NULL_SOURCE_ID;
+  private Long sourceId = NULL_SOURCE_ID;
 
   public EditSourceFloater() {
     this(ADD_SOURCE_TEXT, CANCEL_TEXT);
@@ -94,5 +93,9 @@ public class EditSourceFloater extends BinaryChoiceFloater {
 
   public String getUri() {
     return uriTextEntry.getText();
+  }
+
+  public Long getSourceId() {
+    return sourceId;
   }
 }

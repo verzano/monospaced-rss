@@ -1,10 +1,5 @@
 package com.verzano.terminalui.ansi;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
 public enum Attribute {
   NONE(""),
   NORMAL("0"),
@@ -24,5 +19,14 @@ public enum Attribute {
   INVERSE_OFF("27"),
   INVISIBLE_OFF("28"),
   STRIKETHROUGH_OFF("29");
+
   private final String code;
+
+  Attribute(String code) {
+    this.code = code;
+  }
+
+  public String getCode() {
+    return code;
+  }
 }

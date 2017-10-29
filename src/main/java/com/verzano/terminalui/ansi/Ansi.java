@@ -1,10 +1,8 @@
 package com.verzano.terminalui.ansi;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Ansi {
+  private Ansi() {}
+
   public static final char ESC = '\u001b';
   // Movement
   public static final String SET_POSITION = ESC + "[%d;%dH";
