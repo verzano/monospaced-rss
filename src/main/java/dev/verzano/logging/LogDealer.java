@@ -1,4 +1,4 @@
-package com.verzano.logging;
+package dev.verzano.logging;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,15 +14,16 @@ import java.util.logging.Logger;
 public class LogDealer {
     private static final Map<String, Integer> LOG_COUNTER_MAP = new HashMap<>();
 
-    private LogDealer() {}
+    private LogDealer() {
+    }
 
-    public static Logger get(Class clazz) {
+    public static Logger get(Class<?> clazz) {
         return Logger.getLogger(generateLoggerNameForClass(clazz));
     }
 
-    private static synchronized String generateLoggerNameForClass(Class clazz) {
-        String className = clazz.getName();
-        Integer count = LOG_COUNTER_MAP.getOrDefault(className, 0);
+    private static synchronized String generateLoggerNameForClass(Class<?> clazz) {
+        var className = clazz.getName();
+        var count = LOG_COUNTER_MAP.getOrDefault(className, 0);
 
         LOG_COUNTER_MAP.put(className, count + 1);
 

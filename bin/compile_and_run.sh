@@ -8,7 +8,7 @@ PERSISTENCE_DIR=${ROOT_DIR}"/data"
 
 # TODO better app name/version vals
 # TODO include the logging.properties in the build
-APP_VERSION="monospaced-rss-1.0"
+APP_VERSION="monospaced-rss"
 DISTRIBUTIONS_DIR="build/distributions"
 
 # TODO use getopts and drop the longform
@@ -36,7 +36,7 @@ tar xf ${DISTRIBUTIONS_DIR}/${APP_VERSION}.tar -C ${DISTRIBUTIONS_DIR}\
 
 cd ${DISTRIBUTIONS_DIR}/${APP_VERSION}
 
-# TODO do this in the build.gradle file
+# TODO do this in the build.gradle.kts file
 mkdir -p log
 
 ./bin/monospaced-rss ${PERSISTENCE_DIR}
